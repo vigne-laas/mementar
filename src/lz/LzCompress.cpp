@@ -7,7 +7,9 @@ LzCompress::LzCompress(size_t search_size, size_t la_size) : bit(bitConter(searc
 {
   // la_size_ <= search_size_
   search_size_ = search_size;
+  search_size_1_ = search_size - 1;
   la_size_ = la_size;
+  la_size_1_ = la_size_ - 1;
 }
 
 void LzCompress::compress(std::string& in, const std::string& out)
@@ -26,6 +28,8 @@ void LzCompress::compress(std::string& in, const std::string& out)
   size_t index = -1;
   size_t length = 1;
   size_t tmp_length = 1;
+  size_t search_index = 1;
+  size_t la_index = 1;
   size_t i = -1;
 
   size_t min_size = (in_size < search_size_) ? in_size : search_size_;
@@ -39,8 +43,14 @@ void LzCompress::compress(std::string& in, const std::string& out)
       if(in[i] == c_tmp)
       {
         tmp_length = 1;
-        while((in[i + tmp_length] == in[cursor + tmp_length]) && (tmp_length < la_size_ - 1) && (i + tmp_length < cursor))
+        search_index = i + 1;
+        la_index = cursor + 1;
+        while((in[search_index] == in[la_index]) && (tmp_length < la_size_1_) && (search_index < cursor))
+        {
           tmp_length++;
+          search_index++;
+          la_index++;
+        }
 
         if(tmp_length > length)
         {
@@ -69,13 +79,19 @@ void LzCompress::compress(std::string& in, const std::string& out)
   {
     length = 1;
     char c_tmp = in[cursor];
-    for(i = cursor - search_size_ + 1; i < cursor; i++)
+    for(i = cursor - search_size_1_; i < cursor; i++)
     {
       if(in[i] == c_tmp)
       {
         tmp_length = 1;
-        while((in[i + tmp_length] == in[cursor + tmp_length]) && (tmp_length < la_size_ - 1) && (i + tmp_length < cursor))
+        search_index = i + 1;
+        la_index = cursor + 1;
+        while((in[search_index] == in[la_index]) && (tmp_length < la_size_1_) && (search_index < cursor))
+        {
           tmp_length++;
+          search_index++;
+          la_index++;
+        }
 
         if(tmp_length > length)
         {
