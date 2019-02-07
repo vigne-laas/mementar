@@ -1,7 +1,5 @@
 #include "mementor/lz/BitFileGenerator.h"
 
-#include <iostream>
-
 BitFileGenerator::BitFileGenerator(size_t size_1, size_t size_2, size_t size_3, size_t size_4)
 {
   type_1_size_ = size_1;

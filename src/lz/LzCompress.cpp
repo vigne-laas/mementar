@@ -14,6 +14,11 @@ void LzCompress::compress(std::string& in, const std::string& out)
 {
   size_t in_size = in.size();
 
+  bit.writeChar(in_size >> 0);
+  bit.writeChar(in_size >> 8);
+  bit.writeChar(in_size >> 16);
+  bit.writeChar(in_size >> 24);
+
   bit.writeBitFalse();
   bit.writeChar(in[0]);
 
@@ -34,7 +39,7 @@ void LzCompress::compress(std::string& in, const std::string& out)
       if(in[i] == c_tmp)
       {
         tmp_length = 1;
-        while(in[i + tmp_length] == in[cursor + tmp_length])
+        while((in[i + tmp_length] == in[cursor + tmp_length]) && (tmp_length < la_size_ - 1))
           tmp_length++;
 
         if(tmp_length > length)
@@ -62,13 +67,14 @@ void LzCompress::compress(std::string& in, const std::string& out)
 
   while (cursor < in_size)
   {
+    length = 1;
     char c_tmp = in[cursor];
     for(i = cursor - search_size_; i < cursor; i++)
     {
       if(in[i] == c_tmp)
       {
         tmp_length = 1;
-        while(in[i + tmp_length] == in[cursor + tmp_length])
+        while((in[i + tmp_length] == in[cursor + tmp_length]) && (tmp_length < la_size_ - 1))
           tmp_length++;
 
         if(tmp_length > length)
