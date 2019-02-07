@@ -16,7 +16,7 @@ int main (int argc, char* argv[])
   std::string input_file = "";
   std::string output_file = "";
 
-  /*if (argc != 5)
+  if (argc != 5)
   {
     std::cout << "not enough arguments " << argc << std::endl;
     return -1;
@@ -40,28 +40,22 @@ int main (int argc, char* argv[])
   {
     std::cout << "arguments must be -i or -o" << std::string(argv[4]) << std::endl;
     return -1;
-  }*/
+  }
 
   std::string out;
-
-  //std::ifstream t(input_file);
-  //std::ifstream t("../tests_files/syslog");
-  //std::ifstream t("/home/gsarthou/Downloads/owl-export-unversioned.owl");
-  /*std::string in((std::istreambuf_iterator<char>(t)),
-                   std::istreambuf_iterator<char>());*/
 
   ///////////////////////////////////////////////////////////////////
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
   LzUncompress lz;
-  lz.uncompress("../tests_files/syslog.mlz", out);
+  lz.uncompress(input_file, out);
 
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
   ///////////////////////////////////////////////////////////////////
 
   std::ofstream myfile;
-  myfile.open ("../tests_files/out");
+  myfile.open (output_file);
   myfile << out;
   myfile.close();
 
