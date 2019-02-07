@@ -9,8 +9,13 @@ include_directories(
 
 add_library(mementor_compression_lib
   src/lz/LzCompress.cpp
+  src/lz/LzUncompress.cpp
   src/lz/BitFileGenerator.cpp
+  src/lz/BitFileGetter.cpp
 )
 
 add_executable(compress src/compress.cpp)
 target_link_libraries(compress mementor_compression_lib)
+
+add_executable(uncompress src/uncompress.cpp)
+target_link_libraries(uncompress mementor_compression_lib)

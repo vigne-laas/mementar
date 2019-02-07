@@ -60,6 +60,11 @@ int main (int argc, char* argv[])
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
   ///////////////////////////////////////////////////////////////////
 
+  std::ofstream myfile;
+  myfile.open ("../tests_files/out");
+  myfile << out;
+  myfile.close();
+
   //std::cout << out << std::endl;
 
   std::cout << "time = " << time_span.count() << "s" << std::endl;

@@ -47,9 +47,7 @@ void LzUncompress::uncompress(const std::string& in, std::string& out)
         out += out.substr(out.size() - offset, length);
       }
       else
-      {
         out.push_back(bit.getChar());
-      }
     }
   }
 }
