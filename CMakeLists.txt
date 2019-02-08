@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.5)
-project (mementor)
+project (mementar)
 
 add_compile_options(-std=c++14)
 
@@ -7,7 +7,7 @@ include_directories(
   include
 )
 
-add_library(mementor_compression_lib
+add_library(mementar_compression_lib
   src/lz/LzCompress.cpp
   src/lz/LzUncompress.cpp
   src/lz/BitFileGenerator.cpp
@@ -16,7 +16,7 @@ add_library(mementor_compression_lib
 )
 
 add_executable(compress src/compress.cpp)
-target_link_libraries(compress mementor_compression_lib)
+target_link_libraries(compress mementar_compression_lib)
 
 add_executable(uncompress src/uncompress.cpp)
-target_link_libraries(uncompress mementor_compression_lib)
+target_link_libraries(uncompress mementar_compression_lib)

@@ -1,6 +1,6 @@
-#include "mementor/lz/LzCompress.h"
+#include "mementar/lz/LzCompress.h"
 
-#include "mementor/lz/Huffman.h"
+#include "mementar/lz/Huffman.h"
 
 #include <iostream>
 #include <fstream>

@@ -1,4 +1,4 @@
-#include "mementor/lz/BitFileGetter.h"
+#include "mementar/lz/BitFileGetter.h"
 
 #include <iostream>
 

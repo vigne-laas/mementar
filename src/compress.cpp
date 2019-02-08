@@ -6,7 +6,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "mementor/lz/LzCompress.h"
+#include "mementar/lz/LzCompress.h"
 
 using namespace std::chrono;
 

@@ -1,10 +1,10 @@
-#include "mementor/lz/Huffman.h"
+#include "mementar/lz/Huffman.h"
 
 #include <map>
 #include <iostream>
 #include <algorithm>
 
-#include "mementor/lz/BitFileGenerator.h"
+#include "mementar/lz/BitFileGenerator.h"
 
 bool comparePtrNode(HuffNode_t* a, HuffNode_t* b)
 {

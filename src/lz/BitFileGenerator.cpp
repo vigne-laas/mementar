@@ -1,4 +1,4 @@
-#include "mementor/lz/BitFileGenerator.h"
+#include "mementar/lz/BitFileGenerator.h"
 
 BitFileGenerator::BitFileGenerator(size_t size_1, size_t size_2, size_t size_3, size_t size_4)
 {

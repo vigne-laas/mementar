@@ -1,7 +1,7 @@
 #ifndef LZUNCOMPRESS_H
 #define LZUNCOMPRESS_H
 
-#include "mementor/lz/BitFileGetter.h"
+#include "mementar/lz/BitFileGetter.h"
 
 class LzUncompress
 {

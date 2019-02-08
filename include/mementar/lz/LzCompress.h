@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "mementor/lz/BitFileGenerator.h"
+#include "mementar/lz/BitFileGenerator.h"
 
 class LzCompress
 {

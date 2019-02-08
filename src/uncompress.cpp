@@ -6,8 +6,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "mementor/lz/BitFileGetter.h"
-#include "mementor/lz/LzUncompress.h"
+#include "mementar/lz/BitFileGetter.h"
+#include "mementar/lz/LzUncompress.h"
 
 using namespace std::chrono;
 
