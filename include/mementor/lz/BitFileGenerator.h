@@ -13,6 +13,7 @@ public:
   void writeType2(uint16_t value);
   void writeType3(uint16_t value);
   void writeType4(uint16_t value);
+  void writeN(size_t size, uint16_t value);
   void writeChar(char value);
 
   void writeBitTrue();

@@ -12,6 +12,7 @@ add_library(mementor_compression_lib
   src/lz/LzUncompress.cpp
   src/lz/BitFileGenerator.cpp
   src/lz/BitFileGetter.cpp
+  src/lz/Huffman.cpp
 )
 
 add_executable(compress src/compress.cpp)
