@@ -144,11 +144,11 @@ uint16_t BitFileGetter::getType4()
 char BitFileGetter::getChar()
 {
   uint16_t res = 0;
-  int16_t to_get = 8;
-  for(size_t i = 0; i < 8;)
+  int16_t to_get = 7;
+  for(size_t i = 0; i < 7;)
   {
     uint16_t working_data = (data_[major_index_] & 0x00ff) >> minor_index_;
-    res = res | ((working_data & ~((0xffff) << to_get)) << (8 - to_get));
+    res = res | ((working_data & ~((0xffff) << to_get)) << (7 - to_get));
 
     uint8_t getted = (minor_index_ + to_get >= 8) ? 8 - minor_index_ : to_get;
     i += getted;

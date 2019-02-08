@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-LzCompress::LzCompress(size_t search_size, size_t la_size) : bit(bitConter(search_size), bitConter(la_size))
+LzCompress::LzCompress(size_t search_size, size_t la_size) : bit(bitConter(search_size), bitConter(la_size), 8)
 {
   // la_size_ <= search_size_
   search_size_ = search_size;
@@ -18,10 +18,10 @@ void LzCompress::compress(std::string& in, const std::string& out)
 {
   size_t in_size = in.size();
 
-  bit.writeChar(in_size >> 0);
-  bit.writeChar(in_size >> 8);
-  bit.writeChar(in_size >> 16);
-  bit.writeChar(in_size >> 24);
+  bit.writeType3(in_size >> 0);
+  bit.writeType3(in_size >> 8);
+  bit.writeType3(in_size >> 16);
+  bit.writeType3(in_size >> 24);
 
   bit.writeBitFalse();
   bit.writeChar(in[0]);

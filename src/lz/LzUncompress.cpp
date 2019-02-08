@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-LzUncompress::LzUncompress(size_t search_size, size_t la_size) : bit(bitConter(search_size), bitConter(la_size))
+LzUncompress::LzUncompress(size_t search_size, size_t la_size) : bit(bitConter(search_size), bitConter(la_size), 8)
 {
   // la_size_ <= search_size_
   search_size_ = search_size;
@@ -29,10 +29,10 @@ void LzUncompress::uncompress(const std::string& in, std::string& out)
     size_t length = 0;
 
     size_t out_file_size = 0;
-    char size1 = bit.getChar();
-    char size2 = bit.getChar();
-    char size3 = bit.getChar();
-    char size4 = bit.getChar();
+    char size1 = bit.getType3();
+    char size2 = bit.getType3();
+    char size3 = bit.getType3();
+    char size4 = bit.getType3();
 
     out_file_size = ((size4 << 24)&0xff000000) | ((size3 << 16)&0x00ff0000) | ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
 

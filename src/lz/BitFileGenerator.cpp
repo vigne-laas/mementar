@@ -130,8 +130,8 @@ void BitFileGenerator::writeN(size_t size, uint16_t value)
 
 void BitFileGenerator::writeChar(char value)
 {
-  int16_t to_add = 8;
-  for(size_t i = 0; i < 8;)
+  int16_t to_add = 7;
+  for(size_t i = 0; i < 7;)
   {
     data_[major_index_] = data_[major_index_] | (value << minor_index_);
 
