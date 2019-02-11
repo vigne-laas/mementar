@@ -37,14 +37,14 @@ void LzUncompress::uncompress(const std::string& in, std::string& out)
     size1 = bit.getType3();
     size2 = bit.getType3();
     search_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
-    bit.setSize1(bitConter(search_size_));
+    bit.setSize1(neededBitCount(search_size_));
 
     size1 = bit.getType3();
     size2 = bit.getType3();
     la_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
-    bit.setSize2(bitConter(la_size_));
+    bit.setSize2(neededBitCount(la_size_));
 
-    size_t found_size = bitConter(search_size_) + bitConter(la_size_);
+    size_t found_size = neededBitCount(search_size_) + neededBitCount(la_size_);
     size_t not_found_size = 8;
 
     bool end = false;
@@ -63,7 +63,7 @@ void LzUncompress::uncompress(const std::string& in, std::string& out)
   }
 }
 
-int LzUncompress::bitConter(size_t max_value)
+int LzUncompress::neededBitCount(size_t max_value)
 {
   int nb_bit = 1;
   int tmp_max = 2;

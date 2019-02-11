@@ -16,7 +16,7 @@ private:
 
   BitFileGetter bit;
 
-  int bitConter(size_t max_value);
+  int neededBitCount(size_t max_value);
 };
 
 #endif // LZUNCOMPRESS_H

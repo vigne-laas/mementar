@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-LzCompress::LzCompress(size_t search_size, size_t la_size) : bit(bitConter(search_size), bitConter(la_size), 8)
+LzCompress::LzCompress(size_t search_size, size_t la_size) : bit(neededBitCount(search_size), neededBitCount(la_size), 8)
 {
   // la_size_ <= search_size_
   search_size_ = search_size;
@@ -141,7 +141,7 @@ void LzCompress::compress(std::string& in, const std::string& out)
   std::cout << "Saved into " << out << ".mlz" << std::endl;
 }
 
-int LzCompress::bitConter(size_t max_value)
+int LzCompress::neededBitCount(size_t max_value)
 {
   int nb_bit = 1;
   int tmp_max = 2;
