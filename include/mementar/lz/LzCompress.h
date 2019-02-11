@@ -9,7 +9,7 @@
 class LzCompress
 {
 public:
-  LzCompress(size_t search_size = 1024, size_t la_size = 64);
+  LzCompress(size_t search_size = 2048, size_t la_size = 64);
 
   void compress(std::string& in, const std::string& out);
 

@@ -23,6 +23,12 @@ void LzCompress::compress(std::string& in, const std::string& out)
   bit.writeType3(in_size >> 16);
   bit.writeType3(in_size >> 24);
 
+  bit.writeType3(search_size_ >> 0);
+  bit.writeType3(search_size_ >> 8);
+
+  bit.writeType3(la_size_ >> 0);
+  bit.writeType3(la_size_ >> 8);
+
   bit.writeBitFalse();
   bit.writeChar(in[0]);
 

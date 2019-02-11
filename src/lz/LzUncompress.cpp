@@ -2,12 +2,13 @@
 
 #include <iostream>
 #include <fstream>
+#include <math.h>
 
-LzUncompress::LzUncompress(size_t search_size, size_t la_size) : bit(bitConter(search_size), bitConter(la_size), 8)
+LzUncompress::LzUncompress() : bit(0, 0, 8)
 {
   // la_size_ <= search_size_
-  search_size_ = search_size;
-  la_size_ = la_size;
+  search_size_ = 0;
+  la_size_ = 0;
 }
 
 void LzUncompress::uncompress(const std::string& in, std::string& out)
@@ -21,9 +22,6 @@ void LzUncompress::uncompress(const std::string& in, std::string& out)
   {
     bit.set(buffer);
 
-    size_t found_size = bitConter(search_size_) + bitConter(la_size_);
-    size_t not_found_size = 8;
-
     bool found = false;
     size_t offset = 0;
     size_t length = 0;
@@ -35,6 +33,19 @@ void LzUncompress::uncompress(const std::string& in, std::string& out)
     char size4 = bit.getType3();
 
     out_file_size = ((size4 << 24)&0xff000000) | ((size3 << 16)&0x00ff0000) | ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+
+    size1 = bit.getType3();
+    size2 = bit.getType3();
+    search_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+    bit.setSize1(bitConter(search_size_));
+
+    size1 = bit.getType3();
+    size2 = bit.getType3();
+    la_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+    bit.setSize2(bitConter(la_size_));
+
+    size_t found_size = bitConter(search_size_) + bitConter(la_size_);
+    size_t not_found_size = 8;
 
     bool end = false;
     while(out.size() < out_file_size)

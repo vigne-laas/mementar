@@ -6,7 +6,7 @@
 class LzUncompress
 {
 public:
-  LzUncompress(size_t search_size = 1024, size_t la_size = 64);
+  LzUncompress();
 
   void uncompress(const std::string& in, std::string& out);
 
