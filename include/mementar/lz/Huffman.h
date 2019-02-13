@@ -50,6 +50,9 @@ public:
   void getTreeCode(std::vector<char>& out);
   void getDataCode(std::vector<char>& data, std::vector<char>& out);
 
+  size_t setTree(std::vector<char>& in);
+  void getFile(std::vector<char>& data, std::string& out);
+
   ~Huffman();
 
 private:
