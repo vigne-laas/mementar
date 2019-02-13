@@ -1,6 +1,5 @@
 #include "mementar/lz/Huffman.h"
 
-#include <map>
 #include <iostream>
 #include <algorithm>
 
@@ -17,22 +16,24 @@ Huffman::~Huffman()
     delete it;
 }
 
-void Huffman::load(std::vector<char>& data)
+void Huffman::analyse(std::vector<char>& data)
 {
-  std::map<char, HuffNode_t*> tmp_map;
   for(const auto& c : data)
   {
-    auto it = tmp_map.find(c);
-    if(it == tmp_map.end())
+    auto it = leaf_map_.find(c);
+    if(it == leaf_map_.end())
     {
       HuffNode_t* leaf = new HuffNode_t(c);
       heap_.push_back(leaf);
-      tmp_map[c] = leaf;
+      leaf_map_[c] = leaf;
     }
     else
       it->second->freq_++;
   }
+}
 
+void Huffman::generateTree()
+{
   while(heap_.size() > 1)
   {
     std::sort(heap_.begin(), heap_.end(), comparePtrNode);
@@ -49,22 +50,6 @@ void Huffman::load(std::vector<char>& data)
   heap_[0]->code_.value_ = 0;
   heap_[0]->code_.size_ = 0;
   generateCode(heap_[0]);
-
-  BitFileGenerator bit(8, 8, 16);
-
-  for(auto it : tmp_map)
-  {
-    bit.writeType1(it.second->data_);
-    bit.writeType1(it.second->code_.size_);
-    bit.writeType1(it.second->code_.value_);
-  }
-
-  for(const auto& c : data)
-  {
-    auto it = tmp_map.find(c);
-    bit.writeN(it->second->code_.size_, it->second->code_.value_);
-  }
-  data = bit.get();
 }
 
 void Huffman::generateCode(HuffNode_t* node)
@@ -81,4 +66,32 @@ void Huffman::generateCode(HuffNode_t* node)
     node->left_->code_.size_ = node->code_.size_ + 1;
     generateCode(node->left_);
   }
+}
+
+void Huffman::getTreeCode(std::vector<char>& out)
+{
+  BitFileGenerator bit(8, 4, 13);
+  // //coding tree
+  bit.writeType1(leaf_map_.size());
+  for(auto it : leaf_map_)
+  {
+    bit.writeType1(it.second->data_);
+    bit.writeType2(it.second->code_.size_);
+    bit.writeType3(it.second->code_.value_);
+  }
+  std::vector<char> tmp = bit.get();
+  out.insert(out.begin(), tmp.begin(), tmp.end());
+}
+
+void Huffman::getDataCode(std::vector<char>& data, std::vector<char>& out)
+{
+  BitFileGenerator bit;
+
+  for(const auto& c : data)
+  {
+    auto it = leaf_map_.find(c);
+    bit.writeN(it->second->code_.size_, it->second->code_.value_);
+  }
+  std::vector<char> tmp = bit.get();
+  out.insert(out.begin(), tmp.begin(), tmp.end());
 }

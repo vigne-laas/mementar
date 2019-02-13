@@ -1,7 +1,5 @@
 #include "mementar/lz/LzCompress.h"
 
-#include "mementar/lz/Huffman.h"
-
 #include <iostream>
 #include <fstream>
 
@@ -127,10 +125,6 @@ void LzCompress::compress(std::string& in, const std::string& out)
   std::vector<char> out_vect = bit.get();
 
   std::cout << "Compression rate : " << (1 - (out_vect.size() / (float)in.size())) * 100.0f << std::endl;
-
-  /*Huffman huff;
-  huff.load(out_vect);
-  std::cout << "Compression rate : " << (1 - (out_vect.size() / (float)in.size())) * 100.0f << std::endl;*/
 
   std::ofstream outfile;
 	outfile.open(out + ".mlz", std::ios::binary | std::ios::out);

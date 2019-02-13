@@ -4,6 +4,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <map>
 
 struct HuffCode_t
 {
@@ -44,13 +45,16 @@ struct HuffNode_t
 class Huffman
 {
 public:
-  void load(std::vector<char>& data);
+  void analyse(std::vector<char>& data);
+  void generateTree();
+  void getTreeCode(std::vector<char>& out);
+  void getDataCode(std::vector<char>& data, std::vector<char>& out);
 
   ~Huffman();
 
 private:
   std::vector<HuffNode_t*> heap_;
-  std::vector<char> data_;
+  std::map<char, HuffNode_t*> leaf_map_;
 
   void generateCode(HuffNode_t* node);
 };
