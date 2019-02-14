@@ -8,7 +8,7 @@
 
 struct HuffCode_t
 {
-  uint16_t value_;
+  uint32_t value_;
   uint8_t size_;
 };
 

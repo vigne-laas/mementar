@@ -14,10 +14,10 @@ public:
   void setSize3(size_t size_3) { type_3_size_ = size_3; }
   void setSize4(size_t size_4) { type_4_size_ = size_4; }
 
-  uint16_t getType1();
-  uint16_t getType2();
-  uint16_t getType3();
-  uint16_t getType4();
+  uint32_t getType1();
+  uint32_t getType2();
+  uint32_t getType3();
+  uint32_t getType4();
   char getChar();
 
   bool getBit();

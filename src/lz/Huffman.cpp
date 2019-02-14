@@ -6,6 +6,22 @@
 #include "mementar/lz/BitFileGenerator.h"
 #include "mementar/lz/BitFileGetter.h"
 
+#define TREE_CHAR_SIZE 8
+#define TREE_VALUE_SIZE 5
+#define TREE_VALUE_SIZE_SIZE 25
+
+void print_tree(HuffNode_t* node)
+{
+  for(size_t i = 0; i < node->code_.size_; i++)
+    std::cout << " ";
+  std::cout << std::hex << node->code_.value_ << std::endl;
+
+  if(node->left_ != nullptr)
+    print_tree(node->left_);
+  if(node->right_ != nullptr)
+    print_tree(node->right_);
+}
+
 bool comparePtrNode(HuffNode_t* a, HuffNode_t* b)
 {
   return (a->freq_ < b->freq_);
@@ -83,7 +99,7 @@ void Huffman::generateCode(HuffNode_t* node)
 
 void Huffman::getTreeCode(std::vector<char>& out)
 {
-  BitFileGenerator bit(8, 4, 13);
+  BitFileGenerator bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
   // //coding tree
   bit.writeType1(leaf_map_.size() >> 0);
   bit.writeType1(leaf_map_.size() >> 8);
@@ -122,7 +138,7 @@ void Huffman::getDataCode(std::vector<char>& data, std::vector<char>& out)
 
 size_t Huffman::setTree(std::vector<char>& in)
 {
-  BitFileGetter bit(8, 4, 13);
+  BitFileGetter bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
   bit.set(in);
 
   char size1 = bit.getType1();
@@ -142,17 +158,17 @@ size_t Huffman::setTree(std::vector<char>& in)
   while(heap_.size() > 1)
   {
     HuffNode_t* tmp_node = new HuffNode_t;
-    tmp_node->left_ = heap_[0];
-    tmp_node->right_ = heap_[1];
+    tmp_node->left_ = heap_[1];
+    tmp_node->right_ = heap_[0];
     tmp_node->code_.size_ = heap_[0]->code_.size_ - 1;
-    tmp_node->code_.value_ = (heap_[0]->code_.value_ >> 1) & 0xefff;
+    tmp_node->code_.value_ = (heap_[0]->code_.value_ >> 1) & 0xefffffff;
     heap_.erase(heap_.begin());
     heap_.erase(heap_.begin());
     heap_.push_back(tmp_node);
     std::sort(heap_.begin(), heap_.end(), comparePtrNodeByCode);
   }
 
-  size_t tree_bit_size = (2*8 + nb_leaf*(8 + 4 + 13));
+  size_t tree_bit_size = (2*8 + nb_leaf*(TREE_CHAR_SIZE + TREE_VALUE_SIZE + TREE_VALUE_SIZE_SIZE));
   if(tree_bit_size % 8)
     return tree_bit_size / 8 + 1;
   else
@@ -172,12 +188,13 @@ void Huffman::getFile(std::vector<char>& data, std::string& out)
   char size4 = bit.getType1();
 
   out_file_size = ((size4 << 24)&0xff000000) | ((size3 << 16)&0x00ff0000) | ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+
   while(out.size() < out_file_size)
   {
     HuffNode_t* node = heap_[0];
     while(node->right_ != nullptr)
     {
-      if(bit.getBit())
+      if(!bit.getBit())
         node = node->right_;
       else
         node = node->left_;

@@ -13,7 +13,7 @@ BitFileGenerator::BitFileGenerator(size_t size_1, size_t size_2, size_t size_3, 
   data_.push_back(0x00);
 }
 
-void BitFileGenerator::writeType1(uint16_t value)
+void BitFileGenerator::writeType1(uint32_t value)
 {
   int16_t to_add = type_1_size_;
   for(size_t i = 0; i < type_1_size_;)
@@ -36,7 +36,7 @@ void BitFileGenerator::writeType1(uint16_t value)
   }
 }
 
-void BitFileGenerator::writeType2(uint16_t value)
+void BitFileGenerator::writeType2(uint32_t value)
 {
   int16_t to_add = type_2_size_;
   for(size_t i = 0; i < type_2_size_;)
@@ -59,7 +59,7 @@ void BitFileGenerator::writeType2(uint16_t value)
   }
 }
 
-void BitFileGenerator::writeType3(uint16_t value)
+void BitFileGenerator::writeType3(uint32_t value)
 {
   int16_t to_add = type_3_size_;
   for(size_t i = 0; i < type_3_size_;)
@@ -82,7 +82,7 @@ void BitFileGenerator::writeType3(uint16_t value)
   }
 }
 
-void BitFileGenerator::writeType4(uint16_t value)
+void BitFileGenerator::writeType4(uint32_t value)
 {
   int16_t to_add = type_4_size_;
   for(size_t i = 0; i < type_4_size_;)
@@ -105,7 +105,7 @@ void BitFileGenerator::writeType4(uint16_t value)
   }
 }
 
-void BitFileGenerator::writeN(size_t size, uint16_t value)
+void BitFileGenerator::writeN(size_t size, uint32_t value)
 {
   int16_t to_add = size;
   for(size_t i = 0; i < size;)
