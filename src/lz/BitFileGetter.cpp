@@ -19,8 +19,8 @@ uint32_t BitFileGetter::getType1()
   int16_t to_get = type_1_size_;
   for(size_t i = 0; i < type_1_size_;)
   {
-    uint32_t working_data = (data_[major_index_] & 0x00ff) >> minor_index_;
-    res = res | ((working_data & ~((0xffff) << to_get)) << (type_1_size_ - to_get));
+    uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
+    res = res | ((working_data & ~((0xffffffff) << to_get)) << (type_1_size_ - to_get));
 
     uint8_t getted = (minor_index_ + to_get >= 8) ? 8 - minor_index_ : to_get;
     i += getted;
@@ -51,8 +51,8 @@ uint32_t BitFileGetter::getType2()
   int16_t to_get = type_2_size_;
   for(size_t i = 0; i < type_2_size_;)
   {
-    uint32_t working_data = (data_[major_index_] & 0x00ff) >> minor_index_;
-    res = res | ((working_data & ~((0xffff) << to_get)) << (type_2_size_ - to_get));
+    uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
+    res = res | ((working_data & ~((0xffffffff) << to_get)) << (type_2_size_ - to_get));
 
     uint8_t getted = (minor_index_ + to_get >= 8) ? 8 - minor_index_ : to_get;
     i += getted;
@@ -83,8 +83,8 @@ uint32_t BitFileGetter::getType3()
   int16_t to_get = type_3_size_;
   for(size_t i = 0; i < type_3_size_;)
   {
-    uint32_t working_data = (data_[major_index_] & 0x00ff) >> minor_index_;
-    res = res | ((working_data & ~((0xffff) << to_get)) << (type_3_size_ - to_get));
+    uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
+    res = res | ((working_data & ~((0xffffffff) << to_get)) << (type_3_size_ - to_get));
 
     uint8_t getted = (minor_index_ + to_get >= 8) ? 8 - minor_index_ : to_get;
     i += getted;
@@ -115,8 +115,8 @@ uint32_t BitFileGetter::getType4()
   int16_t to_get = type_4_size_;
   for(size_t i = 0; i < type_4_size_;)
   {
-    uint32_t working_data = (data_[major_index_] & 0x00ff) >> minor_index_;
-    res = res | ((working_data & ~((0xffff) << to_get)) << (type_4_size_ - to_get));
+    uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
+    res = res | ((working_data & ~((0xffffffff) << to_get)) << (type_4_size_ - to_get));
 
     uint8_t getted = (minor_index_ + to_get >= 8) ? 8 - minor_index_ : to_get;
     i += getted;
@@ -147,8 +147,8 @@ char BitFileGetter::getChar()
   int16_t to_get = 7;
   for(size_t i = 0; i < 7;)
   {
-    uint32_t working_data = (data_[major_index_] & 0x00ff) >> minor_index_;
-    res = res | ((working_data & ~((0xffff) << to_get)) << (7 - to_get));
+    uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
+    res = res | ((working_data & ~((0xffffffff) << to_get)) << (7 - to_get));
 
     uint8_t getted = (minor_index_ + to_get >= 8) ? 8 - minor_index_ : to_get;
     i += getted;
@@ -177,7 +177,7 @@ bool BitFileGetter::getBit()
 {
   bool res = false;
 
-  uint32_t working_data = (data_[major_index_] & 0x00ff) >> minor_index_;
+  uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
   res = working_data & 0x01;
 
   minor_index_ ++;

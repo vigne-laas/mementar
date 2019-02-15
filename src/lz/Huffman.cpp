@@ -7,8 +7,8 @@
 #include "mementar/lz/BitFileGetter.h"
 
 #define TREE_CHAR_SIZE 8
-#define TREE_VALUE_SIZE 7
-#define TREE_VALUE_SIZE_SIZE 32
+#define TREE_VALUE_SIZE 6
+#define TREE_VALUE_SIZE_SIZE 31 //do not go over 31
 
 void print_tree(HuffNode_t* node)
 {
@@ -101,8 +101,8 @@ void Huffman::getTreeCode(std::vector<char>& out)
 {
   BitFileGenerator bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
   // //coding tree
-  bit.writeType1(leaf_map_.size() >> 0);
-  bit.writeType1(leaf_map_.size() >> 8);
+  bit.writeType1((leaf_map_.size() >> 0) & 0x000000ff);
+  bit.writeType1((leaf_map_.size() >> 8) & 0x000000ff);
 
   for(auto it : leaf_map_)
   {
@@ -118,10 +118,10 @@ void Huffman::getDataCode(std::vector<char>& data, std::vector<char>& out)
 {
   BitFileGenerator bit(8);
 
-  bit.writeType1((data.size() >> 0) & 0xff);
-  bit.writeType1((data.size() >> 8) & 0xff);
-  bit.writeType1((data.size() >> 16) & 0xff);
-  bit.writeType1((data.size() >> 24) & 0xff);
+  bit.writeType1((data.size() >> 0) & 0x000000ff);
+  bit.writeType1((data.size() >> 8) & 0x000000ff);
+  bit.writeType1((data.size() >> 16) & 0x000000ff);
+  bit.writeType1((data.size() >> 24) & 0x000000ff);
 
   for(const auto& c : data)
   {

@@ -18,7 +18,7 @@ void BitFileGenerator::writeType1(uint32_t value)
   int16_t to_add = type_1_size_;
   for(size_t i = 0; i < type_1_size_;)
   {
-    data_[major_index_] = data_[major_index_] | (value << minor_index_);
+    data_[major_index_] = data_[major_index_] | ((value & ~(0xffffffff << to_add)) << minor_index_);
 
     uint8_t added = 8 - minor_index_;
     i += added;
@@ -41,7 +41,7 @@ void BitFileGenerator::writeType2(uint32_t value)
   int16_t to_add = type_2_size_;
   for(size_t i = 0; i < type_2_size_;)
   {
-    data_[major_index_] = data_[major_index_] | (value << minor_index_);
+    data_[major_index_] = data_[major_index_] | ((value & ~(0xffffffff << to_add)) << minor_index_);
 
     uint8_t added = 8 - minor_index_;
     i += added;
@@ -64,7 +64,7 @@ void BitFileGenerator::writeType3(uint32_t value)
   int16_t to_add = type_3_size_;
   for(size_t i = 0; i < type_3_size_;)
   {
-    data_[major_index_] = data_[major_index_] | (value << minor_index_);
+    data_[major_index_] = data_[major_index_] | ((value & ~(0xffffffff << to_add)) << minor_index_);
 
     uint8_t added = 8 - minor_index_;
     i += added;
@@ -87,7 +87,7 @@ void BitFileGenerator::writeType4(uint32_t value)
   int16_t to_add = type_4_size_;
   for(size_t i = 0; i < type_4_size_;)
   {
-    data_[major_index_] = data_[major_index_] | (value << minor_index_);
+    data_[major_index_] = data_[major_index_] | ((value & ~(0xffffffff << to_add)) << minor_index_);
 
     uint8_t added = 8 - minor_index_;
     i += added;
@@ -110,7 +110,7 @@ void BitFileGenerator::writeN(size_t size, uint32_t value)
   int16_t to_add = size;
   for(size_t i = 0; i < size;)
   {
-    data_[major_index_] = data_[major_index_] | (value << minor_index_);
+    data_[major_index_] = data_[major_index_] | ((value & ~(0xffffffff << to_add)) << minor_index_);
 
     uint8_t added = 8 - minor_index_;
     i += added;
@@ -133,7 +133,7 @@ void BitFileGenerator::writeChar(char value)
   int16_t to_add = 7;
   for(size_t i = 0; i < 7;)
   {
-    data_[major_index_] = data_[major_index_] | (value << minor_index_);
+    data_[major_index_] = data_[major_index_] | ((value & ~(0xffffffff << to_add)) << minor_index_);
 
     uint8_t added = 8 - minor_index_;
     i += added;
