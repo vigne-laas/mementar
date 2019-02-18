@@ -6,9 +6,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "mementar/lz/BitFileGetter.h"
-#include "mementar/lz/LzUncompress.h"
-#include "mementar/lz/Huffman.h"
+#include "mementar/compressing/LzCompress.h"
+#include "mementar/compressing/Huffman.h"
 
 using namespace std::chrono;
 
@@ -78,44 +77,46 @@ int main (int argc, char* argv[])
     return -1;
   }
 
-  std::string out;
+  std::ifstream t(input_file);
+  //std::ifstream t("../tests_files/syslog");
+  //std::ifstream t("/home/gsarthou/Downloads/owl-export-unversioned.owl");
+  std::string in((std::istreambuf_iterator<char>(t)),
+                   std::istreambuf_iterator<char>());
+
+  //std::string in = "veridique ! dominique pique nique en tunique.";
 
   ///////////////////////////////////////////////////////////////////
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
   if(code_type == lz77)
   {
-    LzUncompress lz;
-    std::vector<char> data;
-    if(lz.readBinaryFile(data, input_file))
-      lz.uncompress(data, out);
+    LzCompress lz_comp;
+    std::vector<char> out_vect;
+  	lz_comp.compress(in, out_vect);
+
+    lz_comp.displayCompressionRate(in.size(), out_vect.size());
+    lz_comp.saveToFile(out_vect, output_file);
   }
   else if(code_type == huffman)
   {
+    std::vector<char> in_vect(in.begin(), in.end());
+
     Huffman huff;
-    std::vector<char> data;
-    if(huff.readBinaryFile(data, input_file))
-    {
-      size_t tree_size = huff.setTree(data);
-      data = std::vector<char>(data.begin() + tree_size, data.end());
-      huff.getFile(data, out);
-    }
+    huff.analyse(in_vect);
+    huff.generateTree();
+    std::vector<char> out_vect;
+    huff.getTreeCode(out_vect);
+    huff.getDataCode(in_vect, out_vect);
+
+    huff.displayCompressionRate(in.size(), out_vect.size());
+    huff.saveToFile(out_vect, output_file);
   }
 
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
   ///////////////////////////////////////////////////////////////////
 
-  std::ofstream myfile;
-  myfile.open (output_file);
-  myfile << out;
-  myfile.close();
-
-  //std::cout << out << std::endl;
-
   std::cout << "time = " << time_span.count() << "s" << std::endl;
 
   return 0;
 }
-
-//’

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "mementar/lz/Compressor.h"
+#include "mementar/compressing/Compressor.h"
 
 struct HuffCode_t
 {

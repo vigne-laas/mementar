@@ -1,4 +1,4 @@
-#include "mementar/lz/LzUncompress.h"
+#include "mementar/compressing/LzUncompress.h"
 
 #include <iostream>
 #include <fstream>

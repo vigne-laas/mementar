@@ -8,15 +8,15 @@ include_directories(
 )
 
 add_library(mementar_compression_lib
-  src/lz/LzCompress.cpp
-  src/lz/LzUncompress.cpp
-  src/lz/BitFileGenerator.cpp
-  src/lz/BitFileGetter.cpp
-  src/lz/Huffman.cpp
+  src/compressing/LzCompress.cpp
+  src/compressing/LzUncompress.cpp
+  src/compressing/BitFileGenerator.cpp
+  src/compressing/BitFileGetter.cpp
+  src/compressing/Huffman.cpp
 )
 
-add_executable(compress src/compress.cpp)
+add_executable(compress src/tests/compress.cpp)
 target_link_libraries(compress mementar_compression_lib)
 
-add_executable(uncompress src/uncompress.cpp)
+add_executable(uncompress src/tests/uncompress.cpp)
 target_link_libraries(uncompress mementar_compression_lib)

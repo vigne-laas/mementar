@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "mementar/lz/BitFileGenerator.h"
-#include "mementar/lz/Compressor.h"
+#include "mementar/compressing/BitFileGenerator.h"
+#include "mementar/compressing/Compressor.h"
 
 class LzCompress : public Compressor
 {
