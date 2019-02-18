@@ -38,54 +38,11 @@ void LzCompress::compress(std::string& in, const std::string& out)
   size_t la_index = 1;
   size_t i = -1;
 
-  size_t min_size = (in_size < search_size_) ? in_size : search_size_;
-
-  while (cursor < min_size)
-  {
-    length = 1;
-    char c_tmp = in[cursor];
-    for(i = 0; i < cursor; i++)
-    {
-      if(in[i] == c_tmp)
-      {
-        tmp_length = 1;
-        search_index = i + 1;
-        la_index = cursor + 1;
-        while((in[search_index] == in[la_index]) && (tmp_length < la_size_1_) && (search_index < cursor))
-        {
-          tmp_length++;
-          search_index++;
-          la_index++;
-        }
-
-        if(tmp_length > length)
-        {
-          length = tmp_length;
-          index = i;
-        }
-      }
-    }
-
-    if(length > 1)
-    {
-      bit.writeBitTrue();
-      bit.writeType1(cursor - index);
-      bit.writeType2(length);
-    }
-    else
-    {
-      bit.writeBitFalse();
-      bit.writeChar(c_tmp);
-    }
-
-    cursor += length;
-  }
-
   while (cursor < in_size)
   {
     length = 1;
     char c_tmp = in[cursor];
-    for(i = cursor - search_size_1_; i < cursor; i++)
+    for(i = std::max(cursor - search_size_1_, size_t{0}); i < cursor; i++)
     {
       if(in[i] == c_tmp)
       {
@@ -138,7 +95,7 @@ void LzCompress::compress(std::string& in, const std::string& out)
 int LzCompress::neededBitCount(size_t max_value)
 {
   int nb_bit = 1;
-  int tmp_max = 2;
+  size_t tmp_max = 2;
   while(tmp_max < max_value)
   {
     tmp_max = tmp_max<<1;

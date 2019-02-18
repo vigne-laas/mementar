@@ -7,7 +7,7 @@
 class BitFileGenerator
 {
 public:
-  BitFileGenerator(size_t size_1 = 0, size_t size_2 = 0, size_t size_3 = 0, size_t size_4 = 0);
+  BitFileGenerator(uint8_t size_1 = 0, uint8_t size_2 = 0, uint8_t size_3 = 0, uint8_t size_4 = 0);
 
   void writeType1(uint32_t value);
   void writeType2(uint32_t value);
@@ -24,12 +24,12 @@ public:
 private:
   std::vector<char> data_;
   size_t major_index_;
-  size_t minor_index_;
+  uint8_t minor_index_;
 
-  size_t type_1_size_;
-  size_t type_2_size_;
-  size_t type_3_size_;
-  size_t type_4_size_;
+  uint8_t type_1_size_;
+  uint8_t type_2_size_;
+  uint8_t type_3_size_;
+  uint8_t type_4_size_;
 };
 
 #endif // BITFILEGENERATOR_H

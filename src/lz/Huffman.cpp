@@ -123,11 +123,11 @@ void Huffman::getDataCode(std::vector<char>& data, std::vector<char>& out)
   bit.writeType1((data.size() >> 16) & 0x000000ff);
   bit.writeType1((data.size() >> 24) & 0x000000ff);
 
-  for(const auto& c : data)
+  for(auto c : data)
   {
-    auto it = leaf_map_.find(c);
-    for(size_t i = 1; i <= it->second->code_.size_; i++)
-      if((it->second->code_.value_ >> (it->second->code_.size_ - i)) & 0x01)
+    auto& code = leaf_map_.find(c)->second->code_;
+    for(uint32_t i = 1 << (code.size_ - 1); i > 0; i >>= 1)
+      if(code.value_ & i)
         bit.writeBitTrue();
       else
         bit.writeBitFalse();

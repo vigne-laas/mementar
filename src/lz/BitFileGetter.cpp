@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-BitFileGetter::BitFileGetter(size_t size_1, size_t size_2, size_t size_3, size_t size_4)
+BitFileGetter::BitFileGetter(uint32_t size_1, uint32_t size_2, uint32_t size_3, uint32_t size_4)
 {
   type_1_size_ = size_1;
   type_2_size_ = size_2;
@@ -16,7 +16,7 @@ BitFileGetter::BitFileGetter(size_t size_1, size_t size_2, size_t size_3, size_t
 uint32_t BitFileGetter::getType1()
 {
   uint32_t res = 0;
-  int16_t to_get = type_1_size_;
+  int8_t to_get = type_1_size_;
   while(true)
   {
     uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
@@ -48,7 +48,7 @@ uint32_t BitFileGetter::getType1()
 uint32_t BitFileGetter::getType2()
 {
   uint32_t res = 0;
-  int16_t to_get = type_2_size_;
+  int8_t to_get = type_2_size_;
   while(true)
   {
     uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
@@ -80,7 +80,7 @@ uint32_t BitFileGetter::getType2()
 uint32_t BitFileGetter::getType3()
 {
   uint32_t res = 0;
-  int16_t to_get = type_3_size_;
+  int8_t to_get = type_3_size_;
   while(true)
   {
     uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
@@ -112,7 +112,7 @@ uint32_t BitFileGetter::getType3()
 uint32_t BitFileGetter::getType4()
 {
   uint32_t res = 0;
-  int16_t to_get = type_4_size_;
+  int8_t to_get = type_4_size_;
   while(true)
   {
     uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;
@@ -144,7 +144,7 @@ uint32_t BitFileGetter::getType4()
 char BitFileGetter::getChar()
 {
   char res = 0;
-  int16_t to_get = 7;
+  int8_t to_get = 7;
   while(true)
   {
     uint32_t working_data = (data_[major_index_] & 0x000000ff) >> minor_index_;

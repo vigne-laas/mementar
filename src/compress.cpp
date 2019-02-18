@@ -24,7 +24,7 @@ int main (int argc, char* argv[])
   std::string output_file = "";
   code_t code_type = other_code;
 
-  for(size_t i = 1; i < argc; i++)
+  for(int i = 1; i < argc; i++)
   {
     if(std::string(argv[i]) == "-i")
     {
