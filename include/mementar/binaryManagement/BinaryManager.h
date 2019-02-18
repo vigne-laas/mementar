@@ -1,15 +1,15 @@
-#ifndef COMPRESSOR_H
-#define COMPRESSOR_H
+#ifndef BINARYMANAGER_H
+#define BINARYMANAGER_H
 
 #include <iostream>
 #include <fstream>
 #include <streambuf>
 #include <vector>
 
-class Compressor
+class BinaryManager
 {
 public:
-  Compressor(std::string extension)
+  BinaryManager(std::string extension)
   {
     extension_ = extension;
   }
@@ -46,4 +46,4 @@ private:
   std::string extension_;
 };
 
-#endif // COMPRESSOR_H
+#endif // BINARYMANAGER_H

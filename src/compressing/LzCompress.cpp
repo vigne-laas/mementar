@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-LzCompress::LzCompress(size_t search_size, size_t la_size) : Compressor("mlz"), bit(neededBitCount(search_size), neededBitCount(la_size), 8)
+LzCompress::LzCompress(size_t search_size, size_t la_size) : BinaryManager("mlz"), bit(neededBitCount(search_size), neededBitCount(la_size), 8)
 {
   // la_size_ <= search_size_
   search_size_ = search_size;

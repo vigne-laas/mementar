@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "mementar/compressing/Compressor.h"
+#include "mementar/binaryManagement/BinaryManager.h"
 
 struct HuffCode_t
 {
@@ -43,7 +43,7 @@ struct HuffNode_t
   }
 };
 
-class Huffman : public Compressor
+class Huffman : public BinaryManager
 {
 public:
   void analyse(std::vector<char>& data);

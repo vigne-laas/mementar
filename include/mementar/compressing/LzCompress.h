@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "mementar/compressing/BitFileGenerator.h"
-#include "mementar/compressing/Compressor.h"
+#include "mementar/binaryManagement/BitFileGenerator.h"
+#include "mementar/binaryManagement/BinaryManager.h"
 
-class LzCompress : public Compressor
+class LzCompress : public BinaryManager
 {
 public:
   LzCompress(size_t search_size = 2048, size_t la_size = 64);

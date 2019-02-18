@@ -1,4 +1,4 @@
-#include "mementar/compressing/BitFileGenerator.h"
+#include "mementar/binaryManagement/BitFileGenerator.h"
 
 BitFileGenerator::BitFileGenerator(uint8_t size_1, uint8_t size_2, uint8_t size_3, uint8_t size_4)
 {

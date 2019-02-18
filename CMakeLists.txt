@@ -8,10 +8,10 @@ include_directories(
 )
 
 add_library(mementar_compression_lib
+  src/binaryManagement/BitFileGenerator.cpp
+  src/binaryManagement/BitFileGetter.cpp
   src/compressing/LzCompress.cpp
   src/compressing/LzUncompress.cpp
-  src/compressing/BitFileGenerator.cpp
-  src/compressing/BitFileGetter.cpp
   src/compressing/Huffman.cpp
 )
 

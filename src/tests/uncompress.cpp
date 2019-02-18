@@ -6,7 +6,6 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "mementar/compressing/BitFileGetter.h"
 #include "mementar/compressing/LzUncompress.h"
 #include "mementar/compressing/Huffman.h"
 

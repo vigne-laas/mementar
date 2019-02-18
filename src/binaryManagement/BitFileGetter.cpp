@@ -1,4 +1,4 @@
-#include "mementar/compressing/BitFileGetter.h"
+#include "mementar/binaryManagement/BitFileGetter.h"
 
 #include <iostream>
 

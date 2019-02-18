@@ -4,7 +4,7 @@
 #include <fstream>
 #include <math.h>
 
-LzUncompress::LzUncompress() : Compressor("mlz"), bit(0, 0, 8)
+LzUncompress::LzUncompress() : BinaryManager("mlz"), bit(0, 0, 8)
 {
   // la_size_ <= search_size_
   search_size_ = 0;

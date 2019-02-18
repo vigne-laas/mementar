@@ -3,8 +3,8 @@
 #include <iostream>
 #include <algorithm>
 
-#include "mementar/compressing/BitFileGenerator.h"
-#include "mementar/compressing/BitFileGetter.h"
+#include "mementar/binaryManagement/BitFileGenerator.h"
+#include "mementar/binaryManagement/BitFileGetter.h"
 
 #define TREE_CHAR_SIZE 8
 #define TREE_VALUE_SIZE 6
@@ -39,7 +39,7 @@ bool comparePtrNodeByCode(HuffNode_t* a, HuffNode_t* b)
     return false;
 }
 
-Huffman::Huffman() : Compressor("mhu")
+Huffman::Huffman() : BinaryManager("mhu")
 {
 
 }
