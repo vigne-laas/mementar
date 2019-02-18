@@ -1,6 +1,7 @@
 #include "mementar/archiving/Archive.h"
 
 #include "mementar/compressing/LzCompress.h"
+#include "mementar/compressing/LzUncompress.h"
 #include "mementar/compressing/Huffman.h"
 
 Archive::Archive(std::string& description, std::vector<std::string>& files) : BinaryManager("mar")
@@ -52,7 +53,7 @@ void Archive::load(std::vector<char>& out)
   {
     huff.getDataCode(input_files[i], out_vect);
     out.insert(out.end(), out_vect.begin(), out_vect.end());
-    header.input_files_[i].offset_ = offset;
+    header.input_files_[i].offset_ += offset;
     offset += out_vect.size();
     header.input_files_[i].size_ = out_vect.size();
     out_vect = std::vector<char>();
@@ -66,4 +67,13 @@ Header Archive::getHeader(std::vector<char>& data)
 {
   header.decode(data);
   return header;
+}
+
+std::string Archive::extractDescription(Header& head, std::vector<char>& data)
+{
+  std::string out;
+  LzUncompress lz;
+  std::vector<char> tmp_data(data.begin() + head.description_file_.offset_, data.begin() + head.description_file_.offset_ + head.description_file_.size_);
+  lz.uncompress(tmp_data, out);
+  return out;
 }

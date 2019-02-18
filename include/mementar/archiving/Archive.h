@@ -13,6 +13,8 @@ public:
   void load(std::vector<char>& out);
   Header getHeader(std::vector<char>& data);
 
+  std::string extractDescription(Header& head, std::vector<char>& data);
+
 private:
   Header header;
   std::string description_;

@@ -107,7 +107,11 @@ int main (int argc, char* argv[])
   }
   else if(action == act_extract)
   {
-    std::cout << "i will extract the content" << std::endl;
+    Archive arch;
+    std::vector<char> data;
+    arch.readBinaryFile(data, input_files[0]);
+    Header header = arch.getHeader(data);
+    std::cout << arch.extractDescription(header, data) << std::endl;
   }
   else if(action == act_list)
   {
