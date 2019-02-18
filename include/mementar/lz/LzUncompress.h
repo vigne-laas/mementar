@@ -2,13 +2,14 @@
 #define LZUNCOMPRESS_H
 
 #include "mementar/lz/BitFileGetter.h"
+#include "mementar/lz/Compressor.h"
 
-class LzUncompress
+class LzUncompress : public Compressor
 {
 public:
   LzUncompress();
 
-  void uncompress(const std::string& in, std::string& out);
+  void uncompress(std::vector<char>& data, std::string& out);
 
 private:
   size_t search_size_;

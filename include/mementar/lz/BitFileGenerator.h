@@ -20,6 +20,7 @@ public:
   void writeBitFalse();
 
   std::vector<char> get() { return data_; }
+  void get(std::vector<char>& out) { out = data_; }
 
 private:
   std::vector<char> data_;

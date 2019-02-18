@@ -5,13 +5,14 @@
 #include <vector>
 
 #include "mementar/lz/BitFileGenerator.h"
+#include "mementar/lz/Compressor.h"
 
-class LzCompress
+class LzCompress : public Compressor
 {
 public:
   LzCompress(size_t search_size = 2048, size_t la_size = 64);
 
-  void compress(std::string& in, const std::string& out);
+  void compress(std::string& in, std::vector<char>& out);
 
 private:
   size_t search_size_;

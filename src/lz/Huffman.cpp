@@ -39,6 +39,11 @@ bool comparePtrNodeByCode(HuffNode_t* a, HuffNode_t* b)
     return false;
 }
 
+Huffman::Huffman() : Compressor("mhu")
+{
+
+}
+
 Huffman::~Huffman()
 {
   for(auto it : heap_)
@@ -104,13 +109,14 @@ void Huffman::getTreeCode(std::vector<char>& out)
   bit.writeType1((leaf_map_.size() >> 0) & 0x000000ff);
   bit.writeType1((leaf_map_.size() >> 8) & 0x000000ff);
 
-  for(auto it : leaf_map_)
+  for(const auto& it : leaf_map_)
   {
     bit.writeType1(it.second->data_);
     bit.writeType2(it.second->code_.size_);
     bit.writeType3(it.second->code_.value_);
   }
-  std::vector<char> tmp = bit.get();
+  std::vector<char> tmp;
+  bit.get(tmp);
   out.insert(out.end(), tmp.begin(), tmp.end());
 }
 
@@ -191,10 +197,10 @@ void Huffman::getFile(std::vector<char>& data, std::string& out)
     HuffNode_t* node = heap_[0];
     while(node->right_ != nullptr)
     {
-      if(!bit.getBit())
-        node = node->right_;
-      else
+      if(bit.getBit())
         node = node->left_;
+      else
+        node = node->right_;
     }
     out.push_back(node->data_);
   }

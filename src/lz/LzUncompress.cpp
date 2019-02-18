@@ -4,56 +4,48 @@
 #include <fstream>
 #include <math.h>
 
-LzUncompress::LzUncompress() : bit(0, 0, 8)
+LzUncompress::LzUncompress() : Compressor("mlz"), bit(0, 0, 8)
 {
   // la_size_ <= search_size_
   search_size_ = 0;
   la_size_ = 0;
 }
 
-void LzUncompress::uncompress(const std::string& in, std::string& out)
+void LzUncompress::uncompress(std::vector<char>& data, std::string& out)
 {
-	std::ifstream infile(in, std::ios::binary | std::ios::ate);
-  std::streamsize size = infile.tellg();
-  infile.seekg(0, std::ios::beg);
+  bit.set(data);
 
-  std::vector<char> buffer(size);
-  if(infile.read(buffer.data(), size))
+  size_t offset = 0;
+  size_t length = 0;
+
+  size_t out_file_size = 0;
+  char size1 = bit.getType3();
+  char size2 = bit.getType3();
+  char size3 = bit.getType3();
+  char size4 = bit.getType3();
+
+  out_file_size = ((size4 << 24)&0xff000000) | ((size3 << 16)&0x00ff0000) | ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+
+  size1 = bit.getType3();
+  size2 = bit.getType3();
+  search_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+  bit.setSize1(neededBitCount(search_size_));
+
+  size1 = bit.getType3();
+  size2 = bit.getType3();
+  la_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+  bit.setSize2(neededBitCount(la_size_));
+
+  while(out.size() < out_file_size)
   {
-    bit.set(buffer);
-
-    size_t offset = 0;
-    size_t length = 0;
-
-    size_t out_file_size = 0;
-    char size1 = bit.getType3();
-    char size2 = bit.getType3();
-    char size3 = bit.getType3();
-    char size4 = bit.getType3();
-
-    out_file_size = ((size4 << 24)&0xff000000) | ((size3 << 16)&0x00ff0000) | ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
-
-    size1 = bit.getType3();
-    size2 = bit.getType3();
-    search_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
-    bit.setSize1(neededBitCount(search_size_));
-
-    size1 = bit.getType3();
-    size2 = bit.getType3();
-    la_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
-    bit.setSize2(neededBitCount(la_size_));
-
-    while(out.size() < out_file_size)
+    if(bit.getBit())
     {
-      if(bit.getBit())
-      {
-        offset = bit.getType1();
-        length = bit.getType2();
-        out += out.substr(out.size() - offset, length);
-      }
-      else
-        out.push_back(bit.getChar());
+      offset = bit.getType1();
+      length = bit.getType2();
+      out += out.substr(out.size() - offset, length);
     }
+    else
+      out.push_back(bit.getChar());
   }
 }
 

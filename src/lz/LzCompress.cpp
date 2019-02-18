@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 
-LzCompress::LzCompress(size_t search_size, size_t la_size) : bit(neededBitCount(search_size), neededBitCount(la_size), 8)
+LzCompress::LzCompress(size_t search_size, size_t la_size) : Compressor("mlz"), bit(neededBitCount(search_size), neededBitCount(la_size), 8)
 {
   // la_size_ <= search_size_
   search_size_ = search_size;
@@ -12,7 +12,7 @@ LzCompress::LzCompress(size_t search_size, size_t la_size) : bit(neededBitCount(
   la_size_1_ = la_size_ - 1;
 }
 
-void LzCompress::compress(std::string& in, const std::string& out)
+void LzCompress::compress(std::string& in, std::vector<char>& out)
 {
   size_t in_size = in.size();
 
@@ -79,17 +79,7 @@ void LzCompress::compress(std::string& in, const std::string& out)
     cursor += length;
   }
 
-  std::vector<char> out_vect = bit.get();
-
-  std::cout << "Compression rate : " << (1 - (out_vect.size() / (float)in.size())) * 100.0f << std::endl;
-
-  std::ofstream outfile;
-	outfile.open(out + ".mlz", std::ios::binary | std::ios::out);
-  std::string str(out_vect.begin(), out_vect.end());
-	outfile.write(str.c_str(), str.length());
-	outfile.close();
-
-  std::cout << "Saved into " << out << ".mlz" << std::endl;
+  bit.get(out);
 }
 
 int LzCompress::neededBitCount(size_t max_value)

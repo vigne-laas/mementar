@@ -91,7 +91,11 @@ int main (int argc, char* argv[])
   if(code_type == lz77)
   {
     LzCompress lz_comp;
-  	lz_comp.compress(in, output_file);
+    std::vector<char> out_vect;
+  	lz_comp.compress(in, out_vect);
+
+    lz_comp.displayCompressionRate(in.size(), out_vect.size());
+    lz_comp.saveToFile(out_vect, output_file);
   }
   else if(code_type == huffman)
   {
@@ -103,15 +107,9 @@ int main (int argc, char* argv[])
     std::vector<char> out_vect;
     huff.getTreeCode(out_vect);
     huff.getDataCode(in_vect, out_vect);
-    std::cout << "Compression rate : " << (1 - (out_vect.size() / (float)in.size())) * 100.0f << std::endl;
 
-    std::ofstream outfile;
-  	outfile.open(output_file + ".mhu", std::ios::binary | std::ios::out);
-    std::string str(out_vect.begin(), out_vect.end());
-  	outfile.write(str.c_str(), str.length());
-  	outfile.close();
-
-    std::cout << "Saved into " << output_file << ".mhu" << std::endl;
+    huff.displayCompressionRate(in.size(), out_vect.size());
+    huff.saveToFile(out_vect, output_file);
   }
 
   high_resolution_clock::time_point t2 = high_resolution_clock::now();

@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "mementar/lz/Compressor.h"
 
 struct HuffCode_t
 {
@@ -42,7 +43,7 @@ struct HuffNode_t
   }
 };
 
-class Huffman
+class Huffman : public Compressor
 {
 public:
   void analyse(std::vector<char>& data);
@@ -53,6 +54,7 @@ public:
   size_t setTree(std::vector<char>& in);
   void getFile(std::vector<char>& data, std::string& out);
 
+  Huffman();
   ~Huffman();
 
 private:

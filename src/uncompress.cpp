@@ -86,21 +86,19 @@ int main (int argc, char* argv[])
   if(code_type == lz77)
   {
     LzUncompress lz;
-    lz.uncompress(input_file, out);
+    std::vector<char> data;
+    if(lz.readBinaryFile(data, input_file))
+      lz.uncompress(data, out);
   }
   else if(code_type == huffman)
   {
-    std::ifstream infile(input_file, std::ios::binary | std::ios::ate);
-    std::streamsize size = infile.tellg();
-    infile.seekg(0, std::ios::beg);
-
-    std::vector<char> buffer(size);
-    if(infile.read(buffer.data(), size))
+    Huffman huff;
+    std::vector<char> data;
+    if(huff.readBinaryFile(data, input_file))
     {
-      Huffman huff;
-      size_t tree_size = huff.setTree(buffer);
-      buffer = std::vector<char>(buffer.begin() + tree_size, buffer.end());
-      huff.getFile(buffer, out);
+      size_t tree_size = huff.setTree(data);
+      data = std::vector<char>(data.begin() + tree_size, data.end());
+      huff.getFile(data, out);
     }
   }
 
