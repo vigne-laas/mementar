@@ -38,7 +38,7 @@ void Archive::load(std::vector<char>& out)
   for(const auto& file : header.input_files_)
   {
     std::vector<char> in_vect;
-    huff.readBinaryFile(in_vect, file.name_);
+    huff.readBinaryFile(in_vect, file.path_);
     input_files.push_back(in_vect);
     huff.analyse(in_vect);
   }
@@ -75,5 +75,18 @@ std::string Archive::extractDescription(Header& head, std::vector<char>& data)
   LzUncompress lz;
   std::vector<char> tmp_data(data.begin() + head.description_file_.offset_, data.begin() + head.description_file_.offset_ + head.description_file_.size_);
   lz.uncompress(tmp_data, out);
+  return out;
+}
+
+std::string Archive::extractFile(size_t index, Header& head, std::vector<char>& data)
+{
+  std::string out;
+  Huffman huff;
+
+  std::vector<char> tree_data(data.begin() + head.description_file_.offset_ + head.description_file_.size_, data.end());
+  huff.setTree(tree_data);
+  std::vector<char> tmp_data(data.begin() + head.input_files_[index].offset_, data.begin() + head.input_files_[index].offset_ + head.input_files_[index].size_);
+  huff.getFile(tmp_data, out);
+
   return out;
 }

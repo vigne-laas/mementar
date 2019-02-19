@@ -111,7 +111,22 @@ int main (int argc, char* argv[])
     std::vector<char> data;
     arch.readBinaryFile(data, input_files[0]);
     Header header = arch.getHeader(data);
-    std::cout << arch.extractDescription(header, data) << std::endl;
+
+    std::ofstream myfile;
+    std::string out;
+
+    out = arch.extractDescription(header, data);
+    myfile.open(output_file + "/description.txt");
+    myfile << out;
+    myfile.close();
+
+    for(size_t i = 0; i < header.input_files_.size(); i++)
+    {
+      out = arch.extractFile(i, header, data);
+      myfile.open(output_file + "/" + header.input_files_[i].name_);
+      myfile << out;
+      myfile.close();
+    }
   }
   else if(action == act_list)
   {

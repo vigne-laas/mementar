@@ -14,6 +14,7 @@ public:
   Header getHeader(std::vector<char>& data);
 
   std::string extractDescription(Header& head, std::vector<char>& data);
+  std::string extractFile(size_t index, Header& head, std::vector<char>& data);
 
 private:
   Header header;
