@@ -147,10 +147,7 @@ size_t Huffman::setTree(std::vector<char>& in)
   BitFileGetter bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
   bit.set(in);
 
-  char size1 = bit.getType1();
-  char size2 = bit.getType1();
-
-  size_t nb_leaf = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+  auto nb_leaf = toInteger<uint16_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
 
   for(size_t i = 0; i < nb_leaf; i++)
   {
@@ -185,13 +182,7 @@ void Huffman::getFile(std::vector<char>& data, std::string& out)
   BitFileGetter bit(8);
   bit.set(data);
 
-  size_t out_file_size = 0;
-  char size1 = bit.getType1();
-  char size2 = bit.getType1();
-  char size3 = bit.getType1();
-  char size4 = bit.getType1();
-
-  out_file_size = ((size4 << 24)&0xff000000) | ((size3 << 16)&0x00ff0000) | ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+  auto out_file_size = toInteger<size_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
   while(out.size() < out_file_size)
   {
     HuffNode_t* node = heap_[0];

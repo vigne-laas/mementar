@@ -3,6 +3,16 @@
 
 #include <vector>
 #include <string>
+#include <array>
+#include <cstring>
+
+template<typename T>
+constexpr T toInteger(const std::array<unsigned char, sizeof(T)>& bytes) noexcept
+{
+    T ret{};
+    std::memcpy(&ret, bytes.data(), sizeof(T));
+    return ret;
+}
 
 class BitFileGetter
 {

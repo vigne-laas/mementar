@@ -18,22 +18,12 @@ void LzUncompress::uncompress(std::vector<char>& data, std::string& out)
   size_t offset = 0;
   size_t length = 0;
 
-  size_t out_file_size = 0;
-  char size1 = bit.getType3();
-  char size2 = bit.getType3();
-  char size3 = bit.getType3();
-  char size4 = bit.getType3();
+  auto out_file_size = toInteger<size_t>({(uint8_t)bit.getType3(), (uint8_t)bit.getType3(), (uint8_t)bit.getType3(), (uint8_t)bit.getType3()});
 
-  out_file_size = ((size4 << 24)&0xff000000) | ((size3 << 16)&0x00ff0000) | ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
-
-  size1 = bit.getType3();
-  size2 = bit.getType3();
-  search_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+  search_size_ = toInteger<uint16_t>({(uint8_t)bit.getType3(), (uint8_t)bit.getType3()});
   bit.setSize1(neededBitCount(search_size_));
 
-  size1 = bit.getType3();
-  size2 = bit.getType3();
-  la_size_ = ((size2 << 8)&0x0000ff00) | ((size1 << 0)&0x000000ff);
+  la_size_ = toInteger<uint16_t>({(uint8_t)bit.getType3(), (uint8_t)bit.getType3()});
   bit.setSize2(neededBitCount(la_size_));
 
   while(out.size() < out_file_size)
