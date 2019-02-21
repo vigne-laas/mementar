@@ -27,20 +27,23 @@ find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
 ################################################
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-# )
+ add_message_files(
+   FILES
+   MementarEvent.msg
+ )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#  FILES
-# )
+ add_service_files(
+  FILES
+  MementarEventSubscription.srv
+  MementarEventUnsubscription.srv
+ )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -92,7 +95,7 @@ add_library(mementar_compression_lib
 ##############################
 
 add_executable(mementar src/nodes/mementar.cpp)
-#add_dependencies(mementar ontologenius_gencpp)
+add_dependencies(mementar mementar_gencpp)
 target_link_libraries(mementar ${catkin_LIBRARIES})
 target_link_libraries(mementar mementar_compression_lib)
 
