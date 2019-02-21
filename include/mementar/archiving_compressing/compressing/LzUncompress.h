@@ -1,8 +1,8 @@
 #ifndef LZUNCOMPRESS_H
 #define LZUNCOMPRESS_H
 
-#include "mementar/binaryManagement/BitFileGetter.h"
-#include "mementar/binaryManagement/BinaryManager.h"
+#include "archiving_compressing/binaryManagement/BitFileGetter.h"
+#include "archiving_compressing/binaryManagement/BinaryManager.h"
 
 class LzUncompress : public BinaryManager
 {

@@ -1,10 +1,10 @@
-#include "mementar/compressing/Huffman.h"
+#include "archiving_compressing/compressing/Huffman.h"
 
 #include <iostream>
 #include <algorithm>
 
-#include "mementar/binaryManagement/BitFileGenerator.h"
-#include "mementar/binaryManagement/BitFileGetter.h"
+#include "archiving_compressing/binaryManagement/BitFileGenerator.h"
+#include "archiving_compressing/binaryManagement/BitFileGetter.h"
 
 #define TREE_CHAR_SIZE 8
 #define TREE_VALUE_SIZE 6

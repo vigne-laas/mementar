@@ -5,7 +5,8 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "mementar/binaryManagement/BinaryManager.h"
+
+#include "archiving_compressing/binaryManagement/BinaryManager.h"
 
 struct HuffCode_t
 {

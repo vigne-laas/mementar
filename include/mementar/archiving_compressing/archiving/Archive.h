@@ -1,8 +1,8 @@
 #ifndef ARCHIVE_H
 #define ARCHIVE_H
 
-#include "mementar/archiving/Header.h"
-#include "mementar/binaryManagement/BinaryManager.h"
+#include "archiving_compressing/archiving/Header.h"
+#include "archiving_compressing/binaryManagement/BinaryManager.h"
 
 class Archive : public BinaryManager
 {

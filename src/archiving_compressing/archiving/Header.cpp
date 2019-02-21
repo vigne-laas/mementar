@@ -1,7 +1,7 @@
-#include "mementar/archiving/Header.h"
+#include "archiving_compressing/archiving/Header.h"
 
-#include "mementar/binaryManagement/BitFileGenerator.h"
-#include "mementar/binaryManagement/BitFileGetter.h"
+#include "archiving_compressing/binaryManagement/BitFileGenerator.h"
+#include "archiving_compressing/binaryManagement/BitFileGetter.h"
 
 std::string Header::toString()
 {

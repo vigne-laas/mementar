@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "mementar/binaryManagement/BitFileGenerator.h"
-#include "mementar/binaryManagement/BinaryManager.h"
+#include "archiving_compressing/binaryManagement/BitFileGenerator.h"
+#include "archiving_compressing/binaryManagement/BinaryManager.h"
 
 class LzCompress : public BinaryManager
 {
