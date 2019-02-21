@@ -6,8 +6,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "archiving_compressing/compressing/LzUncompress.h"
-#include "archiving_compressing/compressing/Huffman.h"
+#include "mementar/archiving_compressing/compressing/LzUncompress.h"
+#include "mementar/archiving_compressing/compressing/Huffman.h"
 
 using namespace std::chrono;
 

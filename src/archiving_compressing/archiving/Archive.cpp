@@ -1,8 +1,8 @@
-#include "archiving_compressing/archiving/Archive.h"
+#include "mementar/archiving_compressing/archiving/Archive.h"
 
-#include "archiving_compressing/compressing/LzCompress.h"
-#include "archiving_compressing/compressing/LzUncompress.h"
-#include "archiving_compressing/compressing/Huffman.h"
+#include "mementar/archiving_compressing/compressing/LzCompress.h"
+#include "mementar/archiving_compressing/compressing/LzUncompress.h"
+#include "mementar/archiving_compressing/compressing/Huffman.h"
 
 Archive::Archive(std::string& description, std::vector<std::string>& files) : BinaryManager("mar")
 {

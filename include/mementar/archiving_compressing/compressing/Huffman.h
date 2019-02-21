@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 
-#include "archiving_compressing/binaryManagement/BinaryManager.h"
+#include "mementar/archiving_compressing/binaryManagement/BinaryManager.h"
 
 struct HuffCode_t
 {
