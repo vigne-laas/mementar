@@ -1,5 +1,5 @@
-#ifndef LZUNCOMPRESS_H
-#define LZUNCOMPRESS_H
+#ifndef MEMENTAR_LZUNCOMPRESS_H
+#define MEMENTAR_LZUNCOMPRESS_H
 
 #include "mementar/archiving_compressing/binaryManagement/BitFileGetter.h"
 #include "mementar/archiving_compressing/binaryManagement/BinaryManager.h"
@@ -25,4 +25,4 @@ private:
 
 } // namespace mementar
 
-#endif // LZUNCOMPRESS_H
+#endif // MEMENTAR_LZUNCOMPRESS_H

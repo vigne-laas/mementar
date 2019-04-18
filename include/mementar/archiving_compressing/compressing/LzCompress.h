@@ -1,5 +1,5 @@
-#ifndef LZCOMPRESS_H
-#define LZCOMPRESS_H
+#ifndef MEMENTAR_LZCOMPRESS_H
+#define MEMENTAR_LZCOMPRESS_H
 
 #include <string>
 #include <vector>
@@ -30,4 +30,4 @@ private:
 
 } // namespace mementar
 
-#endif //LZCOMPRESS_H
+#endif // MEMENTAR_LZCOMPRESS_H

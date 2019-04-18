@@ -1,5 +1,5 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef MEMENTAR_HEADER_H
+#define MEMENTAR_HEADER_H
 
 #include <vector>
 #include <string>
@@ -42,4 +42,4 @@ public:
 
 } // namespace mementar
 
-#endif // HEADER_H
+#endif // MEMENTAR_HEADER_H

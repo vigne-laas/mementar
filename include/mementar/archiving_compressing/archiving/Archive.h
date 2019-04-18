@@ -1,5 +1,5 @@
-#ifndef ARCHIVE_H
-#define ARCHIVE_H
+#ifndef MEMENTAR_ARCHIVE_H
+#define MEMENTAR_ARCHIVE_H
 
 #include "mementar/archiving_compressing/archiving/Header.h"
 #include "mementar/archiving_compressing/binaryManagement/BinaryManager.h"
@@ -26,4 +26,4 @@ private:
 
 } // namespace mementar
 
-#endif // ARCHIVE_H
+#endif // MEMENTAR_ARCHIVE_H

@@ -1,5 +1,5 @@
-#ifndef IDMANAGER_H
-#define IDMANAGER_H
+#ifndef MEMENTAR_IDMANAGER_H
+#define MEMENTAR_IDMANAGER_H
 
 #include <set>
 
@@ -59,4 +59,4 @@ bool IdManager<TInteger>::removeId(TInteger id)
 
 } // namespace mementar
 
-#endif // IDMANAGER_H
+#endif // MEMENTAR_IDMANAGER_H

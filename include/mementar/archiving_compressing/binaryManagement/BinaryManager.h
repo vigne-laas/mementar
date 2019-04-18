@@ -1,5 +1,5 @@
-#ifndef BINARYMANAGER_H
-#define BINARYMANAGER_H
+#ifndef MEMENTAR_BINARYMANAGER_H
+#define MEMENTAR_BINARYMANAGER_H
 
 #include <iostream>
 #include <fstream>
@@ -51,4 +51,4 @@ private:
 
 } // namespace mementar
 
-#endif // BINARYMANAGER_H
+#endif // MEMENTAR_BINARYMANAGER_H

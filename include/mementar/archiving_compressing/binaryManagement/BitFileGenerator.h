@@ -1,5 +1,5 @@
-#ifndef BITFILEGENERATOR_H
-#define BITFILEGENERATOR_H
+#ifndef MEMENTAR_BITFILEGENERATOR_H
+#define MEMENTAR_BITFILEGENERATOR_H
 
 #include <vector>
 #include <string>
@@ -38,4 +38,4 @@ private:
 
 } // namespace mementar
 
-#endif // BITFILEGENERATOR_H
+#endif // MEMENTAR_BITFILEGENERATOR_H

@@ -1,5 +1,5 @@
-#ifndef HUFFMAN_H
-#define HUFFMAN_H
+#ifndef MEMENTAR_HUFFMAN_H
+#define MEMENTAR_HUFFMAN_H
 
 #include <set>
 #include <string>
@@ -70,4 +70,4 @@ private:
 
 } // namespace mementar
 
-#endif
+#endif // MEMENTAR_HUFFMAN_H

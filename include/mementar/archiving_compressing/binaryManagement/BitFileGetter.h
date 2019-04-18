@@ -1,5 +1,5 @@
-#ifndef BITFILEGETTER_H
-#define BITFILEGETTER_H
+#ifndef MEMENTAR_BITFILEGETTER_H
+#define MEMENTAR_BITFILEGETTER_H
 
 #include <vector>
 #include <string>
@@ -52,4 +52,4 @@ private:
 
 } // namespace mementar
 
-#endif // BITFILEGETTER_H
+#endif // MEMENTAR_BITFILEGETTER_H
