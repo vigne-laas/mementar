@@ -4,6 +4,9 @@
 #include "mementar/archiving_compressing/compressing/LzUncompress.h"
 #include "mementar/archiving_compressing/compressing/Huffman.h"
 
+namespace mementar
+{
+
 Archive::Archive(std::string& description, std::vector<std::string>& files) : BinaryManager("mar")
 {
   description_ = description;
@@ -90,3 +93,5 @@ std::string Archive::extractFile(size_t index, Header& head, std::vector<char>& 
 
   return out;
 }
+
+} // namespace mementar

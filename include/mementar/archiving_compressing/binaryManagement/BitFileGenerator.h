@@ -4,6 +4,9 @@
 #include <vector>
 #include <string>
 
+namespace mementar
+{
+
 class BitFileGenerator
 {
 public:
@@ -32,5 +35,7 @@ private:
   uint8_t type_3_size_;
   uint8_t type_4_size_;
 };
+
+} // namespace mementar
 
 #endif // BITFILEGENERATOR_H

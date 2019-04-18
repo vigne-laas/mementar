@@ -4,6 +4,9 @@
 #include <vector>
 #include <string>
 
+namespace mementar
+{
+
 struct File_t
 {
   File_t(std::string name = "", size_t offset = 0, size_t size = 0)
@@ -36,5 +39,7 @@ public:
   void encode(std::vector<char>& out);
   void decode(std::vector<char>& data);
 };
+
+} // namespace mementar
 
 #endif // HEADER_H

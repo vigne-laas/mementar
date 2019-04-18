@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+namespace mementar
+{
+
 BitFileGetter::BitFileGetter(uint32_t size_1, uint32_t size_2, uint32_t size_3, uint32_t size_4)
 {
   type_1_size_ = size_1;
@@ -200,3 +203,5 @@ bool BitFileGetter::end(size_t offset)
   else
     return false;
 }
+
+} // namespace mementar

@@ -6,6 +6,9 @@
 #include <array>
 #include <cstring>
 
+namespace mementar
+{
+
 template<typename T>
 constexpr T toInteger(const std::array<unsigned char, sizeof(T)>& bytes) noexcept
 {
@@ -46,5 +49,7 @@ private:
   uint32_t type_3_size_;
   uint32_t type_4_size_;
 };
+
+} // namespace mementar
 
 #endif // BITFILEGETTER_H

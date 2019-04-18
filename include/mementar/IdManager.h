@@ -3,6 +3,9 @@
 
 #include <set>
 
+namespace mementar
+{
+
 template<typename TInteger>
 class IdManager
 {
@@ -53,5 +56,7 @@ bool IdManager<TInteger>::removeId(TInteger id)
     return true;
   }
 }
+
+} // namespace mementar
 
 #endif // IDMANAGER_H

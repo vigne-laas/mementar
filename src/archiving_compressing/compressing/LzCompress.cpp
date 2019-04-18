@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 
+namespace mementar
+{
+
 LzCompress::LzCompress(size_t search_size, size_t la_size) : BinaryManager("mlz"), bit(neededBitCount(search_size), neededBitCount(la_size), 8)
 {
   // la_size_ <= search_size_
@@ -93,3 +96,5 @@ int LzCompress::neededBitCount(size_t max_value)
   }
   return nb_bit;
 }
+
+} // namespace mementar

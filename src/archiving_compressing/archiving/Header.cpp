@@ -3,6 +3,9 @@
 #include "mementar/archiving_compressing/binaryManagement/BitFileGenerator.h"
 #include "mementar/archiving_compressing/binaryManagement/BitFileGetter.h"
 
+namespace mementar
+{
+
 std::string Header::toString()
 {
   std::string res;
@@ -88,3 +91,5 @@ void Header::decode(std::vector<char>& data)
     input_files_.push_back(file);
   }
 }
+
+} // namespace mementar

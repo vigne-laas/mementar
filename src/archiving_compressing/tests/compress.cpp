@@ -90,7 +90,7 @@ int main (int argc, char* argv[])
 
   if(code_type == lz77)
   {
-    LzCompress lz_comp;
+    mementar::LzCompress lz_comp;
     std::vector<char> out_vect;
   	lz_comp.compress(in, out_vect);
 
@@ -101,7 +101,7 @@ int main (int argc, char* argv[])
   {
     std::vector<char> in_vect(in.begin(), in.end());
 
-    Huffman huff;
+    mementar::Huffman huff;
     huff.analyse(in_vect);
     huff.generateTree();
     std::vector<char> out_vect;

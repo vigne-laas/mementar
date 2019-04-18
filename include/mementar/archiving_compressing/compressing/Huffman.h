@@ -8,6 +8,9 @@
 
 #include "mementar/archiving_compressing/binaryManagement/BinaryManager.h"
 
+namespace mementar
+{
+
 struct HuffCode_t
 {
   uint32_t value_;
@@ -64,5 +67,7 @@ private:
 
   void generateCode(HuffNode_t* node);
 };
+
+} // namespace mementar
 
 #endif

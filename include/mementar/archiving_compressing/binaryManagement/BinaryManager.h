@@ -6,6 +6,9 @@
 #include <streambuf>
 #include <vector>
 
+namespace mementar
+{
+
 class BinaryManager
 {
 public:
@@ -45,5 +48,7 @@ public:
 private:
   std::string extension_;
 };
+
+} // namespace mementar
 
 #endif // BINARYMANAGER_H

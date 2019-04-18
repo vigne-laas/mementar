@@ -1,5 +1,8 @@
 #include "mementar/archiving_compressing/binaryManagement/BitFileGenerator.h"
 
+namespace mementar
+{
+
 BitFileGenerator::BitFileGenerator(uint8_t size_1, uint8_t size_2, uint8_t size_3, uint8_t size_4)
 {
   type_1_size_ = size_1;
@@ -175,3 +178,5 @@ void BitFileGenerator::writeBitFalse()
   else
     minor_index_++;
 }
+
+} // namespace mementar

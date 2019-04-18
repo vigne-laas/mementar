@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   /*std::string intern_folder = std::string(argv[1]);
   std::cout << "intern_folder " << intern_folder << std::endl;*/
 
-  IdManager<uint32_t> ids;
+  mementar::IdManager<uint32_t> ids;
 
   std::cout << ids.getNewId() << std::endl; // 0
   std::cout << ids.getNewId() << std::endl; // 1

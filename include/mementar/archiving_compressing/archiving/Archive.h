@@ -4,6 +4,9 @@
 #include "mementar/archiving_compressing/archiving/Header.h"
 #include "mementar/archiving_compressing/binaryManagement/BinaryManager.h"
 
+namespace mementar
+{
+
 class Archive : public BinaryManager
 {
 public:
@@ -20,5 +23,7 @@ private:
   Header header;
   std::string description_;
 };
+
+} // namespace mementar
 
 #endif // ARCHIVE_H

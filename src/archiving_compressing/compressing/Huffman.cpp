@@ -6,6 +6,9 @@
 #include "mementar/archiving_compressing/binaryManagement/BitFileGenerator.h"
 #include "mementar/archiving_compressing/binaryManagement/BitFileGetter.h"
 
+namespace mementar
+{
+
 #define TREE_CHAR_SIZE 8
 #define TREE_VALUE_SIZE 6
 #define TREE_VALUE_SIZE_SIZE 31 //do not go over 31
@@ -105,7 +108,7 @@ void Huffman::generateCode(HuffNode_t* node)
 void Huffman::getTreeCode(std::vector<char>& out)
 {
   BitFileGenerator bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
-  // //coding tree
+  //coding tree
   bit.writeType1((leaf_map_.size() >> 0) & 0x000000ff);
   bit.writeType1((leaf_map_.size() >> 8) & 0x000000ff);
 
@@ -172,7 +175,7 @@ size_t Huffman::setTree(std::vector<char>& in)
   }
 
   size_t tree_bit_size = (2*8 + nb_leaf*(TREE_CHAR_SIZE + TREE_VALUE_SIZE + TREE_VALUE_SIZE_SIZE));
-  //if(tree_bit_size % 8)
+
   return tree_bit_size / 8 + 1;
 }
 
@@ -196,3 +199,5 @@ void Huffman::getFile(std::vector<char>& data, std::string& out)
     out.push_back(node->data_);
   }
 }
+
+} // namespace mementar

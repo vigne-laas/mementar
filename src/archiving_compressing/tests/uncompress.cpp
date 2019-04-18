@@ -84,14 +84,14 @@ int main (int argc, char* argv[])
 
   if(code_type == lz77)
   {
-    LzUncompress lz;
+    mementar::LzUncompress lz;
     std::vector<char> data;
     if(lz.readBinaryFile(data, input_file))
       lz.uncompress(data, out);
   }
   else if(code_type == huffman)
   {
-    Huffman huff;
+    mementar::Huffman huff;
     std::vector<char> data;
     if(huff.readBinaryFile(data, input_file))
     {

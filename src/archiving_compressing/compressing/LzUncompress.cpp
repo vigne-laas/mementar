@@ -4,6 +4,9 @@
 #include <fstream>
 #include <math.h>
 
+namespace mementar
+{
+
 LzUncompress::LzUncompress() : BinaryManager("mlz"), bit(0, 0, 8)
 {
   // la_size_ <= search_size_
@@ -50,3 +53,5 @@ int LzUncompress::neededBitCount(size_t max_value)
   }
   return nb_bit;
 }
+
+} // namespace mementar

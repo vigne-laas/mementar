@@ -4,6 +4,9 @@
 #include "mementar/archiving_compressing/binaryManagement/BitFileGetter.h"
 #include "mementar/archiving_compressing/binaryManagement/BinaryManager.h"
 
+namespace mementar
+{
+
 class LzUncompress : public BinaryManager
 {
 public:
@@ -19,5 +22,7 @@ private:
 
   int neededBitCount(size_t max_value);
 };
+
+} // namespace mementar
 
 #endif // LZUNCOMPRESS_H

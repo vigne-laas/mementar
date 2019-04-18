@@ -98,7 +98,7 @@ int main (int argc, char* argv[])
     std::ifstream t(description_file);
     std::string in((std::istreambuf_iterator<char>(t)),
                      std::istreambuf_iterator<char>());
-    Archive arch(in, input_files);
+    mementar::Archive arch(in, input_files);
 
     std::vector<char> data;
     arch.load(data);
@@ -107,10 +107,10 @@ int main (int argc, char* argv[])
   }
   else if(action == act_extract)
   {
-    Archive arch;
+    mementar::Archive arch;
     std::vector<char> data;
     arch.readBinaryFile(data, input_files[0]);
-    Header header = arch.getHeader(data);
+    mementar::Header header = arch.getHeader(data);
 
     std::ofstream myfile;
     std::string out;
@@ -130,10 +130,10 @@ int main (int argc, char* argv[])
   }
   else if(action == act_list)
   {
-    Archive arch;
+    mementar::Archive arch;
     std::vector<char> data;
     arch.readBinaryFile(data, input_files[0]);
-    Header header = arch.getHeader(data);
+    mementar::Header header = arch.getHeader(data);
     std::cout << header.toString() << std::endl;
   }
 
