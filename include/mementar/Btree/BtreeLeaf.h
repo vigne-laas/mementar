@@ -1,8 +1,13 @@
 #ifndef MEMENTAR_BTREELEAF_H
 #define MEMENTAR_BTREELEAF_H
 
+#include <vector>
+
 namespace mementar
 {
+
+template<typename Tkey, typename Tdata>
+class BtreeLeafNode;
 
 template<typename Tkey, typename Tdata>
 class BtreeLeaf
@@ -12,10 +17,28 @@ public:
   {
     next_ = nullptr;
     prev_ = nullptr;
+    mother_ = nullptr;
 
     key_ = key;
-    data_ = data;
+    data_.push_back(data);
   }
+
+  ~BtreeLeaf()
+  {
+    if(prev_ != nullptr)
+    {
+      prev_->next_ = nullptr;
+      delete prev_;
+    }
+
+    if(next_ != nullptr)
+    {
+      next_->prev_ = nullptr;
+      delete next_;
+    }
+  }
+
+  void push_back(Tdata data) { data_.push_back(data); }
 
   BtreeLeaf* next_;
   BtreeLeaf* prev_;
@@ -33,11 +56,16 @@ public:
   bool operator<=(const BtreeLeaf* other) { return ((key_ < other->key_) || (key_ == other->key_)); }
 
   Tkey getKey() const { return key_; }
-  Tdata getData() const { return data_; }
+  std::vector<Tdata> getData() const { return data_; }
+  void getData(std::vector<Tdata>& data) { data = data_; }
+
+  void setMother(BtreeLeafNode<Tkey,Tdata>* mother) { mother_ = mother; }
+  BtreeLeafNode<Tkey,Tdata>* getMother() { return mother_; }
 
 private:
   Tkey key_;
-  Tdata data_;
+  std::vector<Tdata> data_;
+  BtreeLeafNode<Tkey,Tdata>* mother_;
 };
 
 } // mementar
