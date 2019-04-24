@@ -36,6 +36,7 @@ public:
   }
 
   void insert(const Tkey& key, const Tdata& data);
+  void remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
@@ -67,6 +68,13 @@ void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
         root_ = root_->getMother();
     }
   }
+}
+
+template<typename Tkey, typename Tdata>
+void Btree<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+{
+  if(root_ != nullptr)
+    return root_->remove(key, data);
 }
 
 template<typename Tkey, typename Tdata>

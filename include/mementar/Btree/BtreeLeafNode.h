@@ -17,6 +17,7 @@ public:
   ~BtreeLeafNode() {}
 
   BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
+  void remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
@@ -95,6 +96,32 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
     split();
 
   return res;
+}
+
+template<typename Tkey, typename Tdata>
+void BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+{
+  for(size_t i = 0; i < this->keys_.size(); i++)
+  {
+    if(this->keys_[i] == key)
+    {
+      leafs_[i]->remove(data);
+      if(leafs_[i]->getData().size() == 0)
+      {
+        if(leafs_[i]->prev_ != nullptr)
+          leafs_[i]->prev_->next_ = leafs_[i]->next_;
+        if(leafs_[i]->next_ != nullptr)
+          leafs_[i]->next_->prev_ = leafs_[i]->prev_;
+        delete leafs_[i];
+        leafs_.erase(leafs_.begin() + i);
+        this->keys_.erase(this->keys_.begin() + i);
+
+        if(leafs_.size() == 0)
+          std::cout << "a node is empty but will not be destroyed" << std::endl;
+      }
+      return;
+    }
+  }
 }
 
 template<typename Tkey, typename Tdata>

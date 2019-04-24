@@ -43,6 +43,10 @@ int main()
     res = tree.getFirst();
     if(res) std::cout << res->getKey() << std::endl;
 
+    tree.remove(40,40);
+    tree.insert(40,41);
+    tree.display();
+
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
     std::cout << "took " << time_span.count() << std::endl;

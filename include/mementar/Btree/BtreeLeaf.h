@@ -26,6 +26,7 @@ public:
   ~BtreeLeaf() {}
 
   void push_back(const Tdata& data) { data_.push_back(data); }
+  void remove(const Tdata& data);
 
   BtreeLeaf* next_;
   BtreeLeaf* prev_;
@@ -54,6 +55,18 @@ private:
   std::vector<Tdata> data_;
   BtreeLeafNode<Tkey,Tdata>* mother_;
 };
+
+template<typename Tkey, typename Tdata>
+void BtreeLeaf<Tkey,Tdata>::remove(const Tdata& data)
+{
+  for(size_t i = 0; i < data_.size();)
+  {
+    if(data_[i] == data)
+      data_.erase(data_.begin() + i);
+    else
+      i++;
+  }
+}
 
 } // mementar
 
