@@ -14,10 +14,11 @@ template<typename Tkey, typename Tdata>
 class Btree
 {
 public:
-  Btree()
+  Btree(size_t order)
   {
     root_ = nullptr;
     last_ = nullptr;
+    order_ = order;
   }
 
   ~Btree()
@@ -30,10 +31,12 @@ public:
   }
 
   void insert(const Tkey& key, const Tdata& data);
+  void display(int count = -1);
 
 private:
   BtreeNode<Tkey, Tdata>* root_;
   BtreeLeaf<Tkey, Tdata>* last_;
+  size_t order_;
 };
 
 template<typename Tkey, typename Tdata>
@@ -41,7 +44,7 @@ void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
 {
   if(last_ == nullptr)
   {
-    root_ = new BtreeLeafNode<Tkey, Tdata>();
+    root_ = new BtreeLeafNode<Tkey, Tdata>(order_);
     last_ = root_->insert(key, data);
   }
   else
@@ -51,13 +54,31 @@ void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
     {
       if(tmp->operator>(last_))
         last_ = tmp;
-      if(tmp->getMother()->needBalancing())
-      {
-        std::cout << "needBalancing" << std::endl;
-      }
+      if(root_->getMother() != nullptr)
+        root_ = root_->getMother();
     }
 
   }
+}
+
+template<typename Tkey, typename Tdata>
+void Btree<Tkey,Tdata>::display(int count)
+{
+  BtreeLeaf<Tkey, Tdata>* tmp = last_;
+  int cpt = 0;
+  std::cout << "******" << std::endl;
+  while((tmp != nullptr) && ((cpt < count) || (count == -1)))
+  {
+    std::vector<Tdata> datas = tmp->getData();
+    std::cout << tmp->getKey() << " => ";
+    for(const auto& data : datas)
+      std::cout << data << " : ";
+    std::cout << std::endl;
+    tmp = tmp->prev_;
+    cpt++;
+  }
+  std::cout << "******" << std::endl;
+  root_->display();
 }
 
 } // namespace mementar

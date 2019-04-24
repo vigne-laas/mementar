@@ -13,12 +13,16 @@ int main()
   else
     std::cout << "sup" << std::endl;
 
-  mementar::Btree<int, int> tree;
-  for(size_t i = 0; i < 11; i++)
+  mementar::Btree<int, int> tree(2);
+  for(size_t i = 2; i < 62; i++)
   {
-    std::cout << "insert " << i << " : " << i*2 << std::endl;
+    std::cout << "insert " << 20 - i << " : " << i*2 << std::endl;
     tree.insert(i, i*2);
   }
+  tree.insert(0, 0);
+  tree.insert(1, 1);
+  tree.insert(1, 1);
+  tree.display();
 
   return 0;
 }
