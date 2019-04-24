@@ -22,8 +22,6 @@ public:
       delete child;
   }
 
-  virtual bool isLeafNode() { return false; }
-
   virtual BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
   void insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& key);
   virtual bool needBalancing();
@@ -93,10 +91,7 @@ void BtreeNode<Tkey,Tdata>::insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& 
   }
 
   if(needBalancing())
-  {
-    std::cout << "needBalancing" << std::endl;
     split();
-  }
 }
 
 template<typename Tkey, typename Tdata>

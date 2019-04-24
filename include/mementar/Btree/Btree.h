@@ -26,8 +26,13 @@ public:
     if(root_ != nullptr)
       delete root_;
 
-    if(last_ != nullptr)
-      delete last_;
+    BtreeLeaf<Tkey, Tdata>* tmp;
+    while(last_ != nullptr)
+    {
+      tmp = last_;
+      last_ = last_->prev_;
+      delete tmp;
+    }
   }
 
   void insert(const Tkey& key, const Tdata& data);
@@ -57,7 +62,6 @@ void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
       if(root_->getMother() != nullptr)
         root_ = root_->getMother();
     }
-
   }
 }
 

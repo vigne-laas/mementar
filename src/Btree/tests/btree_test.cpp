@@ -1,7 +1,12 @@
 #include <iostream>
+#include <chrono>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
 
 #include "mementar/Btree/BtreeLeaf.h"
 #include "mementar/Btree/Btree.h"
+
+using namespace std::chrono;
 
 int main()
 {
@@ -13,16 +18,24 @@ int main()
   else
     std::cout << "sup" << std::endl;
 
-  mementar::Btree<int, int> tree(2);
-  for(size_t i = 2; i < 62; i++)
+  high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+  size_t nb = 300000;
+  mementar::Btree<size_t, size_t> tree(10);
+  for(size_t i = 0; i < nb; i=i+2)
   {
-    std::cout << "insert " << 20 - i << " : " << i*2 << std::endl;
-    tree.insert(i, i*2);
+    tree.insert(i, i);
   }
-  tree.insert(0, 0);
-  tree.insert(1, 1);
-  tree.insert(1, 1);
-  tree.display();
+
+  for(size_t i = 1; i < nb; i=i+2)
+  {
+    tree.insert(i, i);
+  }
+  //tree.display();
+
+  high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+  std::cout << "took " << time_span.count() << std::endl;
 
   return 0;
 }

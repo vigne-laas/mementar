@@ -23,20 +23,7 @@ public:
     data_.push_back(data);
   }
 
-  ~BtreeLeaf()
-  {
-    if(prev_ != nullptr)
-    {
-      prev_->next_ = nullptr;
-      delete prev_;
-    }
-
-    if(next_ != nullptr)
-    {
-      next_->prev_ = nullptr;
-      delete next_;
-    }
-  }
+  ~BtreeLeaf() {}
 
   void push_back(Tdata data) { data_.push_back(data); }
 

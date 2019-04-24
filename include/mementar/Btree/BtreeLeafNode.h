@@ -16,8 +16,6 @@ public:
 
   ~BtreeLeafNode() {}
 
-  virtual bool isLeafNode() { return true; }
-
   BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
   virtual bool needBalancing();
   void split();
@@ -89,10 +87,7 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
   }
 
   if(needBalancing())
-  {
-    std::cout << "needBalancing" << std::endl;
     split();
-  }
 
   return res;
 }
