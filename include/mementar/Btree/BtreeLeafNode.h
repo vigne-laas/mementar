@@ -17,21 +17,21 @@ public:
   ~BtreeLeafNode() {}
 
   BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
-  virtual bool needBalancing();
-  void split();
+  BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
+  BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
 
   virtual void display(size_t depth = 0);
 private:
   std::vector<BtreeLeaf<Tkey,Tdata>*> leafs_;
+
+  virtual bool needBalancing();
+  void split();
 };
 
 template<typename Tkey, typename Tdata>
 BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
 {
   BtreeLeaf<Tkey,Tdata>* res = nullptr;
-  BtreeLeaf<Tkey,Tdata>* last = nullptr;
-  if(leafs_.size())
-    last = leafs_[leafs_.size() - 1];
 
   if(leafs_.size() == 0)
   {
@@ -42,11 +42,11 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
   }
   else
   {
-    if(this->keys_[this->keys_.size() - 1] == key)
-    {
-      last->push_back(data);
-    }
-    else if(key > this->keys_[this->keys_.size() - 1])
+    BtreeLeaf<Tkey,Tdata>* last = nullptr;
+    if(leafs_.size())
+      last = leafs_[leafs_.size() - 1];
+
+    if(key > this->keys_[this->keys_.size() - 1])
     {
       this->keys_.push_back(key);
       res = new BtreeLeaf<Tkey,Tdata>(key, data);
@@ -54,6 +54,10 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
       last->next_ = res;
       res->prev_ = last;
       res->setMother(this);
+    }
+    else if(this->keys_[this->keys_.size() - 1] == key)
+    {
+      last->push_back(data);
     }
     else
     {
@@ -93,6 +97,28 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
 }
 
 template<typename Tkey, typename Tdata>
+BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::find(const Tkey& key)
+{
+  for(size_t i = 0; i < this->keys_.size(); i++)
+  {
+    if(this->keys_[i] == key)
+      return leafs_[i];
+  }
+  return nullptr;
+}
+
+template<typename Tkey, typename Tdata>
+BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::findNear(const Tkey& key)
+{
+  for(size_t i = 0; i < this->keys_.size(); i++)
+  {
+    if(this->keys_[i] >= key)
+      return leafs_[i];
+  }
+  return leafs_[leafs_.size() - 1]->next_;
+}
+
+template<typename Tkey, typename Tdata>
 bool BtreeLeafNode<Tkey,Tdata>::needBalancing()
 {
   return (leafs_.size() > this->order_);
@@ -103,15 +129,13 @@ void BtreeLeafNode<Tkey,Tdata>::split()
 {
   BtreeLeafNode<Tkey,Tdata>* new_node = new BtreeLeafNode<Tkey,Tdata>(this->order_);
 
-  for(size_t i = 0; i < this->order_/2; i++)
+  size_t half_order = this->order_/2;
+  for(size_t i = 0; i < half_order; i++)
   {
     new_node->leafs_.insert(new_node->leafs_.begin(), leafs_[leafs_.size() - 1]);
     leafs_.erase(leafs_.begin() + leafs_.size() - 1);
     new_node->leafs_[i]->setMother(new_node);
-  }
 
-  for(size_t i = 0; i < this->order_/2; i++)
-  {
     new_node->keys_.insert(new_node->keys_.begin(), this->keys_[this->keys_.size() - 1]);
     this->keys_.erase(this->keys_.begin() + this->keys_.size() - 1);
   }

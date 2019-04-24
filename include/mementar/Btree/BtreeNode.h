@@ -24,8 +24,8 @@ public:
 
   virtual BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
   void insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& key);
-  virtual bool needBalancing();
-  virtual void split();
+  virtual BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
+  virtual BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
 
   void setMother(BtreeNode<Tkey,Tdata>* mother) { mother_ = mother; }
   BtreeNode<Tkey,Tdata>* getMother() { return mother_; }
@@ -36,6 +36,9 @@ protected:
   std::vector<BtreeNode<Tkey,Tdata>*> childs_;
   BtreeNode<Tkey,Tdata>* mother_;
   size_t order_;
+
+  virtual bool needBalancing();
+  virtual void split();
 };
 
 template<typename Tkey, typename Tdata>
@@ -79,7 +82,7 @@ void BtreeNode<Tkey,Tdata>::insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& 
     {
       for(size_t i = 0; i < this->keys_.size(); i++)
       {
-        if(this->keys_[i] >= key)
+        if(key < this->keys_[i])
         {
           this->keys_.insert(this->keys_.begin() + i, key);
           this->childs_.insert(this->childs_.begin() + i, new_node);
@@ -95,6 +98,29 @@ void BtreeNode<Tkey,Tdata>::insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& 
 }
 
 template<typename Tkey, typename Tdata>
+BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::find(const Tkey& key)
+{
+  for(size_t i = 0; i < this->keys_.size(); i++)
+  {
+    if(this->keys_[i] > key)
+      return this->childs_[i]->find(key);
+  }
+  return this->childs_[this->keys_.size()]->find(key);
+}
+
+template<typename Tkey, typename Tdata>
+BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::findNear(const Tkey& key)
+{
+  for(size_t i = 0; i < this->keys_.size(); i++)
+  {
+    if(this->keys_[i] > key)
+      return this->childs_[i]->findNear(key);
+  }
+
+  return this->childs_[this->keys_.size()]->findNear(key);
+}
+
+template<typename Tkey, typename Tdata>
 bool BtreeNode<Tkey,Tdata>::needBalancing()
 {
   return (childs_.size() > order_);
@@ -105,14 +131,16 @@ void BtreeNode<Tkey,Tdata>::split()
 {
   BtreeNode<Tkey,Tdata>* new_node = new BtreeNode<Tkey,Tdata>(order_);
 
-  for(size_t i = 0; i < order_/2; i++)
+  size_t half_order = order_/2;
+  for(size_t i = 0; i < half_order; i++)
   {
     new_node->childs_.insert(new_node->childs_.begin(), childs_[childs_.size() - 1]);
     childs_.erase(childs_.begin() + childs_.size() - 1);
     new_node->childs_[i]->setMother(new_node);
   }
 
-  for(size_t i = 0; i < order_/2 - 1; i++)
+  half_order = half_order - 1;
+  for(size_t i = 0; i < half_order; i++)
   {
     new_node->keys_.insert(new_node->keys_.begin(), keys_[keys_.size() - 1]);
     keys_.erase(keys_.begin() + keys_.size() - 1);

@@ -25,7 +25,7 @@ public:
 
   ~BtreeLeaf() {}
 
-  void push_back(Tdata data) { data_.push_back(data); }
+  void push_back(const Tdata& data) { data_.push_back(data); }
 
   BtreeLeaf* next_;
   BtreeLeaf* prev_;
