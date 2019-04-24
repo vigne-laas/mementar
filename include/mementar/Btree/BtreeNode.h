@@ -26,6 +26,7 @@ public:
   void insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& key);
   virtual BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   virtual BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
+  virtual BtreeLeaf<Tkey, Tdata>* getFirst();
 
   void setMother(BtreeNode<Tkey,Tdata>* mother) { mother_ = mother; }
   BtreeNode<Tkey,Tdata>* getMother() { return mother_; }
@@ -118,6 +119,12 @@ BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::findNear(const Tkey& key)
   }
 
   return this->childs_[this->keys_.size()]->findNear(key);
+}
+
+template<typename Tkey, typename Tdata>
+BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::getFirst()
+{
+  return this->childs_[0]->getFirst();
 }
 
 template<typename Tkey, typename Tdata>

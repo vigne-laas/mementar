@@ -38,6 +38,7 @@ public:
   void insert(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
+  BtreeLeaf<Tkey, Tdata>* getFirst();
 
   void display(int count = -1);
 
@@ -82,6 +83,15 @@ BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::findNear(const Tkey& key)
 {
   if(root_ != nullptr)
     return root_->findNear(key);
+  else
+    return nullptr;
+}
+
+template<typename Tkey, typename Tdata>
+BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::getFirst()
+{
+  if(root_ != nullptr)
+    return root_->getFirst();
   else
     return nullptr;
 }

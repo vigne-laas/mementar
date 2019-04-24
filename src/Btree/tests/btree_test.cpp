@@ -40,6 +40,8 @@ int main()
     if(res) std::cout << res->getKey() << std::endl;
     res = tree.findNear(49);
     if(res) std::cout << res->getKey() << std::endl;
+    res = tree.getFirst();
+    if(res) std::cout << res->getKey() << std::endl;
 
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     duration<double> time_span = duration_cast<duration<double>>(t2 - t1);

@@ -19,6 +19,7 @@ public:
   BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
+  BtreeLeaf<Tkey, Tdata>* getFirst();
 
   virtual void display(size_t depth = 0);
 private:
@@ -116,6 +117,12 @@ BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::findNear(const Tkey& key)
       return leafs_[i];
   }
   return leafs_[leafs_.size() - 1]->next_;
+}
+
+template<typename Tkey, typename Tdata>
+BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::getFirst()
+{
+  return leafs_[0];
 }
 
 template<typename Tkey, typename Tdata>
