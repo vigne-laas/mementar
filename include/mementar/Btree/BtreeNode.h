@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "mementar/Btree/BtreeLeaf.h"
+
 namespace mementar
 {
 
