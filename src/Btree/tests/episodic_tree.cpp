@@ -10,9 +10,11 @@ using namespace std::chrono;
 
 int main()
 {
-  mementar::Btree<size_t, int> tree(10);
+  mementar::Btree<size_t, mementar::Fact> tree(10);
   for(size_t i = 0; i < 1000; i++)
-    tree.insert(i, i);
+    tree.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
+
+  tree.display();
 
   mementar::CompressedLeaf<size_t> leaf(&tree, "/home/gsarthou/Desktop");
 

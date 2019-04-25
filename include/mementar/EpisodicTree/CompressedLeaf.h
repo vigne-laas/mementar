@@ -6,6 +6,7 @@
 
 #include "mementar/Btree/Btree.h"
 #include "mementar/archiving_compressing/compressing/LzCompress.h"
+#include "mementar/Fact.h"
 
 namespace mementar
 {
@@ -14,18 +15,18 @@ template<typename Tkey>
 class CompressedLeaf
 {
 public:
-  CompressedLeaf(Btree<Tkey, int>* tree, const std::string& directory);
+  CompressedLeaf(Btree<Tkey, Fact>* tree, const std::string& directory);
 
   Tkey getKey() { return key_; }
 private:
   Tkey key_;
   std::string directory_;
 
-  std::string treeToString(Btree<Tkey, int>* tree);
+  std::string treeToString(Btree<Tkey, Fact>* tree);
 };
 
 template<typename Tkey>
-CompressedLeaf<Tkey>::CompressedLeaf(Btree<Tkey, int>* tree, const std::string& directory)
+CompressedLeaf<Tkey>::CompressedLeaf(Btree<Tkey, Fact>* tree, const std::string& directory)
 {
   if(tree == nullptr)
     return;
@@ -43,16 +44,16 @@ CompressedLeaf<Tkey>::CompressedLeaf(Btree<Tkey, int>* tree, const std::string& 
 }
 
 template<typename Tkey>
-std::string CompressedLeaf<Tkey>::treeToString(Btree<Tkey, int>* tree)
+std::string CompressedLeaf<Tkey>::treeToString(Btree<Tkey, Fact>* tree)
 {
   std::string res;
-  std::vector<int> tmp_data;
-  BtreeLeaf<Tkey, int>* it = tree->getFirst();
+  std::vector<Fact> tmp_data;
+  BtreeLeaf<Tkey, Fact>* it = tree->getFirst();
   while(it != nullptr)
   {
     tmp_data = it->getData();
-    for(const auto& data : tmp_data)
-      res += "[" + std::to_string(it->getKey()) + "]" + std::to_string(data) + "\n";
+    for(auto& data : tmp_data)
+      res += "[" + std::to_string(it->getKey()) + "]" + data.toString() + "\n";
     it = it->next_;
   }
 
