@@ -13,6 +13,7 @@ public:
   BtreeNode(size_t order = 10)
   {
     order_ = order;
+    level_ = 1;
     mother_ = nullptr;
   }
 
@@ -32,12 +33,18 @@ public:
   void setMother(BtreeNode<Tkey,Tdata>* mother) { mother_ = mother; }
   BtreeNode<Tkey,Tdata>* getMother() { return mother_; }
 
+  void setLevel(size_t level) { level_ = level; }
+  size_t getLevel() { return level_; }
+
+  size_t getNbChilds() { return childs_.size(); }
+
   virtual void display(size_t depth = 0);
 protected:
   std::vector<Tkey> keys_;
   std::vector<BtreeNode<Tkey,Tdata>*> childs_;
   BtreeNode<Tkey,Tdata>* mother_;
   size_t order_;
+  size_t level_;
 
   virtual bool needBalancing();
   virtual void split();
@@ -180,6 +187,7 @@ void BtreeNode<Tkey,Tdata>::split()
   else
   {
     BtreeNode<Tkey,Tdata>* new_mother = new BtreeNode<Tkey,Tdata>(order_);
+    new_mother->setLevel(this->level_ + 1);
     new_mother->insert(this, keys_[keys_.size() - 1]);
     new_mother->insert(new_node, keys_[keys_.size() - 1]);
     keys_.erase(keys_.begin() + keys_.size() - 1);

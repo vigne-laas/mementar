@@ -181,6 +181,7 @@ void BtreeLeafNode<Tkey,Tdata>::split()
   else
   {
     BtreeNode<Tkey,Tdata>* new_mother = new BtreeNode<Tkey,Tdata>(this->order_);
+    new_mother->setLevel(this->level_ + 1);
     new_mother->insert(this, new_node->keys_[0]);
     new_mother->insert(new_node, new_node->keys_[0]);
   }

@@ -18,17 +18,17 @@ int main()
   else
     std::cout << "sup" << std::endl;
 
-  std::vector<size_t> sizes = {100};
+  std::vector<size_t> sizes = {1234};
   std::vector<double> times;
   for(auto nb : sizes)
   {
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-    mementar::Btree<size_t, size_t> tree(8);
-    for(size_t i = 0; i < nb; i=i+2)
+    mementar::Btree<size_t, size_t> tree(10);
+    for(size_t i = 0; i < nb; i++)
       tree.insert(i, i);
 
-    tree.display();
+    //tree.display();
 
     auto res = tree.find(10);
     if(res) std::cout << res->getKey() << std::endl;
@@ -45,7 +45,9 @@ int main()
 
     tree.remove(40,40);
     tree.insert(40,41);
-    tree.display();
+    //tree.display();
+
+    std::cout << "estimation = " << tree.estimateMinLeaves() << std::endl;
 
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     duration<double> time_span = duration_cast<duration<double>>(t2 - t1);

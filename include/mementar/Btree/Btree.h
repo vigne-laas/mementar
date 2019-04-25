@@ -2,6 +2,7 @@
 #define MEMENTAR_BTREE_H
 
 #include <iostream>
+#include <math.h>
 
 #include "mementar/Btree/BtreeNode.h"
 #include "mementar/Btree/BtreeLeafNode.h"
@@ -19,6 +20,7 @@ public:
     root_ = nullptr;
     last_ = nullptr;
     order_ = order;
+    level_ = 0;
   }
 
   ~Btree()
@@ -41,12 +43,19 @@ public:
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
 
+  size_t estimateMinLeaves()
+  {
+    std::cout << order_ << " : " << level_ << std::endl;
+    return pow((double)order_/2. + 1., (double)level_ - 1.) * root_->getNbChilds();
+  }
+
   void display(int count = -1);
 
 private:
   BtreeNode<Tkey, Tdata>* root_;
   BtreeLeaf<Tkey, Tdata>* last_;
   size_t order_;
+  size_t level_;
 };
 
 template<typename Tkey, typename Tdata>
@@ -55,6 +64,7 @@ void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
   if(last_ == nullptr)
   {
     root_ = new BtreeLeafNode<Tkey, Tdata>(order_);
+    level_ = root_->getLevel();
     last_ = root_->insert(key, data);
   }
   else
@@ -65,7 +75,10 @@ void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
       if(tmp->operator>(last_))
         last_ = tmp;
       if(root_->getMother() != nullptr)
+      {
         root_ = root_->getMother();
+        level_ = root_->getLevel();
+      }
     }
   }
 }
