@@ -24,7 +24,7 @@ int main()
   {
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-    mementar::Btree<size_t, size_t> tree(10);
+    mementar::Btree<size_t, size_t> tree(3);
     for(size_t i = 0; i < nb; i++)
       tree.insert(i, i);
 
@@ -45,9 +45,10 @@ int main()
 
     tree.remove(40,40);
     tree.insert(40,41);
-    //tree.display();
+    tree.display();
 
     std::cout << "estimation = " << tree.estimateMinLeaves() << std::endl;
+    std::cout << "level = " << tree.estimateMaxLevel(nb) << ">=" << tree.getCurrentLevel() << std::endl;
 
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     duration<double> time_span = duration_cast<duration<double>>(t2 - t1);

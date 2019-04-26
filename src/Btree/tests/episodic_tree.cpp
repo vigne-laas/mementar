@@ -11,15 +11,22 @@ using namespace std::chrono;
 
 int main()
 {
-  mementar::CompressedLeafNode<size_t> compressed_node;
-  for(size_t i = 1; i < 120; i++)
+  high_resolution_clock::time_point t1 = high_resolution_clock::now();
+
+  mementar::CompressedLeafNode<size_t> compressed_node("/home/gsarthou/Desktop");
+  for(size_t i = 1; i < 200000; i++)
   {
+    //std::cout << i << std::endl;
     compressed_node.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
   }
 
+  high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+  std::cout << "took " << time_span.count() << std::endl;
+
   compressed_node.remove(102,mementar::Fact("bob", "hasValue", std::to_string(102)));
   compressed_node.insert(0, mementar::Fact("bob", "hasValue", std::to_string(0)));
-  compressed_node.display(1);
+  //compressed_node.display(150000);
 
   std::cout << "first key = " << compressed_node.getFirst()->getKey() << std::endl;
 

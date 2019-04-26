@@ -14,9 +14,17 @@ template<typename Tkey>
 class CompressedLeafNode
 {
 public:
-  CompressedLeafNode(size_t order = 10)
+  CompressedLeafNode(std::string directory, size_t order = 10)
   {
+    directory_ = directory;
     order_ = order;
+    last_tree_nb_leafs_ = 0;
+  }
+
+  ~CompressedLeafNode()
+  {
+    for(auto tree : btree_childs_)
+      delete tree;
   }
 
   void insert(const Tkey& key, const Fact& data);
@@ -28,13 +36,17 @@ public:
   void display(Tkey key);
 
 private:
+  std::string directory_;
   size_t order_;
 
   // keys_.size() == btree_childs_.size() + compressed_childs_.size()
   // keys_[i] correspond to the first key of child i
   std::vector<Tkey> keys_;
-  std::vector<Btree<Tkey,Fact>> btree_childs_;
+  std::vector<Btree<Tkey,Fact>*> btree_childs_;
   std::vector<CompressedLeaf<Tkey>> compressed_childs_;
+  size_t last_tree_nb_leafs_;
+
+  bool useNewTree();
 };
 
 template<typename Tkey>
@@ -42,9 +54,9 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const Fact& data)
 {
   if(keys_.size() == 0)
   {
-    btree_childs_.push_back(Btree<Tkey,Fact>(order_));
+    btree_childs_.push_back(new Btree<Tkey,Fact>(order_));
     keys_.push_back(key);
-    btree_childs_[0].insert(key, data);
+    last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
   }
   else
   {
@@ -66,18 +78,25 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const Fact& data)
 
     if(index < compressed_childs_.size())
     {
-      std::cout << "here" << std::endl;
       if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()))
       {
-        btree_childs_.push_back(Btree<Tkey,Fact>(order_));
+        btree_childs_.push_back(new Btree<Tkey,Fact>(order_));
         keys_.push_back(key);
-        btree_childs_[0].insert(key, data);
+        last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
       }
       else
         std::cout << "[ERROR] try to insrt fact in compressed file" << std::endl;
     }
+    else if(useNewTree())
+    {
+      btree_childs_.push_back(new Btree<Tkey,Fact>(order_));
+      keys_.push_back(key);
+      last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(key, data);
+    }
+    else if(index - keys_.size() + 1 == 0) // if insert in more recent tree
+      last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(key,data);
     else
-      btree_childs_[index - keys_.size() + 1].insert(key,data);
+      btree_childs_[index - compressed_childs_.size()]->insert(key,data);
   }
 }
 
@@ -99,7 +118,7 @@ void CompressedLeafNode<Tkey>::remove(const Tkey& key, const Fact& data)
     if((size_t)index < compressed_childs_.size())
       std::cout << "[ERROR] try to remove fact from compressed file" << std::endl;
     else
-      btree_childs_[index - keys_.size() + 1].remove(key,data);
+      btree_childs_[index - compressed_childs_.size()]->remove(key,data);
   }
 }
 
@@ -124,7 +143,7 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::find(const Tkey& key)
       return nullptr;
     }
     else
-      return btree_childs_[index - keys_.size() + 1].find(key);
+      return btree_childs_[index - compressed_childs_.size()]->find(key);
   }
   else
     return nullptr;
@@ -151,7 +170,7 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::findNear(const Tkey& key)
       return nullptr;
     }
     else
-      return btree_childs_[index - keys_.size() + 1].findNear(key);
+      return btree_childs_[index - compressed_childs_.size()]->findNear(key);
   }
   else
     return nullptr;
@@ -166,7 +185,7 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::getFirst()
     return nullptr;
   }
   else if(btree_childs_.size())
-    return btree_childs_[0].getFirst();
+    return btree_childs_[0]->getFirst();
   else
     return nullptr;
 }
@@ -189,8 +208,17 @@ void CompressedLeafNode<Tkey>::display(Tkey key)
     if((size_t)index < compressed_childs_.size())
       std::cout << compressed_childs_[index].getDirectoty() << std::endl;
     else
-      return btree_childs_[index - keys_.size() + 1].display();
+      return btree_childs_[index - compressed_childs_.size()]->display();
   }
+}
+
+template<typename Tkey>
+bool CompressedLeafNode<Tkey>::useNewTree()
+{
+  if(last_tree_nb_leafs_ > 100000)
+    return true;
+  else
+    return false;
 }
 
 } // mementar

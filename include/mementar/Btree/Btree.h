@@ -21,6 +21,7 @@ public:
     last_ = nullptr;
     order_ = order;
     level_ = 0;
+    nb_data_ = 0;
   }
 
   ~Btree()
@@ -37,7 +38,7 @@ public:
     }
   }
 
-  void insert(const Tkey& key, const Tdata& data);
+  size_t insert(const Tkey& key, const Tdata& data);
   void remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
@@ -45,9 +46,15 @@ public:
 
   size_t estimateMinLeaves()
   {
-    std::cout << order_ << " : " << level_ << std::endl;
     return pow((double)order_/2. + 1., (double)level_ - 1.) * root_->getNbChilds();
   }
+
+  size_t estimateMaxLevel(size_t nbLeafs)
+  {
+    return log((double)nbLeafs/2.) / log((double)order_/2. + 1) + 1;
+  }
+
+  size_t getCurrentLevel() { return level_; }
 
   void display(int count = -1);
 
@@ -56,11 +63,13 @@ private:
   BtreeLeaf<Tkey, Tdata>* last_;
   size_t order_;
   size_t level_;
+  size_t nb_data_;
 };
 
 template<typename Tkey, typename Tdata>
-void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
+size_t Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
 {
+  nb_data_++;
   if(last_ == nullptr)
   {
     root_ = new BtreeLeafNode<Tkey, Tdata>(order_);
@@ -81,11 +90,14 @@ void Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
       }
     }
   }
+
+  return nb_data_;
 }
 
 template<typename Tkey, typename Tdata>
 void Btree<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
 {
+  nb_data_--;
   if(root_ != nullptr)
     return root_->remove(key, data);
 }
