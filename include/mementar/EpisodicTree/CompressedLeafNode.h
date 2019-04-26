@@ -47,6 +47,7 @@ private:
   size_t last_tree_nb_leafs_;
 
   bool useNewTree();
+  int getKeyIndex(const Tkey& key);
 };
 
 template<typename Tkey>
@@ -66,15 +67,7 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const Fact& data)
       return;
     }
 
-    size_t index = keys_.size() - 1;
-    for(size_t i = 1; i < keys_.size(); i++)
-    {
-      if(key < keys_[i])
-      {
-        index = i - 1;
-        break;
-      }
-    }
+    size_t index = getKeyIndex(key);
 
     if(index < compressed_childs_.size())
     {
@@ -103,15 +96,7 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const Fact& data)
 template<typename Tkey>
 void CompressedLeafNode<Tkey>::remove(const Tkey& key, const Fact& data)
 {
-  int index = keys_.size() - 1;
-  for(size_t i = 0; i < keys_.size(); i++)
-  {
-    if(key < keys_[i])
-    {
-      index = i - 1;
-      break;
-    }
-  }
+  int index = getKeyIndex(key);
 
   if(index >= 0)
   {
@@ -125,15 +110,7 @@ void CompressedLeafNode<Tkey>::remove(const Tkey& key, const Fact& data)
 template<typename Tkey>
 BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::find(const Tkey& key)
 {
-  int index = keys_.size() - 1;
-  for(size_t i = 0; i < keys_.size(); i++)
-  {
-    if(key < keys_[i])
-    {
-      index = i - 1;
-      break;
-    }
-  }
+  int index = getKeyIndex(key);
 
   if(index >= 0)
   {
@@ -152,15 +129,7 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::find(const Tkey& key)
 template<typename Tkey>
 BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::findNear(const Tkey& key)
 {
-  int index = keys_.size() - 1;
-  for(size_t i = 0; i < keys_.size(); i++)
-  {
-    if(key < keys_[i])
-    {
-      index = i - 1;
-      break;
-    }
-  }
+  int index = getKeyIndex(key);
 
   if(index >= 0)
   {
@@ -193,15 +162,7 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::getFirst()
 template<typename Tkey>
 void CompressedLeafNode<Tkey>::display(Tkey key)
 {
-  int index = keys_.size() - 1;
-  for(size_t i = 0; i < keys_.size(); i++)
-  {
-    if(key < keys_[i])
-    {
-      index = i - 1;
-      break;
-    }
-  }
+  int index = getKeyIndex(key);
 
   if(index >= 0)
   {
@@ -215,10 +176,25 @@ void CompressedLeafNode<Tkey>::display(Tkey key)
 template<typename Tkey>
 bool CompressedLeafNode<Tkey>::useNewTree()
 {
-  if(last_tree_nb_leafs_ > 100000)
+  if(last_tree_nb_leafs_ >= 100000)
     return true;
   else
     return false;
+}
+
+template<typename Tkey>
+int CompressedLeafNode<Tkey>::getKeyIndex(const Tkey& key)
+{
+  int index = keys_.size() - 1;
+  for(size_t i = 0; i < keys_.size(); i++)
+  {
+    if(key < keys_[i])
+    {
+      index = i - 1;
+      break;
+    }
+  }
+  return index;
 }
 
 } // mementar
