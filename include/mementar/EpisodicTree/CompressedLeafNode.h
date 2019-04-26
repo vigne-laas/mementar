@@ -2,6 +2,8 @@
 #define MEMENTAR_COMPRESSEDLEAFNODE_H
 
 #include <vector>
+#include <sstream>
+#include <experimental/filesystem>
 
 #include "mementar/Fact.h"
 #include "mementar/Btree/Btree.h"
@@ -19,12 +21,17 @@ public:
     directory_ = directory;
     order_ = order;
     last_tree_nb_leafs_ = 0;
+
+    loadStoredData();
   }
 
   ~CompressedLeafNode()
   {
     for(auto tree : btree_childs_)
+    {
+      compressed_childs_.push_back(CompressedLeaf<Tkey>(tree, directory_));
       delete tree;
+    }
   }
 
   void insert(const Tkey& key, const Fact& data);
@@ -48,6 +55,8 @@ private:
 
   bool useNewTree();
   int getKeyIndex(const Tkey& key);
+  void loadStoredData();
+  void insert(const Tkey& key, const CompressedLeaf<Tkey>& leaf);
 };
 
 template<typename Tkey>
@@ -78,7 +87,7 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const Fact& data)
         last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
       }
       else
-        std::cout << "[ERROR] try to insrt fact in compressed file" << std::endl;
+        std::cout << "[ERROR] try to insert fact in compressed file" << std::endl;
     }
     else if(useNewTree())
     {
@@ -195,6 +204,53 @@ int CompressedLeafNode<Tkey>::getKeyIndex(const Tkey& key)
     }
   }
   return index;
+}
+
+template<typename Tkey>
+void CompressedLeafNode<Tkey>::loadStoredData()
+{
+  for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
+  {
+    std::string complete_dir = entry.path();
+    std::string dir = complete_dir.substr(directory_.size());
+    if(dir[0] == '/')
+      dir.erase(dir.begin());
+    size_t dot_pose = dir.find(".");
+    if(dot_pose != std::string::npos)
+    {
+      std::string ext = dir.substr(dot_pose + 1);
+      std::string str_key = dir.substr(0, dot_pose);
+      if(ext == "mlz")
+      {
+        Tkey key;
+        std::istringstream iss(str_key);
+        iss >> key;
+        insert(key, CompressedLeaf<Tkey>(key, complete_dir));
+      }
+    }
+  }
+}
+
+template<typename Tkey>
+void CompressedLeafNode<Tkey>::insert(const Tkey& key, const CompressedLeaf<Tkey>& leaf)
+{
+  if((keys_.size() == 0) || (key > keys_[keys_.size() - 1]))
+  {
+    keys_.push_back(key);
+    compressed_childs_.push_back(leaf);
+  }
+  else
+  {
+    for(size_t i = 0; i < keys_.size(); i++)
+    {
+      if(key < keys_[i])
+      {
+        keys_.insert(keys_.begin() + i, key);
+        compressed_childs_.insert(compressed_childs_.begin() + i, leaf);
+        break;
+      }
+    }
+  }
 }
 
 } // mementar

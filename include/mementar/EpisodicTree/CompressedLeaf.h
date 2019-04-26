@@ -16,6 +16,7 @@ class CompressedLeaf
 {
 public:
   CompressedLeaf(Btree<Tkey, Fact>* tree, const std::string& directory);
+  CompressedLeaf(const Tkey& key, const std::string& directory);
 
   std::string getDirectoty() { return directory_; }
   Tkey getKey() { return key_; }
@@ -42,6 +43,14 @@ CompressedLeaf<Tkey>::CompressedLeaf(Btree<Tkey, Fact>* tree, const std::string&
 
   lz_comp.displayCompressionRate(in.size(), out_vect.size());
   lz_comp.saveToFile(out_vect, directory_);
+}
+
+template<typename Tkey>
+CompressedLeaf<Tkey>::CompressedLeaf(const Tkey& key, const std::string& directory)
+{
+  key_ = key;
+  size_t dot_pose = directory.find(".");
+  directory_ = directory.substr(0, dot_pose);
 }
 
 template<typename Tkey>

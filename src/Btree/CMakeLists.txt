@@ -1,7 +1,8 @@
 cmake_minimum_required (VERSION 3.5)
 project (mementar)
 
-add_compile_options(-std=c++14 -Wall)
+add_compile_options(-std=c++1z -Wall)
+link_libraries(stdc++fs)
 
 include_directories(
   ../../include

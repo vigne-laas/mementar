@@ -15,7 +15,6 @@ int main()
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
   mementar::Btree<size_t, size_t> tree(5);
-  size_t max_level = nb;
   for(size_t i = 0; true; i++)
     if(tree.insert(i, i) >= nb)
       break;
