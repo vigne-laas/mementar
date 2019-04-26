@@ -19,5 +19,7 @@ add_library(mementar_compression_lib
 
 add_executable(btree tests/btree_test.cpp)
 
+add_executable(max tests/max_insertion.cpp)
+
 add_executable(episodic tests/episodic_tree.cpp)
 target_link_libraries(episodic mementar_compression_lib)
