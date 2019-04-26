@@ -15,7 +15,7 @@ template<typename Tkey, typename Tdata>
 class Btree
 {
 public:
-  Btree(size_t order)
+  Btree(size_t order = 10)
   {
     root_ = nullptr;
     last_ = nullptr;
