@@ -57,6 +57,8 @@ private:
   int getKeyIndex(const Tkey& key);
   void loadStoredData();
   void insert(const Tkey& key, const CompressedLeaf<Tkey>& leaf);
+
+  void compressFirst();
 };
 
 template<typename Tkey>
@@ -94,6 +96,10 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const Fact& data)
       btree_childs_.push_back(new Btree<Tkey,Fact>(order_));
       keys_.push_back(key);
       last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(key, data);
+
+      //verify if a chld need to be compressed
+      if(btree_childs_.size() > 2)
+        compressFirst();
     }
     else if(index - keys_.size() + 1 == 0) // if insert in more recent tree
       last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(key,data);
@@ -251,6 +257,20 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const CompressedLeaf<Tkey
       }
     }
   }
+}
+
+template<typename Tkey>
+void CompressedLeafNode<Tkey>::compressFirst()
+{
+  if(btree_childs_.size() == 0)
+    return;
+
+  CompressedLeaf<Tkey> tmp(btree_childs_[0], directory_);
+
+  // put mutex here
+  compressed_childs_.push_back(tmp);
+  btree_childs_.erase(btree_childs_.begin());
+  //release shared mutex here
 }
 
 } // mementar

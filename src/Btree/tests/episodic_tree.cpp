@@ -2,6 +2,7 @@
 #include <chrono>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <unistd.h>
 
 #include "mementar/EpisodicTree/CompressedLeaf.h"
 #include "mementar/Btree/Btree.h"
@@ -14,10 +15,11 @@ int main()
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
   mementar::CompressedLeafNode<size_t> compressed_node("/home/gsarthou/Desktop/tests");
-  for(size_t i = 200000; i < 210000; i++)
+  for(size_t i = 0; i < 35000; i++)
   {
     //std::cout << i << std::endl;
     compressed_node.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
+    usleep(1);
   }
 
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
