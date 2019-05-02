@@ -60,7 +60,12 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
         last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
       }
       else
-        std::cout << "[ERROR] try to insert fact in compressed file" << std::endl;
+      {
+        if(compressed_sessions_tree_[index] == nullptr)
+          createSession(index);
+
+        compressed_sessions_tree_[index]->insert(key, data);
+      }
     }
     else if(useNewTree())
     {
@@ -86,9 +91,14 @@ void CompressedLeafNode::remove(const time_t& key, const Fact& data)
   if(index >= 0)
   {
     if((size_t)index < compressed_childs_.size())
-      std::cout << "[ERROR] try to remove fact from compressed file" << std::endl;
+    {
+      if(compressed_sessions_tree_[index] == nullptr)
+        createSession(index);
+
+      compressed_sessions_tree_[index]->remove(key, data);
+    }
     else
-      btree_childs_[index - compressed_childs_.size()]->remove(key,data);
+      btree_childs_[index - compressed_childs_.size()]->remove(key, data);
   }
 }
 
