@@ -134,8 +134,10 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::find(const Tkey& key)
   {
     if((size_t)index < compressed_childs_.size())
     {
-      std::cout << "[TODO] find in compressed file" << std::endl;
-      return nullptr;
+      if(compressed_sessions_tree_[index] == nullptr)
+        createSession(index);
+
+      return compressed_sessions_tree_[index]->find(key);
     }
     else
       return btree_childs_[index - compressed_childs_.size()]->find(key);
@@ -153,8 +155,10 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::findNear(const Tkey& key)
   {
     if((size_t)index < compressed_childs_.size())
     {
-      std::cout << "[TODO] findNear in compressed file" << std::endl;
-      return nullptr;
+      if(compressed_sessions_tree_[index] == nullptr)
+        createSession(index);
+
+      return compressed_sessions_tree_[index]->findNear(key);
     }
     else
       return btree_childs_[index - compressed_childs_.size()]->findNear(key);
@@ -168,8 +172,10 @@ BtreeLeaf<Tkey, Fact>* CompressedLeafNode<Tkey>::getFirst()
 {
   if(compressed_childs_.size())
   {
-    std::cout << "[TODO] findFirst in compressed file" << std::endl;
-    return nullptr;
+    if(compressed_sessions_tree_[index] == nullptr)
+      createSession(index);
+
+    return compressed_sessions_tree_[index]->getFirst();
   }
   else if(btree_childs_.size())
     return btree_childs_[0]->getFirst();
@@ -285,7 +291,8 @@ void CompressedLeafNode<Tkey>::compressFirst()
 template<typename Tkey>
 void CompressedLeafNode<Tkey>::createSession(size_t index)
 {
-
+  compressed_sessions_tree_[index] = compressed_childs_[index].getTree();
+  compressed_sessions_timeout_[index] = std::time(0);
 }
 
 } // mementar

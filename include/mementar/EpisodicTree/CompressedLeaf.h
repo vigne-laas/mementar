@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 
 #include "mementar/Btree/Btree.h"
 #include "mementar/archiving_compressing/compressing/LzCompress.h"
@@ -66,7 +67,27 @@ Btree<Tkey, Fact>* CompressedLeaf<Tkey>::getTree()
   if(lz.readBinaryFile(data, directory_ + ".mlz"))
   {
     lz.uncompress(data, out);
-    Btree<Tkey, Fact> tree = new Btree<Tkey, Fact>();
+    Btree<Tkey, Fact>* tree = new Btree<Tkey, Fact>();
+
+    std::regex regex("\\[(\\d+)\\](\\w+)\\s(\\w+)\\s(\\w+)");
+    std::smatch match;
+
+    std::istringstream iss(out);
+    std::string line;
+    while(std::getline(iss, line))
+    {
+      if(std::regex_match(line, match, regex))
+      {
+        Fact fact(match[2].str(), match[3].str(), match[4].str());
+        Tkey key;
+        std::istringstream iss(match[1].str());
+        iss >> key;
+
+        tree->insert(key, fact);
+      }
+    }
+
+    return tree;
   }
 
   return nullptr;
