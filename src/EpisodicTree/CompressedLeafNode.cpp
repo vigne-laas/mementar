@@ -295,13 +295,13 @@ void CompressedLeafNode::compressFirst()
 
 void CompressedLeafNode::createSession(size_t index)
 {
+  mut_.lock();
   if(compressed_sessions_tree_[index] == nullptr)
   {
-    mut_.lock();
     compressed_sessions_tree_[index] = compressed_childs_[index].getTree();
-    mut_.unlock();
   }
-  compressed_sessions_timeout_[index] = std::time(0);    
+  compressed_sessions_timeout_[index] = std::time(0);
+  mut_.unlock();
 }
 
 void CompressedLeafNode::clean()
