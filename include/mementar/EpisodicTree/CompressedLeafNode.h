@@ -2,6 +2,8 @@
 #define MEMENTAR_COMPRESSEDLEAFNODE_H
 
 #include <vector>
+#include <thread>
+#include <atomic>
 
 #include "mementar/Fact.h"
 #include "mementar/Btree/Btree.h"
@@ -37,15 +39,20 @@ private:
   std::vector<int> compressed_sessions_timeout_; //ms
   size_t last_tree_nb_leafs_;
 
+  std::atomic<bool> running_;
+  std::thread session_cleaner_;
+
   inline void createNewTreeChild(const time_t& key);
   inline bool useNewTree();
   inline int getKeyIndex(const time_t& key);
-  
+
   void loadStoredData();
   void insert(const time_t& key, const CompressedLeaf& leaf);
 
   void compressFirst();
   void createSession(size_t index);
+
+  void clean();
 };
 
 } // mementar

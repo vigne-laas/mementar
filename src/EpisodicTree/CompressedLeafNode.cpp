@@ -13,10 +13,16 @@ CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
   last_tree_nb_leafs_ = 0;
 
   loadStoredData();
+
+  running_ = true;
+  session_cleaner_ = std::move(std::thread(&CompressedLeafNode::clean, this));
 }
 
 CompressedLeafNode::~CompressedLeafNode()
 {
+  running_ = false;
+  session_cleaner_.join();
+
   for(auto tree : btree_childs_)
   {
     compressed_childs_.push_back(CompressedLeaf(tree, directory_));
@@ -255,6 +261,30 @@ void CompressedLeafNode::createSession(size_t index)
   {
     compressed_sessions_tree_[index] = compressed_childs_[index].getTree();
     compressed_sessions_timeout_[index] = std::time(0);
+  }
+}
+
+void CompressedLeafNode::clean()
+{
+  size_t rate = 1000000 / 1000; // clean rate / look up rate;
+  size_t cpt = rate;
+  while(running_ == true)
+  {
+    if(cpt-- == 0)
+    {
+      cpt = rate;
+      time_t now = std::time(0);
+      for(size_t i = 0; i < compressed_sessions_timeout_.size(); i++)
+      {
+        if((compressed_sessions_tree_[i] != nullptr) &&
+          (std::difftime(now, compressed_sessions_timeout_[i]) > 30)) // session expire after 30s
+        {
+          delete compressed_sessions_tree_[i];
+          compressed_sessions_tree_[i] = nullptr;
+        }
+
+      }
+    }
   }
 }
 
