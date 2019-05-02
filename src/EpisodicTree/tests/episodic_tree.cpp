@@ -15,7 +15,7 @@ int main()
 {
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-  mementar::CompressedLeafNode<time_t> compressed_node("/home/gsarthou/Desktop/tests");
+  mementar::CompressedLeafNode compressed_node("/home/gsarthou/Desktop/tests");
   /*for(size_t i = 0; i < 20; i++)
   {
     //std::cout << i << std::endl;
