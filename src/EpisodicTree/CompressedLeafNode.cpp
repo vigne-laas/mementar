@@ -25,6 +25,8 @@ CompressedLeafNode::~CompressedLeafNode()
   running_ = false;
   session_cleaner_.join();
 
+  Context::storeContexts(contexts_, keys_, directory_);
+
   mut_.lock();
   for(auto tree : btree_childs_)
   {
@@ -103,7 +105,6 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
     {
       last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(key,data);
       contexts_[index].insert(data);
-
     }
     else
     {

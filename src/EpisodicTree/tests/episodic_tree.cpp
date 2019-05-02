@@ -16,12 +16,12 @@ int main()
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
   mementar::CompressedLeafNode compressed_node("/home/gsarthou/Desktop/tests");
-  /*for(size_t i = 0; i < 20; i++)
+  for(size_t i = 0; i < 20; i++)
   {
     //std::cout << i << std::endl;
     compressed_node.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
     usleep(1);
-  }*/
+  }
 
   high_resolution_clock::time_point t2 = high_resolution_clock::now();
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);

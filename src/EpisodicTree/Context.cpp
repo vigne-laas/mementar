@@ -1,6 +1,8 @@
 #include "mementar/EpisodicTree/Context.h"
 
 #include <regex>
+#include <iostream>
+#include <fstream>
 
 namespace mementar
 {
@@ -133,6 +135,28 @@ void Context::fromString(const std::string& string)
       }
     }
   }
+}
+
+void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory)
+{
+  if(contexts.size() != keys.size())
+  {
+    std::cout << "[ERROR] contexts and keys don't have the same size" << std::endl;
+    return;
+  }
+
+  std::string res;
+  for(size_t i = 0; i < keys.size(); i++)
+  {
+    res += std::to_string(keys[i]) + "{\n";
+    res += contexts[i].toString();
+    res += "}\n";
+  }
+
+  std::ofstream file;
+  file.open(directory + "/context.txt");
+  file << res;
+  file.close();
 }
 
 } // mementar
