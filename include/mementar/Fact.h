@@ -1,6 +1,9 @@
 #ifndef MEMENTAR_FACT_H
 #define MEMENTAR_FACT_H
 
+#include <string>
+#include <vector>
+
 namespace mementar
 {
 
@@ -27,7 +30,7 @@ public:
 
   std::string toString()
   {
-    return subject_ + ' ' + predicat_ + ' ' + object_;
+    return subject_ + " " + predicat_ + " " + object_;
   }
 
   bool operator==(const Fact& other)
@@ -39,7 +42,8 @@ public:
 
   friend std::ostream& operator<<(std::ostream& os, const Fact& fact)
   {
-    os << fact.subject_ << ' ' << fact.predicat_ << ' ' << fact.object_;
+    std::string space = " ";
+    os << fact.subject_ << space << fact.predicat_ << space << fact.object_;
     return os;
   }
 

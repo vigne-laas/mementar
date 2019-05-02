@@ -52,6 +52,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
     createNewTreeChild(key);
     mut_.lock_shared();
     last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
+    contexts_[0].insert(data);
   }
   else
   {
@@ -71,6 +72,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
         createNewTreeChild(key);
         mut_.lock_shared();
         last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
+        contexts_[keys_.size()].insert(data);
       }
       else
       {
@@ -78,6 +80,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
         createSession(index);
         mut_.lock_shared();
         compressed_sessions_tree_[index]->insert(key, data);
+        contexts_[index].insert(data);
       }
     }
     else if(useNewTree())
@@ -86,6 +89,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
       createNewTreeChild(key);
       mut_.lock_shared();
       last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(key, data);
+      contexts_[keys_.size() - 1].insert(data);
 
       //verify if a chld need to be compressed
       if(btree_childs_.size() > 2)
@@ -96,9 +100,16 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
       }
     }
     else if(index - keys_.size() + 1 == 0) // if insert in more recent tree
+    {
       last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(key,data);
+      contexts_[index].insert(data);
+
+    }
     else
+    {
       btree_childs_[index - compressed_childs_.size()]->insert(key,data);
+      contexts_[index].insert(data);
+    }
   }
   mut_.unlock_shared();
 
@@ -115,10 +126,15 @@ void CompressedLeafNode::remove(const time_t& key, const Fact& data)
     if((size_t)index < compressed_childs_.size())
     {
       createSession(index);
-      compressed_sessions_tree_[index]->remove(key, data);
+      if(compressed_sessions_tree_[index]->remove(key, data))
+      contexts_[index].remove(data);
     }
     else
-      btree_childs_[index - compressed_childs_.size()]->remove(key, data);
+    {
+      if(btree_childs_[index - compressed_childs_.size()]->remove(key, data))
+        contexts_[index].remove(data);
+    }
+
   }
   mut_.unlock_shared();
 }
@@ -226,6 +242,7 @@ void CompressedLeafNode::createNewTreeChild(const time_t& key)
   mut_.lock();
   btree_childs_.push_back(new Btree<time_t,Fact>(order_));
   keys_.push_back(key);
+  contexts_.push_back(Context());
   mut_.unlock();
 }
 
@@ -288,6 +305,7 @@ void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
   if((keys_.size() == 0) || (key > keys_[keys_.size() - 1]))
   {
     keys_.push_back(key);
+    contexts_.push_back(Context());
     compressed_childs_.push_back(leaf);
     compressed_sessions_tree_.push_back(nullptr);
     compressed_sessions_timeout_.push_back(0);
@@ -300,6 +318,7 @@ void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
       {
         keys_.insert(keys_.begin() + i, key);
         compressed_childs_.insert(compressed_childs_.begin() + i, leaf);
+        contexts_.insert(contexts_.begin() + i, Context());
         break;
       }
     }

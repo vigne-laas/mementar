@@ -17,7 +17,7 @@ public:
   ~BtreeLeafNode() {}
 
   BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
-  void remove(const Tkey& key, const Tdata& data);
+  bool remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
@@ -99,7 +99,7 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
 }
 
 template<typename Tkey, typename Tdata>
-void BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+bool BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
@@ -119,9 +119,10 @@ void BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
         if(leafs_.size() == 0)
           std::cout << "a node is empty but will not be destroyed" << std::endl;
       }
-      return;
+      return true;
     }
   }
+  return false;
 }
 
 template<typename Tkey, typename Tdata>

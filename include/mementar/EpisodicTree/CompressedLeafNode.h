@@ -9,6 +9,7 @@
 #include "mementar/Fact.h"
 #include "mementar/Btree/Btree.h"
 #include "mementar/EpisodicTree/CompressedLeaf.h"
+#include "mementar/EpisodicTree/Context.h"
 
 namespace mementar
 {
@@ -36,6 +37,7 @@ private:
   // keys_.size() == btree_childs_.size() + compressed_childs_.size()
   // keys_[i] correspond to the first key of child i
   std::vector<time_t> keys_;
+  std::vector<Context> contexts_;
   std::vector<Btree<time_t,Fact>*> btree_childs_;
   std::vector<CompressedLeaf> compressed_childs_;
   std::vector<Btree<time_t,Fact>*> compressed_sessions_tree_;

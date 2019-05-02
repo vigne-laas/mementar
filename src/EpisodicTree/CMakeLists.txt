@@ -21,6 +21,7 @@ add_library(mementar_compression_lib
 add_library(mementar_tree_lib
   CompressedLeaf.cpp
   CompressedLeafNode.cpp
+  Context.cpp
 )
 target_link_libraries(mementar_tree_lib mementar_compression_lib pthread)
 
