@@ -4,6 +4,7 @@
 #include <vector>
 #include <thread>
 #include <atomic>
+#include <shared_mutex>
 
 #include "mementar/Fact.h"
 #include "mementar/Btree/Btree.h"
@@ -29,6 +30,7 @@ public:
 private:
   std::string directory_;
   size_t order_;
+  mutable std::shared_timed_mutex mut_;
 
   // keys_.size() == btree_childs_.size() + compressed_childs_.size()
   // keys_[i] correspond to the first key of child i
