@@ -24,6 +24,7 @@ public:
   BtreeLeaf<time_t, Fact>* find(const time_t& key);
   BtreeLeaf<time_t, Fact>* findNear(const time_t& key);
   BtreeLeaf<time_t, Fact>* getFirst();
+  BtreeLeaf<time_t, Fact>* getLast();
 
   void display(time_t key);
 
@@ -39,7 +40,9 @@ private:
   std::vector<CompressedLeaf> compressed_childs_;
   std::vector<Btree<time_t,Fact>*> compressed_sessions_tree_;
   std::vector<int> compressed_sessions_timeout_; //ms
+
   size_t last_tree_nb_leafs_;
+  time_t earlier_key_;
 
   std::atomic<bool> running_;
   std::thread session_cleaner_;

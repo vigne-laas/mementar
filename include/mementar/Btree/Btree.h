@@ -43,6 +43,7 @@ public:
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
+  BtreeLeaf<Tkey, Tdata>* getLast() { return last_; }
 
   size_t estimateMinLeaves()
   {

@@ -10,7 +10,9 @@ CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
 {
   directory_ = directory;
   order_ = order;
+
   last_tree_nb_leafs_ = 0;
+  earlier_key_ = 0;
 
   loadStoredData();
 
@@ -63,7 +65,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
 
     if(index < compressed_childs_.size())
     {
-      if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()))
+      if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()) && (key > earlier_key_))
       {
         mut_.unlock_shared();
         createNewTreeChild(key);
@@ -99,6 +101,9 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
       btree_childs_[index - compressed_childs_.size()]->insert(key,data);
   }
   mut_.unlock_shared();
+
+  if(earlier_key_ < key)
+    earlier_key_ = key;
 }
 
 void CompressedLeafNode::remove(const time_t& key, const Fact& data)
@@ -182,6 +187,25 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNode::getFirst()
   return res;
 }
 
+BtreeLeaf<time_t, Fact>* CompressedLeafNode::getLast()
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  mut_.lock_shared();
+  if(btree_childs_.size())
+    res = btree_childs_[btree_childs_.size() - 1]->getLast();
+  else if(compressed_childs_.size())
+  {
+    mut_.unlock_shared();
+    createSession(compressed_childs_.size() - 1);
+    mut_.lock_shared();
+    res = compressed_sessions_tree_[compressed_childs_.size() - 1]->getLast();
+  }
+  mut_.unlock_shared();
+
+  return res;
+}
+
 void CompressedLeafNode::display(time_t key)
 {
   mut_.lock_shared();
@@ -250,6 +274,12 @@ void CompressedLeafNode::loadStoredData()
       }
     }
   }
+
+  if(compressed_childs_.size())
+  {
+    createSession(compressed_childs_.size() - 1);
+    earlier_key_ = compressed_sessions_tree_[compressed_childs_.size() - 1]->getLast()->getKey();
+  }
 }
 
 void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
@@ -297,9 +327,8 @@ void CompressedLeafNode::createSession(size_t index)
 {
   mut_.lock();
   if(compressed_sessions_tree_[index] == nullptr)
-  {
     compressed_sessions_tree_[index] = compressed_childs_[index].getTree();
-  }
+
   compressed_sessions_timeout_[index] = std::time(0);
   mut_.unlock();
 }
