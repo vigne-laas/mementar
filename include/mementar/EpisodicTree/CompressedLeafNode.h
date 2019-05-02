@@ -51,6 +51,8 @@ private:
   std::vector<Tkey> keys_;
   std::vector<Btree<Tkey,Fact>*> btree_childs_;
   std::vector<CompressedLeaf<Tkey>> compressed_childs_;
+  std::vector<Btree<Tkey,Fact>*> compressed_sessions_tree_;
+  std::vector<int> compressed_sessions_timeout_; //ms
   size_t last_tree_nb_leafs_;
 
   bool useNewTree();
@@ -59,6 +61,7 @@ private:
   void insert(const Tkey& key, const CompressedLeaf<Tkey>& leaf);
 
   void compressFirst();
+  void createSession(size_t index);
 };
 
 template<typename Tkey>
@@ -232,6 +235,7 @@ void CompressedLeafNode<Tkey>::loadStoredData()
         std::istringstream iss(str_key);
         iss >> key;
         insert(key, CompressedLeaf<Tkey>(key, complete_dir));
+        std::cout << complete_dir << " have been loaded" << std::endl;
       }
     }
   }
@@ -244,6 +248,8 @@ void CompressedLeafNode<Tkey>::insert(const Tkey& key, const CompressedLeaf<Tkey
   {
     keys_.push_back(key);
     compressed_childs_.push_back(leaf);
+    compressed_sessions_tree_.push_back(nullptr);
+    compressed_sessions_timeout_.push_back(0);
   }
   else
   {
@@ -269,8 +275,17 @@ void CompressedLeafNode<Tkey>::compressFirst()
 
   // put mutex here
   compressed_childs_.push_back(tmp);
+  compressed_sessions_tree_.push_back(nullptr);
+  compressed_sessions_timeout_.push_back(0);
+
   btree_childs_.erase(btree_childs_.begin());
   //release shared mutex here
+}
+
+template<typename Tkey>
+void CompressedLeafNode<Tkey>::createSession(size_t index)
+{
+
 }
 
 } // mementar

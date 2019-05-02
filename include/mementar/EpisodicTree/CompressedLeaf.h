@@ -6,6 +6,7 @@
 
 #include "mementar/Btree/Btree.h"
 #include "mementar/archiving_compressing/compressing/LzCompress.h"
+#include "mementar/archiving_compressing/compressing/LzUncompress.h"
 #include "mementar/Fact.h"
 
 namespace mementar
@@ -20,6 +21,8 @@ public:
 
   std::string getDirectoty() { return directory_; }
   Tkey getKey() { return key_; }
+
+  Btree<Tkey, Fact>* getTree();
 private:
   Tkey key_;
   std::string directory_;
@@ -51,6 +54,22 @@ CompressedLeaf<Tkey>::CompressedLeaf(const Tkey& key, const std::string& directo
   key_ = key;
   size_t dot_pose = directory.find(".");
   directory_ = directory.substr(0, dot_pose);
+}
+
+template<typename Tkey>
+Btree<Tkey, Fact>* CompressedLeaf<Tkey>::getTree()
+{
+  std::string out;
+
+  LzUncompress lz;
+  std::vector<char> data;
+  if(lz.readBinaryFile(data, directory_ + ".mlz"))
+  {
+    lz.uncompress(data, out);
+    Btree<Tkey, Fact> tree = new Btree<Tkey, Fact>();
+  }
+
+  return nullptr;
 }
 
 template<typename Tkey>
