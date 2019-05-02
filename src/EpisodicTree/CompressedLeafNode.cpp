@@ -37,8 +37,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
 {
   if(keys_.size() == 0)
   {
-    btree_childs_.push_back(new Btree<time_t,Fact>(order_));
-    keys_.push_back(key);
+    createNewTreeChild(key);
     last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
   }
   else
@@ -55,22 +54,18 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
     {
       if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()))
       {
-        btree_childs_.push_back(new Btree<time_t,Fact>(order_));
-        keys_.push_back(key);
+        createNewTreeChild(key);
         last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
       }
       else
       {
-        if(compressed_sessions_tree_[index] == nullptr)
-          createSession(index);
-
+        createSession(index);
         compressed_sessions_tree_[index]->insert(key, data);
       }
     }
     else if(useNewTree())
     {
-      btree_childs_.push_back(new Btree<time_t,Fact>(order_));
-      keys_.push_back(key);
+      createNewTreeChild(key);
       last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(key, data);
 
       //verify if a chld need to be compressed
@@ -92,9 +87,7 @@ void CompressedLeafNode::remove(const time_t& key, const Fact& data)
   {
     if((size_t)index < compressed_childs_.size())
     {
-      if(compressed_sessions_tree_[index] == nullptr)
-        createSession(index);
-
+      createSession(index);
       compressed_sessions_tree_[index]->remove(key, data);
     }
     else
@@ -110,9 +103,7 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNode::find(const time_t& key)
   {
     if((size_t)index < compressed_childs_.size())
     {
-      if(compressed_sessions_tree_[index] == nullptr)
-        createSession(index);
-
+      createSession(index);
       return compressed_sessions_tree_[index]->find(key);
     }
     else
@@ -130,9 +121,7 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNode::findNear(const time_t& key)
   {
     if((size_t)index < compressed_childs_.size())
     {
-      if(compressed_sessions_tree_[index] == nullptr)
-        createSession(index);
-
+      createSession(index);
       return compressed_sessions_tree_[index]->findNear(key);
     }
     else
@@ -146,9 +135,7 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNode::getFirst()
 {
   if(compressed_childs_.size())
   {
-    if(compressed_sessions_tree_[0] == nullptr)
-      createSession(0);
-
+    createSession(0);
     return compressed_sessions_tree_[0]->getFirst();
   }
   else if(btree_childs_.size())
@@ -168,6 +155,12 @@ void CompressedLeafNode::display(time_t key)
     else
       return btree_childs_[index - compressed_childs_.size()]->display();
   }
+}
+
+void CompressedLeafNode::createNewTreeChild(const time_t& key)
+{
+  btree_childs_.push_back(new Btree<time_t,Fact>(order_));
+  keys_.push_back(key);
 }
 
 bool CompressedLeafNode::useNewTree()
@@ -258,8 +251,11 @@ void CompressedLeafNode::compressFirst()
 
 void CompressedLeafNode::createSession(size_t index)
 {
-  compressed_sessions_tree_[index] = compressed_childs_[index].getTree();
-  compressed_sessions_timeout_[index] = std::time(0);
+  if(compressed_sessions_tree_[index] == nullptr)
+  {
+    compressed_sessions_tree_[index] = compressed_childs_[index].getTree();
+    compressed_sessions_timeout_[index] = std::time(0);
+  }
 }
 
 } // mementar

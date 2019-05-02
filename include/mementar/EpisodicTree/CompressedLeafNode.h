@@ -37,8 +37,10 @@ private:
   std::vector<int> compressed_sessions_timeout_; //ms
   size_t last_tree_nb_leafs_;
 
-  bool useNewTree();
-  int getKeyIndex(const time_t& key);
+  inline void createNewTreeChild(const time_t& key);
+  inline bool useNewTree();
+  inline int getKeyIndex(const time_t& key);
+  
   void loadStoredData();
   void insert(const time_t& key, const CompressedLeaf& leaf);
 
