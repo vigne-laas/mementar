@@ -25,6 +25,7 @@ public:
   void fromString(const std::string& string);
 
   static void storeContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory);
+  static void loadContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory);
 private:
   std::map<std::string, size_t> subjects_;
   std::map<std::string, size_t> predicats_;

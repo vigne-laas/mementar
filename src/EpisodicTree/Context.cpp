@@ -3,6 +3,7 @@
 #include <regex>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 namespace mementar
 {
@@ -146,9 +147,10 @@ void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>&
   }
 
   std::string res;
+  res += "[" + std::to_string(keys.size()) + "]\n";
   for(size_t i = 0; i < keys.size(); i++)
   {
-    res += std::to_string(keys[i]) + "{\n";
+    res += "{" + std::to_string(keys[i]) + "}{\n";
     res += contexts[i].toString();
     res += "}\n";
   }
@@ -157,6 +159,52 @@ void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>&
   file.open(directory + "/context.txt");
   file << res;
   file.close();
+}
+
+void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory)
+{
+  std::cout << "Load contexts:" << std::endl;
+  std::ifstream t(directory + "/context.txt");
+  std::string str((std::istreambuf_iterator<char>(t)),
+                   std::istreambuf_iterator<char>());
+
+  size_t pose_start, pose_end;
+
+  pose_start = str.find("[") + 1;
+  pose_end = str.find("]", pose_start);
+
+  std::string tmp = str.substr(pose_start, pose_end - pose_start);
+  size_t nb_contexts;
+  std::istringstream iss(tmp);
+  iss >> nb_contexts;
+
+  std::cout << "=>  0%";
+
+  for(size_t i = 0; i < nb_contexts; i++)
+  {
+    pose_start = str.find("{", pose_end) + 1;
+    pose_end = str.find("}", pose_start);
+    tmp = str.substr(pose_start, pose_end - pose_start);
+    time_t key;
+    iss = std::istringstream(tmp);
+    iss >> key;
+
+    pose_start = str.find("{", pose_end) + 1;
+    pose_end = str.find("}", pose_start);
+    tmp = str.substr(pose_start, pose_end - pose_start);
+
+    for(size_t j = 0; j < keys.size(); j++)
+    {
+      if(key == keys[j])
+      {
+        contexts[j].fromString(tmp);
+        break;
+      }
+    }
+
+    std::cout << "\r=>" << std::setw(3) << (i+1)*100/nb_contexts << "%";
+  }
+  std::cout << std::endl;
 }
 
 } // mementar

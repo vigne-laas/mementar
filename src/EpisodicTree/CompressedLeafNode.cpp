@@ -15,6 +15,7 @@ CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
   earlier_key_ = 0;
 
   loadStoredData();
+  Context::loadContexts(contexts_, keys_, directory_);
 
   running_ = true;
   session_cleaner_ = std::move(std::thread(&CompressedLeafNode::clean, this));
