@@ -48,7 +48,7 @@ public:
 
   static void Percent(size_t percent)
   {
-    std::cout << "=>" << std::setw(3) << percent << "%\r";
+    std::cout << "=>" << std::setw(3) << percent << "%\r" << std::flush;
   }
 };
 

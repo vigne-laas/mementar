@@ -30,10 +30,16 @@ CompressedLeafNode::~CompressedLeafNode()
   Context::storeContexts(contexts_, keys_, directory_);
 
   mut_.lock();
+  Display::Info("Compress trees:");
+  size_t nb_leafs = keys_.size();
+  size_t leafs_cpt = 0;
+  Display::Percent(0);
+
   for(auto tree : btree_childs_)
   {
     compressed_childs_.push_back(CompressedLeaf(tree, directory_));
     delete tree;
+    Display::Percent((++leafs_cpt)*100/nb_leafs);
   }
 
   for(size_t i = 0; i < compressed_sessions_tree_.size(); i++)
@@ -43,7 +49,9 @@ CompressedLeafNode::~CompressedLeafNode()
       compressed_childs_[i] = std::move(CompressedLeaf(compressed_sessions_tree_[i], directory_));
       delete compressed_sessions_tree_[i];
     }
+    Display::Percent((++leafs_cpt)*100/nb_leafs);
   }
+  Display::Debug("");
   mut_.unlock();
 }
 
@@ -303,6 +311,7 @@ void CompressedLeafNode::loadStoredData()
     cpt_file++;
     Display::Percent(cpt_file*100/nb_file);
   }
+  Display::Percent(100);
   Display::Debug("");
 
   if(compressed_childs_.size())

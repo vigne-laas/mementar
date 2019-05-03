@@ -142,12 +142,14 @@ void Context::fromString(const std::string& string)
 
 void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory)
 {
+  Display::Info("Save contexts:");
   if(contexts.size() != keys.size())
   {
     std::cout << "[ERROR] contexts and keys don't have the same size" << std::endl;
     return;
   }
 
+  Display::Percent(0);
   std::string res;
   res += "[" + std::to_string(keys.size()) + "]\n";
   for(size_t i = 0; i < keys.size(); i++)
@@ -155,57 +157,66 @@ void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>&
     res += "{" + std::to_string(keys[i]) + "}{\n";
     res += contexts[i].toString();
     res += "}\n";
+    Display::Percent((i+1)*100/keys.size());
   }
 
   std::ofstream file;
   file.open(directory + "/context.txt");
   file << res;
   file.close();
+
+  Display::Percent(100);
+  Display::Debug("");
 }
 
 void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory)
 {
   Display::Info("Load contexts:");
   std::ifstream t(directory + "/context.txt");
-  std::string str((std::istreambuf_iterator<char>(t)),
-                   std::istreambuf_iterator<char>());
-
-  size_t pose_start, pose_end;
-
-  pose_start = str.find("[") + 1;
-  pose_end = str.find("]", pose_start);
-
-  std::string tmp = str.substr(pose_start, pose_end - pose_start);
-  size_t nb_contexts;
-  std::istringstream iss(tmp);
-  iss >> nb_contexts;
-
-  Display::Percent(0);
-
-  for(size_t i = 0; i < nb_contexts; i++)
+  if(t)
   {
-    pose_start = str.find("{", pose_end) + 1;
-    pose_end = str.find("}", pose_start);
-    tmp = str.substr(pose_start, pose_end - pose_start);
-    time_t key;
-    iss = std::istringstream(tmp);
-    iss >> key;
+    std::string str((std::istreambuf_iterator<char>(t)),
+                     std::istreambuf_iterator<char>());
 
-    pose_start = str.find("{", pose_end) + 1;
-    pose_end = str.find("}", pose_start);
-    tmp = str.substr(pose_start, pose_end - pose_start);
+    size_t pose_start, pose_end;
 
-    for(size_t j = 0; j < keys.size(); j++)
+    pose_start = str.find("[") + 1;
+    pose_end = str.find("]", pose_start);
+
+    std::string tmp = str.substr(pose_start, pose_end - pose_start);
+    size_t nb_contexts;
+    std::istringstream iss(tmp);
+    iss >> nb_contexts;
+
+    Display::Percent(0);
+
+    for(size_t i = 0; i < nb_contexts; i++)
     {
-      if(key == keys[j])
-      {
-        contexts[j].fromString(tmp);
-        break;
-      }
-    }
+      pose_start = str.find("{", pose_end) + 1;
+      pose_end = str.find("}", pose_start);
+      tmp = str.substr(pose_start, pose_end - pose_start);
+      time_t key;
+      iss = std::istringstream(tmp);
+      iss >> key;
 
-    Display::Percent((i+1)*100/nb_contexts);
+      pose_start = str.find("{", pose_end) + 1;
+      pose_end = str.find("}", pose_start);
+      tmp = str.substr(pose_start, pose_end - pose_start);
+
+      for(size_t j = 0; j < keys.size(); j++)
+      {
+        if(key == keys[j])
+        {
+          contexts[j].fromString(tmp);
+          break;
+        }
+      }
+
+      Display::Percent((i+1)*100/nb_contexts);
+    }
   }
+
+  Display::Percent(100);
   Display::Debug("");
 }
 
