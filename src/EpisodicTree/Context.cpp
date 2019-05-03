@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iomanip>
 
+#include "mementar/Display.h"
+
 namespace mementar
 {
 
@@ -163,7 +165,7 @@ void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>&
 
 void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory)
 {
-  std::cout << "Load contexts:" << std::endl;
+  Display::Info("Load contexts:");
   std::ifstream t(directory + "/context.txt");
   std::string str((std::istreambuf_iterator<char>(t)),
                    std::istreambuf_iterator<char>());
@@ -178,7 +180,7 @@ void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& 
   std::istringstream iss(tmp);
   iss >> nb_contexts;
 
-  std::cout << "=>  0%";
+  Display::Percent(0);
 
   for(size_t i = 0; i < nb_contexts; i++)
   {
@@ -202,9 +204,9 @@ void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& 
       }
     }
 
-    std::cout << "\r=>" << std::setw(3) << (i+1)*100/nb_contexts << "%";
+    Display::Percent((i+1)*100/nb_contexts);
   }
-  std::cout << std::endl;
+  Display::Debug("");
 }
 
 } // mementar

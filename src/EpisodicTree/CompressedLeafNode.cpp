@@ -2,6 +2,7 @@
 #include <experimental/filesystem>
 
 #include "mementar/EpisodicTree/CompressedLeafNode.h"
+#include "mementar/Display.h"
 
 namespace mementar
 {
@@ -272,6 +273,11 @@ int CompressedLeafNode::getKeyIndex(const time_t& key)
 
 void CompressedLeafNode::loadStoredData()
 {
+  Display::Info("Load compressed files:");
+  size_t nb_file = std::distance(std::experimental::filesystem::directory_iterator(directory_), std::experimental::filesystem::directory_iterator{});
+  size_t cpt_file = 0;
+  Display::Percent(0);
+
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
     std::string complete_dir = entry.path();
@@ -289,10 +295,15 @@ void CompressedLeafNode::loadStoredData()
         std::istringstream iss(str_key);
         iss >> key;
         insert(key, CompressedLeaf(key, complete_dir));
-        std::cout << complete_dir << " have been loaded" << std::endl;
+
+        Display::Debug(complete_dir);
       }
     }
+
+    cpt_file++;
+    Display::Percent(cpt_file*100/nb_file);
   }
+  Display::Debug("");
 
   if(compressed_childs_.size())
   {
