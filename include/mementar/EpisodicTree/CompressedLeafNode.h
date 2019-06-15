@@ -14,8 +14,11 @@
 namespace mementar
 {
 
+class ArchivedLeaf;
+
 class CompressedLeafNode
 {
+  friend ArchivedLeaf;
 public:
   CompressedLeafNode(std::string directory, size_t order = 10);
   ~CompressedLeafNode();

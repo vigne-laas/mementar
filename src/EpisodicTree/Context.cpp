@@ -140,24 +140,19 @@ void Context::fromString(const std::string& string)
   }
 }
 
-void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory)
+void Context::storeContexts(std::vector<Context>& contexts, const std::string& directory)
 {
   Display::Info("Save contexts:");
-  if(contexts.size() != keys.size())
-  {
-    std::cout << "[ERROR] contexts and keys don't have the same size" << std::endl;
-    return;
-  }
 
   Display::Percent(0);
   std::string res;
-  res += "[" + std::to_string(keys.size()) + "]\n";
-  for(size_t i = 0; i < keys.size(); i++)
+  res += "[" + std::to_string(contexts.size()) + "]\n";
+  for(size_t i = 0; i < contexts.size(); i++)
   {
-    res += "{" + std::to_string(keys[i]) + "}{\n";
+    res += "{" + std::to_string(contexts[i].getKey()) + "}{\n";
     res += contexts[i].toString();
     res += "}\n";
-    Display::Percent((i+1)*100/keys.size());
+    Display::Percent((i+1)*100/contexts.size());
   }
 
   std::ofstream file;
@@ -169,8 +164,30 @@ void Context::storeContexts(std::vector<Context>& contexts, std::vector<time_t>&
   Display::Debug("");
 }
 
-void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory)
+std::string Context::ContextsToString(std::vector<Context>& contexts)
 {
+  Display::Info("Convert contexts:");
+
+  Display::Percent(0);
+  std::string res;
+  res += "[" + std::to_string(contexts.size()) + "]\n";
+  for(size_t i = 0; i < contexts.size(); i++)
+  {
+    res += "{" + std::to_string(contexts[i].getKey()) + "}{\n";
+    res += contexts[i].toString();
+    res += "}\n";
+    Display::Percent((i+1)*100/contexts.size());
+  }
+
+  Display::Percent(100);
+  Display::Debug("");
+
+  return res;
+}
+
+void Context::loadContexts(std::vector<Context>& contexts, const std::string& directory)
+{
+  //contexts must have a key
   Display::Info("Load contexts:");
   std::ifstream t(directory + "/context.txt");
   if(t)
@@ -203,9 +220,9 @@ void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& 
       pose_end = str.find("}", pose_start);
       tmp = str.substr(pose_start, pose_end - pose_start);
 
-      for(size_t j = 0; j < keys.size(); j++)
+      for(size_t j = 0; j < contexts.size(); j++)
       {
-        if(key == keys[j])
+        if(key == contexts[j].getKey())
         {
           contexts[j].fromString(tmp);
           break;
@@ -218,6 +235,43 @@ void Context::loadContexts(std::vector<Context>& contexts, std::vector<time_t>& 
 
   Display::Percent(100);
   Display::Debug("");
+}
+
+void Context::StringToContext(std::vector<Context>& contexts, const std::string& str)
+{
+  //contexts must have a key
+  size_t pose_start, pose_end;
+
+  pose_start = str.find("[") + 1;
+  pose_end = str.find("]", pose_start);
+
+  std::string tmp = str.substr(pose_start, pose_end - pose_start);
+  size_t nb_contexts;
+  std::istringstream iss(tmp);
+  iss >> nb_contexts;
+
+  for(size_t i = 0; i < nb_contexts; i++)
+  {
+    pose_start = str.find("{", pose_end) + 1;
+    pose_end = str.find("}", pose_start);
+    tmp = str.substr(pose_start, pose_end - pose_start);
+    time_t key;
+    iss = std::istringstream(tmp);
+    iss >> key;
+
+    pose_start = str.find("{", pose_end) + 1;
+    pose_end = str.find("}", pose_start);
+    tmp = str.substr(pose_start, pose_end - pose_start);
+
+    for(size_t j = 0; j < contexts.size(); j++)
+    {
+      if(key == contexts[j].getKey())
+      {
+        contexts[j].fromString(tmp);
+        break;
+      }
+    }
+  }
 }
 
 } // mementar

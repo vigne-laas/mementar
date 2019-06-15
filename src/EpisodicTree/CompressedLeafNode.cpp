@@ -16,7 +16,7 @@ CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
   earlier_key_ = 0;
 
   loadStoredData();
-  Context::loadContexts(contexts_, keys_, directory_);
+  Context::loadContexts(contexts_, directory_);
 
   running_ = true;
   session_cleaner_ = std::move(std::thread(&CompressedLeafNode::clean, this));
@@ -27,7 +27,7 @@ CompressedLeafNode::~CompressedLeafNode()
   running_ = false;
   session_cleaner_.join();
 
-  Context::storeContexts(contexts_, keys_, directory_);
+  Context::storeContexts(contexts_, directory_);
 
   mut_.lock();
   Display::Info("Compress trees:");
@@ -253,7 +253,7 @@ void CompressedLeafNode::createNewTreeChild(const time_t& key)
   mut_.lock();
   btree_childs_.push_back(new Btree<time_t,Fact>(order_));
   keys_.push_back(key);
-  contexts_.push_back(Context());
+  contexts_.push_back(Context(key));
   mut_.unlock();
 }
 
@@ -327,7 +327,7 @@ void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
   if((keys_.size() == 0) || (key > keys_[keys_.size() - 1]))
   {
     keys_.push_back(key);
-    contexts_.push_back(Context());
+    contexts_.push_back(Context(key));
     compressed_childs_.push_back(leaf);
     compressed_sessions_tree_.push_back(nullptr);
     compressed_sessions_timeout_.push_back(0);
@@ -340,7 +340,7 @@ void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
       {
         keys_.insert(keys_.begin() + i, key);
         compressed_childs_.insert(compressed_childs_.begin() + i, leaf);
-        contexts_.insert(contexts_.begin() + i, Context());
+        contexts_.insert(contexts_.begin() + i, Context(key));
         break;
       }
     }

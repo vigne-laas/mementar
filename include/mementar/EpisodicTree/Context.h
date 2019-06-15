@@ -13,6 +13,8 @@ namespace mementar
 class Context
 {
 public:
+  Context(time_t key) { key_ = key; }
+
   void insert(const Fact& fact);
   void remove(const Fact& fact);
 
@@ -24,9 +26,15 @@ public:
   std::string toString();
   void fromString(const std::string& string);
 
-  static void storeContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory);
-  static void loadContexts(std::vector<Context>& contexts, std::vector<time_t>& keys, const std::string& directory);
+  time_t getKey() { return key_; }
+  void setKey(time_t key) {key_ = key; }
+
+  static void storeContexts(std::vector<Context>& contexts, const std::string& directory);
+  static std::string ContextsToString(std::vector<Context>& contexts);
+  static void loadContexts(std::vector<Context>& contexts, const std::string& directory);
+  static void StringToContext(std::vector<Context>& contexts, const std::string& str);
 private:
+  time_t key_;
   std::map<std::string, size_t> subjects_;
   std::map<std::string, size_t> predicats_;
   std::map<std::string, size_t> objects_;
