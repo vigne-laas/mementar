@@ -341,6 +341,8 @@ void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
         keys_.insert(keys_.begin() + i, key);
         compressed_childs_.insert(compressed_childs_.begin() + i, leaf);
         contexts_.insert(contexts_.begin() + i, Context(key));
+        compressed_sessions_tree_.insert(compressed_sessions_tree_.begin() + i, nullptr);
+        compressed_sessions_timeout_.insert(compressed_sessions_timeout_.begin() + i, 0);
         break;
       }
     }

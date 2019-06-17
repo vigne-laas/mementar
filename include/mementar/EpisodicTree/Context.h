@@ -32,7 +32,7 @@ public:
   static void storeContexts(std::vector<Context>& contexts, const std::string& directory);
   static std::string ContextsToString(std::vector<Context>& contexts);
   static void loadContexts(std::vector<Context>& contexts, const std::string& directory);
-  static void StringToContext(std::vector<Context>& contexts, const std::string& str);
+  static std::vector<Context> StringToContext(const std::string& str);
 private:
   time_t key_;
   std::map<std::string, size_t> subjects_;

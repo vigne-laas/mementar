@@ -237,9 +237,10 @@ void Context::loadContexts(std::vector<Context>& contexts, const std::string& di
   Display::Debug("");
 }
 
-void Context::StringToContext(std::vector<Context>& contexts, const std::string& str)
+std::vector<Context> Context::StringToContext(const std::string& str)
 {
-  //contexts must have a key
+  std::vector<Context> contexts;
+
   size_t pose_start, pose_end;
 
   pose_start = str.find("[") + 1;
@@ -263,15 +264,11 @@ void Context::StringToContext(std::vector<Context>& contexts, const std::string&
     pose_end = str.find("}", pose_start);
     tmp = str.substr(pose_start, pose_end - pose_start);
 
-    for(size_t j = 0; j < contexts.size(); j++)
-    {
-      if(key == contexts[j].getKey())
-      {
-        contexts[j].fromString(tmp);
-        break;
-      }
-    }
+    contexts.push_back(Context(key));
+    contexts[contexts.size() - 1].fromString(tmp);
   }
+
+  return contexts;
 }
 
 } // mementar
