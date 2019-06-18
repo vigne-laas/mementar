@@ -1,5 +1,7 @@
 #include "mementar/EpisodicTree/CompressedLeafNodeSession.h"
 
+#include "mementar/Display.h"
+
 namespace mementar
 {
 
@@ -60,6 +62,111 @@ int CompressedLeafNodeSession::getKeyIndex(const time_t& key)
     }
   }
   return index;
+}
+
+void CompressedLeafNodeSession::insert(const time_t& key, const Fact& data)
+{
+  mut_.lock_shared();
+  if(contexts_.size() == 0)
+  {
+    Display::Error("Can not insert in empty session");
+  }
+  else
+  {
+    if(key < contexts_[0].getKey())
+    {
+      Display::Error("try to insert fact in past that do not exist");
+      return;
+    }
+
+    size_t index = getKeyIndex(key);
+    mut_.unlock_shared();
+    createSession(index);
+    mut_.lock_shared();
+    sessions_tree_[index]->insert(key, data);
+    contexts_[index].insert(data);
+    modified_[index] = true;
+  }
+
+  mut_.unlock_shared();
+}
+
+void CompressedLeafNodeSession::remove(const time_t& key, const Fact& data)
+{
+  mut_.lock_shared();
+  int index = getKeyIndex(key);
+  if(index >= 0)
+  {
+    mut_.unlock_shared();
+    createSession(index);
+    mut_.lock_shared();
+    if(sessions_tree_[index]->remove(key, data))
+    {
+      modified_[index] = true;
+      contexts_[index].remove(data);
+    }
+  }
+  mut_.unlock_shared();
+}
+
+BtreeLeaf<time_t, Fact>* CompressedLeafNodeSession::find(const time_t& key)
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  mut_.lock_shared();
+  int index = getKeyIndex(key);
+  if(index >= 0)
+  {
+    mut_.unlock_shared();
+    createSession(index);
+    mut_.lock_shared();
+    res = sessions_tree_[index]->find(key);
+  }
+  mut_.unlock_shared();
+  return res;
+}
+
+BtreeLeaf<time_t, Fact>* CompressedLeafNodeSession::findNear(const time_t& key)
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  mut_.lock_shared();
+  int index = getKeyIndex(key);
+  if(index >= 0)
+  {
+    mut_.unlock_shared();
+    createSession(index);
+    mut_.lock_shared();
+    res = sessions_tree_[index]->findNear(key);
+  }
+  mut_.unlock_shared();
+
+  return res;
+}
+
+BtreeLeaf<time_t, Fact>* CompressedLeafNodeSession::getFirst()
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  createSession(0);
+  mut_.lock_shared();
+  res = sessions_tree_[0]->getFirst();
+  mut_.unlock_shared();
+
+  return res;
+}
+
+BtreeLeaf<time_t, Fact>* CompressedLeafNodeSession::getLast()
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  createSession(childs_.size() - 1);
+  mut_.lock_shared();
+  res = sessions_tree_[childs_.size() - 1]->getLast();
+
+  mut_.unlock_shared();
+
+  return res;
 }
 
 void CompressedLeafNodeSession::loadData()

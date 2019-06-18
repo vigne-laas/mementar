@@ -44,7 +44,7 @@ private:
   void insert(const time_t& key, const ArchivedLeaf& leaf);
 
   void createSession(size_t index);
-  
+
   void clean();
 };
 
