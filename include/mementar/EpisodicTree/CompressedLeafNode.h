@@ -45,6 +45,7 @@ private:
   std::vector<CompressedLeaf> compressed_childs_;
   std::vector<Btree<time_t,Fact>*> compressed_sessions_tree_;
   std::vector<int> compressed_sessions_timeout_; //ms
+  std::vector<bool> modified_;
 
   size_t last_tree_nb_leafs_;
   time_t earlier_key_;

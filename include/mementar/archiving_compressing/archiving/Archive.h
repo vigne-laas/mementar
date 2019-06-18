@@ -13,15 +13,30 @@ public:
   Archive(std::string& description, std::vector<std::string>& files);
   Archive();
 
+  bool readBinaryFile(const std::string& file_name)
+  {
+    return BinaryManager::readBinaryFile(data_, file_name);
+  }
+
   void load(std::vector<char>& out);
   Header getHeader(std::vector<char>& data);
+  Header getHeader() { return getHeader(data_); }
 
   std::string extractDescription(Header& head, std::vector<char>& data);
+  std::string extractDescription(Header& head)
+  {
+    return extractDescription(head, data_);
+  }
   std::string extractFile(size_t index, Header& head, std::vector<char>& data);
+  std::string extractFile(size_t index, Header& head)
+  {
+    return extractFile(index, head, data_);
+  }
 
 private:
   Header header;
   std::string description_;
+  std::vector<char> data_;
 };
 
 } // namespace mementar

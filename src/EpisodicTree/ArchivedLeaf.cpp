@@ -52,11 +52,10 @@ ArchivedLeaf::ArchivedLeaf(const time_t& key, const std::string& directory)
 Btree<time_t, Fact>* ArchivedLeaf::getTree(size_t i)
 {
   mementar::Archive arch;
-  std::vector<char> data;
-  arch.readBinaryFile(data, directory_ + ".mar");
-  mementar::Header header = arch.getHeader(data);
+  arch.readBinaryFile(directory_ + ".mar");
+  mementar::Header header = arch.getHeader();
 
-  std::string comp = arch.extractFile(i, header, data);
+  std::string comp = arch.extractFile(i, header);
 
   std::string out;
   LzUncompress lz;
@@ -88,11 +87,10 @@ Btree<time_t, Fact>* ArchivedLeaf::getTree(size_t i)
 std::vector<Context> ArchivedLeaf::getContexts()
 {
   mementar::Archive arch;
-  std::vector<char> data;
-  arch.readBinaryFile(data, directory_ + ".mar");
-  mementar::Header header = arch.getHeader(data);
+  arch.readBinaryFile(directory_ + ".mar");
+  mementar::Header header = arch.getHeader();
 
-  std::string out = arch.extractDescription(header, data);
+  std::string out = arch.extractDescription(header);
 
   return Context::StringToContext(out);
 }

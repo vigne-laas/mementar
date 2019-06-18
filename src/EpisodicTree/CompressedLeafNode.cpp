@@ -46,7 +46,8 @@ CompressedLeafNode::~CompressedLeafNode()
   {
     if(compressed_sessions_tree_[i] != nullptr)
     {
-      compressed_childs_[i] = std::move(CompressedLeaf(compressed_sessions_tree_[i], directory_));
+      if(modified_[i])
+        compressed_childs_[i] = std::move(CompressedLeaf(compressed_sessions_tree_[i], directory_));
       delete compressed_sessions_tree_[i];
     }
     Display::Percent((++leafs_cpt)*100/nb_leafs);
@@ -93,6 +94,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
         mut_.lock_shared();
         compressed_sessions_tree_[index]->insert(key, data);
         contexts_[index].insert(data);
+        modified_[index] = true;
       }
     }
     else if(useNewTree())
@@ -136,9 +138,14 @@ void CompressedLeafNode::remove(const time_t& key, const Fact& data)
   {
     if((size_t)index < compressed_childs_.size())
     {
+      mut_.unlock_shared();
       createSession(index);
+      mut_.lock_shared();
       if(compressed_sessions_tree_[index]->remove(key, data))
-      contexts_[index].remove(data);
+      {
+        modified_[index] = true;
+        contexts_[index].remove(data);
+      }
     }
     else
     {
@@ -254,6 +261,7 @@ void CompressedLeafNode::createNewTreeChild(const time_t& key)
   btree_childs_.push_back(new Btree<time_t,Fact>(order_));
   keys_.push_back(key);
   contexts_.push_back(Context(key));
+  modified_.push_back(false);
   mut_.unlock();
 }
 
@@ -331,6 +339,7 @@ void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
     compressed_childs_.push_back(leaf);
     compressed_sessions_tree_.push_back(nullptr);
     compressed_sessions_timeout_.push_back(0);
+    modified_.push_back(false);
   }
   else
   {
@@ -343,6 +352,7 @@ void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
         contexts_.insert(contexts_.begin() + i, Context(key));
         compressed_sessions_tree_.insert(compressed_sessions_tree_.begin() + i, nullptr);
         compressed_sessions_timeout_.insert(compressed_sessions_timeout_.begin() + i, 0);
+        modified_.insert(modified_.begin() + i, false);
         break;
       }
     }
@@ -392,6 +402,8 @@ void CompressedLeafNode::clean()
           (std::difftime(now, compressed_sessions_timeout_[i]) > 30)) // session expire after 30s
         {
           mut_.lock();
+          if(modified_[i])
+            compressed_childs_[i] = std::move(CompressedLeaf(compressed_sessions_tree_[i], directory_));
           delete compressed_sessions_tree_[i];
           compressed_sessions_tree_[i] = nullptr;
           mut_.unlock();

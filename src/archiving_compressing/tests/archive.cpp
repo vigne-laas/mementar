@@ -108,21 +108,20 @@ int main (int argc, char* argv[])
   else if(action == act_extract)
   {
     mementar::Archive arch;
-    std::vector<char> data;
-    arch.readBinaryFile(data, input_files[0]);
-    mementar::Header header = arch.getHeader(data);
+    arch.readBinaryFile(input_files[0]);
+    mementar::Header header = arch.getHeader();
 
     std::ofstream myfile;
     std::string out;
 
-    out = arch.extractDescription(header, data);
+    out = arch.extractDescription(header);
     myfile.open(output_file + "/description.txt");
     myfile << out;
     myfile.close();
 
     for(size_t i = 0; i < header.input_files_.size(); i++)
     {
-      out = arch.extractFile(i, header, data);
+      out = arch.extractFile(i, header);
       myfile.open(output_file + "/" + header.input_files_[i].name_);
       myfile << out;
       myfile.close();
@@ -131,9 +130,8 @@ int main (int argc, char* argv[])
   else if(action == act_list)
   {
     mementar::Archive arch;
-    std::vector<char> data;
-    arch.readBinaryFile(data, input_files[0]);
-    mementar::Header header = arch.getHeader(data);
+    arch.readBinaryFile(input_files[0]);
+    mementar::Header header = arch.getHeader();
     std::cout << header.toString() << std::endl;
   }
 

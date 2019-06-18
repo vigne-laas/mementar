@@ -53,6 +53,7 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
       this->keys_.push_back(key);
       res = new BtreeLeaf<Tkey,Tdata>(key, data);
       leafs_.push_back(res);
+      res->next_ = last->next_;
       last->next_ = res;
       res->prev_ = last;
       res->setMother(this);
