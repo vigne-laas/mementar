@@ -27,32 +27,21 @@ ArchivedLeafNode::~ArchivedLeafNode()
   running_ = false;
   session_cleaner_.join();
 
-  /*Context::storeContexts(contexts_, directory_);
-
   mut_.lock();
-  Display::Info("Compress trees:");
-  size_t nb_leafs = keys_.size();
+  Display::Info("Archive trees:");
+  size_t nb_leafs = archived_sessions_tree_.size();
   size_t leafs_cpt = 0;
   Display::Percent(0);
 
-  for(auto tree : btree_childs_)
+  for(auto tree : archived_sessions_tree_)
   {
-    compressed_childs_.push_back(CompressedLeaf(tree, directory_));
-    delete tree;
+    if(tree != nullptr)
+      delete tree;
     Display::Percent((++leafs_cpt)*100/nb_leafs);
   }
 
-  for(size_t i = 0; i < compressed_sessions_tree_.size(); i++)
-  {
-    if(compressed_sessions_tree_[i] != nullptr)
-    {
-      compressed_childs_[i] = std::move(CompressedLeaf(compressed_sessions_tree_[i], directory_));
-      delete compressed_sessions_tree_[i];
-    }
-    Display::Percent((++leafs_cpt)*100/nb_leafs);
-  }
   Display::Debug("");
-  mut_.unlock();*/
+  mut_.unlock();
 }
 
 void ArchivedLeafNode::loadStoredData()
@@ -90,7 +79,6 @@ void ArchivedLeafNode::loadStoredData()
   Display::Percent(100);
   Display::Debug("");
 
-  //TODO get last key in compressed tree
   if(archived_childs_.size())
   {
     createSession(archived_childs_.size() - 1);
@@ -107,6 +95,7 @@ void ArchivedLeafNode::insert(const time_t& key, const ArchivedLeaf& leaf)
     archived_childs_.push_back(leaf);
     archived_sessions_tree_.push_back(nullptr);
     archived_sessions_timeout_.push_back(0);
+    modified_.push_back(false);
   }
   else
   {
@@ -118,6 +107,7 @@ void ArchivedLeafNode::insert(const time_t& key, const ArchivedLeaf& leaf)
         archived_childs_.insert(archived_childs_.begin() + i, leaf);
         archived_sessions_tree_.insert(archived_sessions_tree_.begin() + i, nullptr);
         archived_sessions_timeout_.insert(archived_sessions_timeout_.begin() + i, 0);
+        modified_.insert(modified_.begin() + i, false);
         break;
       }
     }
@@ -127,10 +117,9 @@ void ArchivedLeafNode::insert(const time_t& key, const ArchivedLeaf& leaf)
 
 void ArchivedLeafNode::createSession(size_t index)
 {
-  //TODO claas for archived Leaf sessions
   mut_.lock();
   if(archived_sessions_tree_[index] == nullptr)
-    archived_sessions_tree_[index] = archived_childs_[index].getTree(0);
+    archived_sessions_tree_[index] = new CompressedLeafNodeSession(archived_childs_[index].getDirectoty());
 
   archived_sessions_timeout_[index] = std::time(0);
   mut_.unlock();
@@ -152,8 +141,6 @@ void ArchivedLeafNode::clean()
           (std::difftime(now, archived_sessions_timeout_[i]) > 30)) // session expire after 30s
         {
           mut_.lock();
-          /*TODO if(modified_[i])
-            archived_childs_[i] = std::move(ArchivedLeafSession(archived_sessions_tree_[i], directory_));*/
           delete archived_sessions_tree_[i];
           archived_sessions_tree_[i] = nullptr;
           mut_.unlock();

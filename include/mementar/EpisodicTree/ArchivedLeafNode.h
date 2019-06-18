@@ -3,6 +3,7 @@
 
 #include "mementar/EpisodicTree/ArchivedLeaf.h"
 #include "mementar/EpisodicTree/CompressedLeafNode.h"
+#include "mementar/EpisodicTree/CompressedLeafNodeSession.h"
 
 namespace mementar
 {
@@ -31,8 +32,9 @@ private:
   std::vector<time_t> keys_;
   std::vector<CompressedLeafNode*> compressed_childs_;
   std::vector<ArchivedLeaf> archived_childs_;
-  std::vector<Btree<time_t,Fact>*> archived_sessions_tree_;
+  std::vector<CompressedLeafNodeSession*> archived_sessions_tree_;
   std::vector<int> archived_sessions_timeout_; //ms
+  std::vector<bool> modified_;
 
   size_t last_tree_nb_leafs_;
   time_t earlier_key_;

@@ -163,7 +163,6 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNodeSession::getLast()
   createSession(childs_.size() - 1);
   mut_.lock_shared();
   res = sessions_tree_[childs_.size() - 1]->getLast();
-
   mut_.unlock_shared();
 
   return res;
