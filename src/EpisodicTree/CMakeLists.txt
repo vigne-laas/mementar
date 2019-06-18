@@ -22,6 +22,8 @@ add_library(mementar_tree_lib
   CompressedLeaf.cpp
   CompressedLeafNode.cpp
   Context.cpp
+  CompressedLeafSession.cpp
+  CompressedLeafNodeSession.cpp
   ArchivedLeaf.cpp
   ArchivedLeafNode.cpp
 )

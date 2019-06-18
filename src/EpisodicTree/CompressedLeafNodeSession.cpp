@@ -1,0 +1,113 @@
+#include "mementar/EpisodicTree/CompressedLeafNodeSession.h"
+
+namespace mementar
+{
+
+CompressedLeafNodeSession::CompressedLeafNodeSession(const std::string& file_name)
+{
+  file_name_ = file_name;
+
+  earlier_key_ = 0;
+
+  loadData();
+}
+
+CompressedLeafNodeSession::~CompressedLeafNodeSession()
+{
+  running_ = false;
+  session_cleaner_.join();
+
+  mut_.lock();
+
+  std::string description = Context::ContextsToString(contexts_);
+
+  Archive arch(description, header_);
+
+  std::vector<std::vector<char> > raw_datas;
+  for(size_t i = 0; i < childs_.size(); i++)
+  {
+    if(sessions_tree_[i] != nullptr)
+    {
+      if(modified_[i])
+        raw_datas.push_back(treeToRaw(i));
+      else
+        raw_datas.push_back(childs_[i].getRawData(header_, arch_));
+    }
+    else
+      raw_datas.push_back(childs_[i].getRawData(header_, arch_));
+  }
+
+  std::vector<char> data;
+  arch.load(data, raw_datas);
+
+  arch.saveToFile(data, file_name_);
+
+  arch_ = arch;
+  header_ = arch_.getHeader();
+
+  mut_.unlock();
+}
+
+int CompressedLeafNodeSession::getKeyIndex(const time_t& key)
+{
+  int index = contexts_.size() - 1;
+  for(size_t i = 0; i < contexts_.size(); i++)
+  {
+    if(key < contexts_[i].getKey())
+    {
+      index = i - 1;
+      break;
+    }
+  }
+  return index;
+}
+
+void CompressedLeafNodeSession::loadData()
+{
+  arch_.readBinaryFile(file_name_);
+  header_ = arch_.getHeader();
+
+  std::string description = arch_.extractDescription(header_);
+  contexts_ = Context::StringToContext(description);
+
+  //assume as ordered ?
+  for(size_t i = 0; i < contexts_.size(); i++)
+  {
+    childs_.push_back(CompressedLeafSession(contexts_[i].getKey(), i));
+    sessions_tree_.push_back(nullptr);
+    modified_.push_back(false);
+  }
+
+  if(childs_.size())
+  {
+    createSession(childs_.size() - 1);
+    earlier_key_ = sessions_tree_[childs_.size() - 1]->getLast()->getKey();
+  }
+}
+
+void CompressedLeafNodeSession::createSession(size_t index)
+{
+  mut_.lock();
+  if(sessions_tree_[index] == nullptr)
+    sessions_tree_[index] = childs_[index].getTree(header_, arch_);
+  mut_.unlock();
+}
+
+std::vector<char> CompressedLeafNodeSession::treeToRaw(size_t index)
+{
+  std::string res;
+
+  std::vector<Fact> tmp_data;
+  BtreeLeaf<time_t, Fact>* it = sessions_tree_[index]->getFirst();
+  while(it != nullptr)
+  {
+    tmp_data = it->getData();
+    for(auto& data : tmp_data)
+      res += "[" + std::to_string(it->getKey()) + "]" + data.toString() + "\n";
+    it = it->next_;
+  }
+
+  return std::vector<char>(res.begin(), res.end());
+}
+
+} // namespace mementar

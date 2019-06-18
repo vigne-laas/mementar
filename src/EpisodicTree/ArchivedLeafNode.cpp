@@ -152,6 +152,8 @@ void ArchivedLeafNode::clean()
           (std::difftime(now, archived_sessions_timeout_[i]) > 30)) // session expire after 30s
         {
           mut_.lock();
+          /*TODO if(modified_[i])
+            archived_childs_[i] = std::move(ArchivedLeafSession(archived_sessions_tree_[i], directory_));*/
           delete archived_sessions_tree_[i];
           archived_sessions_tree_[i] = nullptr;
           mut_.unlock();

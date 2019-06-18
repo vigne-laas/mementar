@@ -1,5 +1,6 @@
 #include <vector>
 #include <regex>
+#include <experimental/filesystem>
 
 #include "mementar/EpisodicTree/ArchivedLeaf.h"
 
@@ -40,6 +41,14 @@ ArchivedLeaf::ArchivedLeaf(CompressedLeafNode* tree, size_t nb, const std::strin
   arch.load(data);
 
   arch.saveToFile(data, directory_);
+
+  for(size_t i = 0; i < nb; i++)
+  {
+    if(i >= tree->compressed_childs_.size())
+      break;
+
+    std::experimental::filesystem::remove(tree->compressed_childs_[i].getDirectoty());
+  }
 }
 
 ArchivedLeaf::ArchivedLeaf(const time_t& key, const std::string& directory)

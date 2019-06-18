@@ -11,6 +11,7 @@ class Archive : public BinaryManager
 {
 public:
   Archive(std::string& description, std::vector<std::string>& files);
+  Archive(const std::string& description, const Header& header);
   Archive();
 
   bool readBinaryFile(const std::string& file_name)
@@ -19,6 +20,8 @@ public:
   }
 
   void load(std::vector<char>& out);
+  void load(std::vector<char>& out, std::vector<std::vector<char> >& raw_datas);
+
   Header getHeader(std::vector<char>& data);
   Header getHeader() { return getHeader(data_); }
 
@@ -34,7 +37,7 @@ public:
   }
 
 private:
-  Header header;
+  Header header_;
   std::string description_;
   std::vector<char> data_;
 };
