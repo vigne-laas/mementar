@@ -29,6 +29,7 @@ int main()
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
   std::cout << "took " << time_span.count() << std::endl;
 
+  std::cout << "will remove" << std::endl;
   archived_node.remove(102,mementar::Fact("bob", "hasValue", std::to_string(102)));
   std::cout << "removed" << std::endl;
   archived_node.insert(0, mementar::Fact("bob", "hasValue", std::to_string(0)));

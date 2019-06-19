@@ -124,11 +124,16 @@ void ArchivedLeafNode::remove(const time_t& key, const Fact& data)
   {
     if((size_t)index < archived_childs_.size())
     {
+      std::cout << "in archived" << std::endl;
       mut_.unlock_shared();
       createSession(index);
       mut_.lock_shared();
+      std::cout << "session created" << std::endl;
       if(archived_sessions_tree_[index]->remove(key, data))
+      {
+        std::cout << index << "/" << modified_.size() << std::endl;
         modified_[index] = true;
+      }
     }
     else
       compressed_childs_[index - archived_childs_.size()]->remove(key, data);
@@ -348,6 +353,7 @@ void ArchivedLeafNode::archiveFirst()
   archived_childs_.push_back(tmp);
   archived_sessions_tree_.push_back(nullptr);
   archived_sessions_timeout_.push_back(0);
+  modified_.push_back(false);
 
   compressed_childs_.erase(compressed_childs_.begin());
   mut_.unlock();
