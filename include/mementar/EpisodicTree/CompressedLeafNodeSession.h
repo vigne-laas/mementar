@@ -30,6 +30,8 @@ public:
   BtreeLeaf<time_t, Fact>* getFirst();
   BtreeLeaf<time_t, Fact>* getLast();
 
+  time_t getKey() { return contexts_[0].getKey(); }
+
 private:
   std::string file_name_;
   mutable std::shared_timed_mutex mut_;
@@ -47,7 +49,6 @@ private:
   time_t earlier_key_;
 
   std::atomic<bool> running_;
-  std::thread session_cleaner_;
 
   inline int getKeyIndex(const time_t& key);
 

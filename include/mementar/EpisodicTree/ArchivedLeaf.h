@@ -15,7 +15,7 @@ public:
   ArchivedLeaf(CompressedLeafNode* tree, size_t nb, const std::string& directory);
   ArchivedLeaf(const time_t& key, const std::string& directory);
 
-  std::string getDirectory() { return directory_ + ".mar"; }
+  std::string getDirectory() { return directory_; }
   time_t getKey() { return key_; }
 
   Btree<time_t, Fact>* getTree(size_t i);

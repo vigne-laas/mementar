@@ -61,6 +61,7 @@ ArchivedLeaf::ArchivedLeaf(const time_t& key, const std::string& directory)
 Btree<time_t, Fact>* ArchivedLeaf::getTree(size_t i)
 {
   mementar::Archive arch;
+  std::cout << "ArchivedLeaf::getTree READ BINARY FILE " << directory_ << ".mar" << std::endl;
   arch.readBinaryFile(directory_ + ".mar");
   mementar::Header header = arch.getHeader();
 
@@ -96,6 +97,7 @@ Btree<time_t, Fact>* ArchivedLeaf::getTree(size_t i)
 std::vector<Context> ArchivedLeaf::getContexts()
 {
   mementar::Archive arch;
+  std::cout << "ArchivedLeaf::getContexts READ BINARY FILE " << directory_ << ".mar" << std::endl;
   arch.readBinaryFile(directory_ + ".mar");
   mementar::Header header = arch.getHeader();
 

@@ -16,11 +16,7 @@ CompressedLeafNodeSession::CompressedLeafNodeSession(const std::string& file_nam
 
 CompressedLeafNodeSession::~CompressedLeafNodeSession()
 {
-  running_ = false;
-  session_cleaner_.join();
-
   mut_.lock();
-
   std::string description = Context::ContextsToString(contexts_);
 
   Archive arch(description, header_);
@@ -43,9 +39,6 @@ CompressedLeafNodeSession::~CompressedLeafNodeSession()
   arch.load(data, raw_datas);
 
   arch.saveToFile(data, file_name_);
-
-  arch_ = arch;
-  header_ = arch_.getHeader();
 
   mut_.unlock();
 }
@@ -173,7 +166,7 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNodeSession::getLast()
 
 void CompressedLeafNodeSession::loadData()
 {
-  arch_.readBinaryFile(file_name_);
+  arch_.readBinaryFile(file_name_ + ".mar");
   header_ = arch_.getHeader();
 
   std::string description = arch_.extractDescription(header_);
