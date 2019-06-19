@@ -91,8 +91,9 @@ void CompressedLeafNodeSession::insert(const time_t& key, const Fact& data)
   mut_.unlock_shared();
 }
 
-void CompressedLeafNodeSession::remove(const time_t& key, const Fact& data)
+bool CompressedLeafNodeSession::remove(const time_t& key, const Fact& data)
 {
+  bool res = false;
   mut_.lock_shared();
   int index = getKeyIndex(key);
   if(index >= 0)
@@ -104,9 +105,11 @@ void CompressedLeafNodeSession::remove(const time_t& key, const Fact& data)
     {
       modified_[index] = true;
       contexts_[index].remove(data);
+      res = true;
     }
   }
   mut_.unlock_shared();
+  return res;
 }
 
 BtreeLeaf<time_t, Fact>* CompressedLeafNodeSession::find(const time_t& key)

@@ -24,7 +24,7 @@ public:
   ~CompressedLeafNodeSession();
 
   void insert(const time_t& key, const Fact& data);
-  void remove(const time_t& key, const Fact& data);
+  bool remove(const time_t& key, const Fact& data);
   BtreeLeaf<time_t, Fact>* find(const time_t& key);
   BtreeLeaf<time_t, Fact>* findNear(const time_t& key);
   BtreeLeaf<time_t, Fact>* getFirst();

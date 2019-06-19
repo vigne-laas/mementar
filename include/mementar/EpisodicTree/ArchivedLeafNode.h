@@ -14,13 +14,14 @@ public:
   ArchivedLeafNode(const std::string& directory, size_t order = 10);
   ~ArchivedLeafNode();
 
-  /*void insert(const time_t& key, const Fact& data);
+  void insert(const time_t& key, const Fact& data);
   void remove(const time_t& key, const Fact& data);
   BtreeLeaf<time_t, Fact>* find(const time_t& key);
   BtreeLeaf<time_t, Fact>* findNear(const time_t& key);
   BtreeLeaf<time_t, Fact>* getFirst();
+  BtreeLeaf<time_t, Fact>* getLast();
 
-  void display(time_t key);*/
+  void display(time_t key);
 
 private:
   std::string directory_;
@@ -36,14 +37,18 @@ private:
   std::vector<int> archived_sessions_timeout_; //ms
   std::vector<bool> modified_;
 
-  size_t last_tree_nb_leafs_;
   time_t earlier_key_;
 
   std::atomic<bool> running_;
   std::thread session_cleaner_;
 
+  void createNewCompressedChild(const time_t& key);
+  bool useNewTree();
+  int getKeyIndex(const time_t& key);
+
   void loadStoredData();
   void insert(const time_t& key, const ArchivedLeaf& leaf);
+  void archiveFirst();
 
   void createSession(size_t index);
 

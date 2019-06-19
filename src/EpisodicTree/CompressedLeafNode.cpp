@@ -152,7 +152,6 @@ void CompressedLeafNode::remove(const time_t& key, const Fact& data)
       if(btree_childs_[index - compressed_childs_.size()]->remove(key, data))
         contexts_[index].remove(data);
     }
-
   }
   mut_.unlock_shared();
 }
@@ -261,7 +260,6 @@ void CompressedLeafNode::createNewTreeChild(const time_t& key)
   btree_childs_.push_back(new Btree<time_t,Fact>(order_));
   keys_.push_back(key);
   contexts_.push_back(Context(key));
-  modified_.push_back(false);
   mut_.unlock();
 }
 

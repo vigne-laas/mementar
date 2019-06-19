@@ -13,7 +13,6 @@ ArchivedLeafNode::ArchivedLeafNode(const std::string& directory, size_t order)
   directory_ = directory;
   order_ = order;
 
-  last_tree_nb_leafs_ = 0;
   earlier_key_ = 0;
 
   loadStoredData();
@@ -42,6 +41,220 @@ ArchivedLeafNode::~ArchivedLeafNode()
 
   Display::Debug("");
   mut_.unlock();
+}
+
+void ArchivedLeafNode::insert(const time_t& key, const Fact& data)
+{
+  mut_.lock_shared();
+  if(keys_.size() == 0)
+  {
+    mut_.unlock_shared();
+    createNewCompressedChild(key);
+    mut_.lock_shared();
+    compressed_childs_[0]->insert(key, data);
+  }
+  else
+  {
+    if(key < keys_[0])
+    {
+      std::cout << "[ERROR] try to insert fact in past that do not exist" << std::endl;
+      return;
+    }
+
+    size_t index = getKeyIndex(key);
+
+    if(index < archived_childs_.size())
+    {
+      if((index == archived_childs_.size() - 1) && (keys_.size() == archived_childs_.size()) && (key > earlier_key_))
+      {
+        mut_.unlock_shared();
+        createNewCompressedChild(key);
+        mut_.lock_shared();
+        compressed_childs_[0]->insert(key, data);
+      }
+      else
+      {
+        mut_.unlock_shared();
+        createSession(index);
+        mut_.lock_shared();
+        archived_sessions_tree_[index]->insert(key, data);
+        modified_[index] = true;
+      }
+    }
+    else if(useNewTree())
+    {
+      mut_.unlock_shared();
+      createNewCompressedChild(key);
+      mut_.lock_shared();
+      compressed_childs_[compressed_childs_.size() - 1]->insert(key, data);
+
+      //verify if a chld need to be compressed
+      if(compressed_childs_.size() > 1)
+      {
+        mut_.unlock_shared();
+        archiveFirst();
+        mut_.lock_shared();
+      }
+    }
+    else
+    {
+      compressed_childs_[index - archived_childs_.size()]->insert(key,data);
+    }
+  }
+  mut_.unlock_shared();
+
+  if(earlier_key_ < key)
+    earlier_key_ = key;
+}
+
+void ArchivedLeafNode::remove(const time_t& key, const Fact& data)
+{
+  mut_.lock_shared();
+  int index = getKeyIndex(key);
+  if(index >= 0)
+  {
+    if((size_t)index < archived_childs_.size())
+    {
+      mut_.unlock_shared();
+      createSession(index);
+      mut_.lock_shared();
+      if(archived_sessions_tree_[index]->remove(key, data))
+        modified_[index] = true;
+    }
+    else
+      compressed_childs_[index - archived_childs_.size()]->remove(key, data);
+  }
+  mut_.unlock_shared();
+}
+
+BtreeLeaf<time_t, Fact>* ArchivedLeafNode::find(const time_t& key)
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  mut_.lock_shared();
+  int index = getKeyIndex(key);
+  if(index >= 0)
+  {
+    if((size_t)index < archived_childs_.size())
+    {
+      mut_.unlock_shared();
+      createSession(index);
+      mut_.lock_shared();
+      res = archived_sessions_tree_[index]->find(key);
+    }
+    else
+      res = compressed_childs_[index - archived_childs_.size()]->find(key);
+  }
+  mut_.unlock_shared();
+  return res;
+}
+
+BtreeLeaf<time_t, Fact>* ArchivedLeafNode::findNear(const time_t& key)
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  mut_.lock_shared();
+  int index = getKeyIndex(key);
+  if(index >= 0)
+  {
+    if((size_t)index < archived_childs_.size())
+    {
+      mut_.unlock_shared();
+      createSession(index);
+      mut_.lock_shared();
+      res = archived_sessions_tree_[index]->findNear(key);
+    }
+    else
+      res = compressed_childs_[index - archived_childs_.size()]->findNear(key);
+  }
+  mut_.unlock_shared();
+
+  return res;
+}
+
+BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getFirst()
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  mut_.lock_shared();
+  if(archived_childs_.size())
+  {
+    mut_.unlock_shared();
+    createSession(0);
+    mut_.lock_shared();
+    res = archived_sessions_tree_[0]->getFirst();
+  }
+  else if(compressed_childs_.size())
+    res = compressed_childs_[0]->getFirst();
+  mut_.unlock_shared();
+
+  return res;
+}
+
+BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getLast()
+{
+  BtreeLeaf<time_t, Fact>* res = nullptr;
+
+  mut_.lock_shared();
+  if(compressed_childs_.size())
+    res = compressed_childs_[compressed_childs_.size() - 1]->getLast();
+  else if(archived_childs_.size())
+  {
+    mut_.unlock_shared();
+    createSession(archived_childs_.size() - 1);
+    mut_.lock_shared();
+    res = archived_sessions_tree_[archived_childs_.size() - 1]->getLast();
+  }
+  mut_.unlock_shared();
+
+  return res;
+}
+
+void ArchivedLeafNode::display(time_t key)
+{
+  mut_.lock_shared();
+  int index = getKeyIndex(key);
+
+  if(index >= 0)
+  {
+    if((size_t)index < archived_childs_.size())
+      std::cout << archived_childs_[index].getDirectoty() << std::endl;
+    else
+      compressed_childs_[index - archived_childs_.size()]->display(key);
+  }
+  mut_.unlock_shared();
+}
+
+void ArchivedLeafNode::createNewCompressedChild(const time_t& key)
+{
+  mut_.lock();
+  compressed_childs_.push_back(new CompressedLeafNode(directory_, order_));
+  keys_.push_back(key);
+  mut_.unlock();
+}
+
+bool ArchivedLeafNode::useNewTree()
+{
+  if(compressed_childs_.size() == 0)
+    return false;
+  if(compressed_childs_[0]->size() >= order_)
+    return true;
+  else
+    return false;
+}
+
+int ArchivedLeafNode::getKeyIndex(const time_t& key)
+{
+  int index = keys_.size() - 1;
+  for(size_t i = 0; i < keys_.size(); i++)
+  {
+    if(key < keys_[i])
+    {
+      index = i - 1;
+      break;
+    }
+  }
+  return index;
 }
 
 void ArchivedLeafNode::loadStoredData()
@@ -112,6 +325,22 @@ void ArchivedLeafNode::insert(const time_t& key, const ArchivedLeaf& leaf)
       }
     }
   }
+  mut_.unlock();
+}
+
+void ArchivedLeafNode::archiveFirst()
+{
+  if(compressed_childs_.size() == 0)
+    return;
+
+  ArchivedLeaf tmp(compressed_childs_[0], order_/2, directory_);
+
+  mut_.lock();
+  archived_childs_.push_back(tmp);
+  archived_sessions_tree_.push_back(nullptr);
+  archived_sessions_timeout_.push_back(0);
+
+  compressed_childs_.erase(compressed_childs_.begin());
   mut_.unlock();
 }
 

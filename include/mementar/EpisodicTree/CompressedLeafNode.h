@@ -31,6 +31,7 @@ public:
   BtreeLeaf<time_t, Fact>* getLast();
 
   void display(time_t key);
+  size_t size() { return keys_.size(); }
 
 private:
   std::string directory_;
