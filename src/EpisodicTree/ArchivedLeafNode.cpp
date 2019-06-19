@@ -27,6 +27,12 @@ ArchivedLeafNode::~ArchivedLeafNode()
   session_cleaner_.join();
 
   mut_.lock();
+  for(auto tree : compressed_childs_)
+  {
+    if(tree != nullptr)
+      delete tree;
+  }
+
   Display::Info("Archive trees:");
   size_t nb_leafs = archived_sessions_tree_.size();
   size_t leafs_cpt = 0;

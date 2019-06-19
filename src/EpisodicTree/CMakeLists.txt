@@ -31,3 +31,6 @@ target_link_libraries(mementar_tree_lib mementar_compression_lib pthread)
 
 add_executable(episodic tests/episodic_tree.cpp)
 target_link_libraries(episodic mementar_tree_lib)
+
+add_executable(a tests/archived_tree.cpp)
+target_link_libraries(a mementar_tree_lib)
