@@ -91,15 +91,18 @@ std::string Context::toString()
   std::string res;
   res += "__SUBJECT__\n";
   for(auto it : subjects_)
-    res += "<" + std::to_string(it.second) + ">" + it.first + "\n";
+    if(it.second != 0)
+      res += "<" + std::to_string(it.second) + ">" + it.first + "\n";
 
   res += "__PREDICAT__\n";
   for(auto it : predicats_)
-    res += "<" + std::to_string(it.second) + ">" + it.first + "\n";
+    if(it.second != 0)
+      res += "<" + std::to_string(it.second) + ">" + it.first + "\n";
 
   res += "__OBJECT__\n";
   for(auto it : objects_)
-    res += "<" + std::to_string(it.second) + ">" + it.first + "\n";
+    if(it.second != 0)
+      res += "<" + std::to_string(it.second) + ">" + it.first + "\n";
 
   return res;
 }
@@ -134,7 +137,8 @@ void Context::fromString(const std::string& string)
         size_t nb;
         std::istringstream iss(match[1].str());
         iss >> nb;
-        map_ptr->operator[](match[2].str()) = nb;
+        if(nb != 0)
+          map_ptr->operator[](match[2].str()) = nb;
       }
     }
   }
