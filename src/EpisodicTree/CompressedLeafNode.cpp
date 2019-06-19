@@ -56,6 +56,37 @@ CompressedLeafNode::~CompressedLeafNode()
   mut_.unlock();
 }
 
+CompressedLeafNode* CompressedLeafNode::split()
+{
+  mut_.lock();
+  CompressedLeafNode* new_one = new CompressedLeafNode();
+  new_one->directory_ = directory_;
+  new_one->order_ = order_;
+
+  size_t nb = keys_.size()/2;
+  for(size_t i = 0; i < nb; i++)
+  {
+    new_one->keys_.push_back(keys_[0]);
+    new_one->contexts_.push_back(contexts_[0]);
+    new_one->compressed_childs_.push_back(compressed_childs_[0]);
+    new_one->compressed_sessions_tree_.push_back(compressed_sessions_tree_[0]);
+    new_one->compressed_sessions_timeout_.push_back(compressed_sessions_timeout_[0]);
+    new_one->modified_.push_back(modified_[0]);
+
+    keys_.erase(keys_.begin());
+    contexts_.erase(contexts_.begin());
+    compressed_childs_.erase(compressed_childs_.begin());
+    compressed_sessions_tree_.erase(compressed_sessions_tree_.begin());
+    compressed_sessions_timeout_.erase(compressed_sessions_timeout_.begin());
+    modified_.erase(modified_.begin());
+  }
+
+  new_one->init();
+  mut_.unlock();
+
+  return new_one;
+}
+
 void CompressedLeafNode::insert(const time_t& key, const Fact& data)
 {
   mut_.lock_shared();
@@ -252,6 +283,12 @@ void CompressedLeafNode::display(time_t key)
       btree_childs_[index - compressed_childs_.size()]->display();
   }
   mut_.unlock_shared();
+}
+
+void CompressedLeafNode::init()
+{
+  running_ = true;
+  session_cleaner_ = std::move(std::thread(&CompressedLeafNode::clean, this));
 }
 
 void CompressedLeafNode::createNewTreeChild(const time_t& key)

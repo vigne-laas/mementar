@@ -14,7 +14,7 @@ int main()
 {
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-  mementar::ArchivedLeafNode archived_node("/home/gsarthou/Desktop/tests");
+  mementar::ArchivedLeafNode archived_node("/home/gsarthou/Desktop/tests", 4);
 
   std::cout << " *************" << std::endl;
   for(size_t i = 0; i < 400000; i++)

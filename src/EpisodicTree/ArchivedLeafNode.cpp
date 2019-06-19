@@ -90,7 +90,10 @@ void ArchivedLeafNode::insert(const time_t& key, const Fact& data)
     else if(useNewTree())
     {
       mut_.unlock_shared();
-      createNewCompressedChild(key);
+      mut_.lock();
+      compressed_childs_.insert(compressed_childs_.end() - 1, compressed_childs_[0]->split());
+      keys_.push_back(compressed_childs_[compressed_childs_.size() - 1]->getKey());
+      mut_.unlock();
       mut_.lock_shared();
       compressed_childs_[compressed_childs_.size() - 1]->insert(key, data);
 

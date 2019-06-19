@@ -23,6 +23,8 @@ public:
   CompressedLeafNode(std::string directory, size_t order = 10);
   ~CompressedLeafNode();
 
+  CompressedLeafNode* split();
+
   void insert(const time_t& key, const Fact& data);
   void remove(const time_t& key, const Fact& data);
   BtreeLeaf<time_t, Fact>* find(const time_t& key);
@@ -34,8 +36,12 @@ public:
   size_t size() { return keys_.size(); }
 
   std::string getDirectory() { return directory_; }
+  time_t getKey() { return keys_[0]; }
 
 private:
+  CompressedLeafNode() {};
+  void init();
+
   std::string directory_;
   size_t order_;
   mutable std::shared_timed_mutex mut_;
