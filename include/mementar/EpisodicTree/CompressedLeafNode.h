@@ -36,7 +36,13 @@ public:
   size_t size() { return keys_.size(); }
 
   std::string getDirectory() { return directory_; }
-  time_t getKey() { return keys_[0]; }
+  time_t getKey()
+  {
+    if(contexts_.size())
+      return contexts_[0].getKey();
+    else
+      return -1;
+  }
 
 private:
   CompressedLeafNode() {};

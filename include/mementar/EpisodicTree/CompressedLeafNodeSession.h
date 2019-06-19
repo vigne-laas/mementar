@@ -30,7 +30,13 @@ public:
   BtreeLeaf<time_t, Fact>* getFirst();
   BtreeLeaf<time_t, Fact>* getLast();
 
-  time_t getKey() { return contexts_[0].getKey(); }
+  time_t getKey()
+  {
+    if(contexts_.size())
+      return contexts_[0].getKey();
+    else
+      return -1;
+  }
 
 private:
   std::string file_name_;

@@ -302,6 +302,10 @@ void ArchivedLeafNode::loadStoredData()
   Display::Percent(100);
   Display::Debug("");
 
+  CompressedLeafNode* comp = new CompressedLeafNode(directory_, order_);
+  if(comp->getKey() != time_t(-1))
+    compressed_childs_.push_back(comp);
+
   if(archived_childs_.size())
   {
     createSession(archived_childs_.size() - 1);
