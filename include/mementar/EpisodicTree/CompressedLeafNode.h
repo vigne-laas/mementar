@@ -33,6 +33,8 @@ public:
   void display(time_t key);
   size_t size() { return keys_.size(); }
 
+  std::string getDirectory() { return directory_; }
+
 private:
   std::string directory_;
   size_t order_;

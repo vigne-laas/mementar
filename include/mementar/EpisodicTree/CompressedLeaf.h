@@ -16,7 +16,7 @@ public:
   CompressedLeaf(Btree<time_t, Fact>* tree, const std::string& directory);
   CompressedLeaf(const time_t& key, const std::string& directory);
 
-  std::string getDirectoty() { return directory_; }
+  std::string getDirectory() { return directory_; }
   time_t getKey() { return key_; }
 
   Btree<time_t, Fact>* getTree();

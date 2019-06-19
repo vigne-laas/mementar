@@ -224,7 +224,7 @@ void ArchivedLeafNode::display(time_t key)
   if(index >= 0)
   {
     if((size_t)index < archived_childs_.size())
-      std::cout << archived_childs_[index].getDirectoty() << std::endl;
+      std::cout << archived_childs_[index].getDirectory() << std::endl;
     else
       compressed_childs_[index - archived_childs_.size()]->display(key);
   }
@@ -354,7 +354,7 @@ void ArchivedLeafNode::createSession(size_t index)
 {
   mut_.lock();
   if(archived_sessions_tree_[index] == nullptr)
-    archived_sessions_tree_[index] = new CompressedLeafNodeSession(archived_childs_[index].getDirectoty());
+    archived_sessions_tree_[index] = new CompressedLeafNodeSession(archived_childs_[index].getDirectory());
 
   archived_sessions_timeout_[index] = std::time(0);
   mut_.unlock();

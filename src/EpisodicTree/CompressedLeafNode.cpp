@@ -71,7 +71,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
   {
     if(key < keys_[0])
     {
-      std::cout << "[ERROR] try to insert fact in past that do not exist" << std::endl;
+      Display::Error("try to insert fact in past that do not exist");
       return;
     }
 
@@ -247,7 +247,7 @@ void CompressedLeafNode::display(time_t key)
   if(index >= 0)
   {
     if((size_t)index < compressed_childs_.size())
-      std::cout << compressed_childs_[index].getDirectoty() << std::endl;
+      std::cout << compressed_childs_[index].getDirectory() << std::endl;
     else
       btree_childs_[index - compressed_childs_.size()]->display();
   }
@@ -369,6 +369,7 @@ void CompressedLeafNode::compressFirst()
   compressed_childs_.push_back(tmp);
   compressed_sessions_tree_.push_back(nullptr);
   compressed_sessions_timeout_.push_back(0);
+  modified_.push_back(false);
 
   btree_childs_.erase(btree_childs_.begin());
   mut_.unlock();

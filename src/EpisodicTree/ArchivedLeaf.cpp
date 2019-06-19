@@ -30,7 +30,7 @@ ArchivedLeaf::ArchivedLeaf(CompressedLeafNode* tree, size_t nb, const std::strin
 
     keys.push_back(tree->keys_[i]);
     contexts.push_back(tree->contexts_[i]);
-    input_files.push_back(tree->compressed_childs_[i].getDirectoty());
+    input_files.push_back(tree->compressed_childs_[i].getDirectory());
   }
 
   std::string context = Context::ContextsToString(contexts);
@@ -47,7 +47,7 @@ ArchivedLeaf::ArchivedLeaf(CompressedLeafNode* tree, size_t nb, const std::strin
     if(i >= tree->compressed_childs_.size())
       break;
 
-    std::experimental::filesystem::remove(tree->compressed_childs_[i].getDirectoty());
+    std::experimental::filesystem::remove(tree->compressed_childs_[i].getDirectory());
   }
 }
 

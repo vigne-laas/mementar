@@ -59,7 +59,6 @@ private:
 template<typename Tkey, typename Tdata>
 void BtreeLeaf<Tkey,Tdata>::remove(const Tdata& data)
 {
-  std::cout << "remove leaf" << std::endl;
   for(size_t i = 0; i < data_.size();)
   {
     if(data_[i] == data)
