@@ -33,3 +33,6 @@
 
 build/
 tests_files/*
+
+# mementar intern files
+/file_intern/*
