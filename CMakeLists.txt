@@ -100,7 +100,6 @@ add_library(mementar_tree_lib
   src/EpisodicTree/ArchivedLeafNode.cpp
 )
 target_link_libraries(mementar_tree_lib
-  PUBLIC
   mementar_compression_lib
   pthread
 )
@@ -113,7 +112,6 @@ add_library(mementar_interface
   src/RosInterface.cpp
 )
 target_link_libraries(mementar_interface
- PUBLIC
  mementar_tree_lib
 )
 
@@ -124,7 +122,7 @@ target_link_libraries(mementar_interface
 ##############################
 
 add_executable(mementar src/nodes/mementar.cpp)
-target_link_libraries(mementar PRIVATE mementar_interface)
+target_link_libraries(mementar mementar_interface)
 target_link_libraries(mementar ${catkin_LIBRARIES})
 add_dependencies(mementar ${catkin_EXPORTED_TARGETS})
 
