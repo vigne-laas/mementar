@@ -19,7 +19,7 @@ RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, siz
   else
     dir += "/" + name;
 
-  std::experimental::filesystem::create_directory(dir);
+  std::experimental::filesystem::create_directories(dir);
   tree_ = new ArchivedLeafNode(dir, order);
 
   name_ = name;
