@@ -28,6 +28,11 @@ public:
       object_ = splitted[2];
   }
 
+  bool valid()
+  {
+    return((subject_ != "") && (predicat_ != "") && (object_ != ""));
+  }
+
   std::string toString()
   {
     return subject_ + "|" + predicat_ + "|" + object_;

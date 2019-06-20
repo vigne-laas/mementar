@@ -37,6 +37,9 @@ void RosInterface::run()
   service_name = (name_ == "") ? "mementar/insert" : "mementar/insert/" + name_;
   ros::Subscriber knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::knowledgeCallback, this);
 
+  service_name = (name_ == "") ? "mementar/insert_stamped" : "mementar/insert_stamped/" + name_;
+  ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::stampedKnowledgeCallback, this);
+
   // Start up ROS service with callbacks
   service_name = (name_ == "") ? "mementar/actions" : "mementar/actions/" + name_;
   ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
@@ -57,7 +60,16 @@ void RosInterface::run()
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
-  //tree_->insert(msg->data);
+  Fact fact(msg->data);
+  if(fact.valid())
+    tree_->insert(time(0), fact);
+}
+
+void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
+{
+  Fact fact(msg->data);
+  if(fact.valid())
+    tree_->insert(msg->stamp.sec, fact);
 }
 
 bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
@@ -68,9 +80,15 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
   removeUselessSpace(req.action);
   removeUselessSpace(req.param);
 
-  /*if(req.action == "remove")
-    tree_->remove(req.param);
-  else */if(req.action == "newSession")
+  if(req.action == "remove")
+  {
+    Fact fact(req.param);
+    if(fact.valid())
+      tree_->remove(req.stamp.sec, req.param);
+    else
+      res.code = REQUEST_ERROR;
+  }
+  else if(req.action == "newSession")
     tree_->newSession();
   else
     res.code = UNKNOW_ACTION;

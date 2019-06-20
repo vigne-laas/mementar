@@ -31,6 +31,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
  add_message_files(
    FILES
    MementarEvent.msg
+   StampedString.msg
  )
 
 ## Generate services in the 'srv' folder

@@ -7,6 +7,7 @@
 #include "std_msgs/String.h"
 
 #include "mementar/MementarService.h"
+#include "mementar/StampedString.h"
 
 #include "mementar/core/EpisodicTree/ArchivedLeafNode.h"
 
@@ -32,6 +33,7 @@ private:
   std::atomic<bool> run_;
 
   void knowledgeCallback(const std_msgs::String::ConstPtr& msg);
+  void stampedKnowledgeCallback(const StampedString::ConstPtr& msg);
 
   bool actionsHandle(mementar::MementarService::Request &req,
                      mementar::MementarService::Response &res);
