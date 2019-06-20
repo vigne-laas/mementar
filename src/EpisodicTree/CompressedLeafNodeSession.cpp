@@ -1,6 +1,7 @@
 #include "mementar/EpisodicTree/CompressedLeafNodeSession.h"
 
 #include "mementar/Display.h"
+#include "mementar/archiving_compressing/compressing/LzCompress.h"
 
 namespace mementar
 {
@@ -209,7 +210,11 @@ std::vector<char> CompressedLeafNodeSession::treeToRaw(size_t index)
     it = it->next_;
   }
 
-  return std::vector<char>(res.begin(), res.end());
+  mementar::LzCompress lz_comp;
+  std::vector<char> res_vect;
+  lz_comp.compress(res, res_vect);
+
+  return res_vect;
 }
 
 } // namespace mementar

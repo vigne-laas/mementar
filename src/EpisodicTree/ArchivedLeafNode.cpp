@@ -304,7 +304,13 @@ void ArchivedLeafNode::loadStoredData()
 
   CompressedLeafNode* comp = new CompressedLeafNode(directory_, order_);
   if(comp->getKey() != time_t(-1))
+  {
     compressed_childs_.push_back(comp);
+    keys_.push_back(comp->getKey());
+    archived_sessions_tree_.push_back(nullptr);
+    archived_sessions_timeout_.push_back(0);
+    modified_.push_back(false);
+  }
 
   if(archived_childs_.size())
   {
