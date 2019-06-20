@@ -23,7 +23,7 @@ Btree<time_t, Fact>* CompressedLeafSession::getTree(Header& header, Archive& arc
   lz.uncompress(comp_data, out);
   Btree<time_t, Fact>* tree = new Btree<time_t, Fact>();
 
-  std::regex regex("\\[(\\d+)\\](\\w+)\\s(\\w+)\\s(\\w+)");
+  std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
   std::smatch match;
 
   std::istringstream iss(out);

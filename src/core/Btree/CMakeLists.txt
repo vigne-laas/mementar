@@ -5,7 +5,7 @@ add_compile_options(-std=c++1z -Wall)
 link_libraries(stdc++fs)
 
 include_directories(
-  ../../include
+  ../../../include
 )
 
 add_executable(btree tests/btree_test.cpp)

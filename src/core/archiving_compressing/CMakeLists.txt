@@ -4,7 +4,7 @@ project (mementar)
 add_compile_options(-std=c++14 -Wall)
 
 include_directories(
-  ../../include
+  ../../../include
 )
 
 add_library(mementar_compression_lib

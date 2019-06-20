@@ -19,7 +19,7 @@ public:
 
   Fact(const std::string& triplet)
   {
-    std::vector<std::string> splitted = split(triplet, " ");
+    std::vector<std::string> splitted = split(triplet, "|");
     if(splitted.size() >= 1)
       subject_ = splitted[0];
     if(splitted.size() >= 2)
@@ -30,7 +30,7 @@ public:
 
   std::string toString()
   {
-    return subject_ + " " + predicat_ + " " + object_;
+    return subject_ + "|" + predicat_ + "|" + object_;
   }
 
   bool operator==(const Fact& other)
