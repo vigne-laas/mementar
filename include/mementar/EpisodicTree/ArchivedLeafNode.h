@@ -23,6 +23,8 @@ public:
 
   void display(time_t key);
 
+  void newSession();
+
 private:
   std::string directory_;
   size_t order_;
@@ -38,6 +40,7 @@ private:
   std::vector<bool> modified_;
 
   time_t earlier_key_;
+  bool ask_for_new_tree_;
 
   std::atomic<bool> running_;
   std::thread session_cleaner_;

@@ -19,9 +19,9 @@ int main()
   std::cout << " *************" << std::endl;
   for(size_t i = 0; i < 400000; i++)
   {
-    //std::cout << i << std::endl;
     archived_node.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
-    //usleep(1);
+    if(i == 250000)
+      archived_node.newSession();
   }
   std::cout << " *************" << std::endl;
 

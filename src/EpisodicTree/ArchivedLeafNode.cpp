@@ -15,6 +15,7 @@ ArchivedLeafNode::ArchivedLeafNode(const std::string& directory, size_t order)
   order_ = order;
 
   earlier_key_ = 0;
+  ask_for_new_tree_ = false;
 
   loadStoredData();
 
@@ -235,6 +236,12 @@ void ArchivedLeafNode::display(time_t key)
   mut_.unlock_shared();
 }
 
+void ArchivedLeafNode::newSession()
+{
+  if(compressed_childs_.size())
+    compressed_childs_[compressed_childs_.size() - 1]->newSession();
+}
+
 void ArchivedLeafNode::createNewCompressedChild(const time_t& key)
 {
   mut_.lock();
@@ -245,9 +252,10 @@ void ArchivedLeafNode::createNewCompressedChild(const time_t& key)
 
 bool ArchivedLeafNode::useNewTree()
 {
+
   if(compressed_childs_.size() == 0)
     return false;
-  if(compressed_childs_[0]->size() >= order_)
+  else if(compressed_childs_[0]->size() >= order_)
     return true;
   else
     return false;

@@ -44,6 +44,8 @@ public:
       return -1;
   }
 
+  void newSession() { ask_for_new_tree_ = true; }
+
 private:
   CompressedLeafNode() {};
   void init();
@@ -64,6 +66,7 @@ private:
 
   size_t last_tree_nb_leafs_;
   time_t earlier_key_;
+  bool ask_for_new_tree_;
 
   std::atomic<bool> running_;
   std::thread session_cleaner_;

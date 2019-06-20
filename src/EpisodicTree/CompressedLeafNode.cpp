@@ -14,6 +14,7 @@ CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
 
   last_tree_nb_leafs_ = 0;
   earlier_key_ = 0;
+  ask_for_new_tree_ = false;
 
   loadStoredData();
   Context::loadContexts(contexts_, directory_);
@@ -302,7 +303,12 @@ void CompressedLeafNode::createNewTreeChild(const time_t& key)
 
 bool CompressedLeafNode::useNewTree()
 {
-  if(last_tree_nb_leafs_ >= 100000)
+  if(ask_for_new_tree_)
+  {
+    ask_for_new_tree_ = false;
+    return true;
+  }
+  else if(last_tree_nb_leafs_ >= 100000)
     return true;
   else
     return false;
