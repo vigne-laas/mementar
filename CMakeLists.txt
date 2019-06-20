@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(mementar)
 
-add_compile_options(-std=c++14)
+add_compile_options(-std=c++1z -Wall)
+link_libraries(stdc++fs)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -35,6 +36,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
 ## Generate services in the 'srv' folder
  add_service_files(
   FILES
+  MementarService.srv
   MementarEventSubscription.srv
   MementarEventUnsubscription.srv
  )
@@ -88,6 +90,33 @@ add_library(mementar_compression_lib
   src/archiving_compressing/archiving/Archive.cpp
 )
 
+add_library(mementar_tree_lib
+  src/EpisodicTree/CompressedLeaf.cpp
+  src/EpisodicTree/CompressedLeafNode.cpp
+  src/EpisodicTree/Context.cpp
+  src/EpisodicTree/CompressedLeafSession.cpp
+  src/EpisodicTree/CompressedLeafNodeSession.cpp
+  src/EpisodicTree/ArchivedLeaf.cpp
+  src/EpisodicTree/ArchivedLeafNode.cpp
+)
+target_link_libraries(mementar_tree_lib
+  PUBLIC
+  mementar_compression_lib
+  pthread
+)
+
+##############################
+## INTERFACE
+##############################
+
+add_library(mementar_interface
+  src/RosInterface.cpp
+)
+target_link_libraries(mementar_interface
+ PUBLIC
+ mementar_tree_lib
+)
+
 ##############################
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
@@ -95,9 +124,9 @@ add_library(mementar_compression_lib
 ##############################
 
 add_executable(mementar src/nodes/mementar.cpp)
-add_dependencies(mementar mementar_gencpp)
+target_link_libraries(mementar PRIVATE mementar_interface)
 target_link_libraries(mementar ${catkin_LIBRARIES})
-target_link_libraries(mementar mementar_compression_lib)
+add_dependencies(mementar ${catkin_EXPORTED_TARGETS})
 
 ##############################
 ## Install

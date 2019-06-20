@@ -1,18 +1,17 @@
 #include "ros/ros.h"
 
-#include "mementar/archiving_compressing/archiving/Header.h"
+#include "mementar/RosInterface.h"
 #include "mementar/IdManager.h"
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "mementar");
 
+  std::string directory = std::string(argv[1]);
+  std::cout << "directory " << directory << std::endl;
+
   ros::NodeHandle n;
-
-  ros::service::waitForService("ontologenius/rest", -1);
-
-  /*std::string intern_folder = std::string(argv[1]);
-  std::cout << "intern_folder " << intern_folder << std::endl;*/
+  mementar::RosInterface interface(&n, directory);
 
   mementar::IdManager<uint32_t> ids;
 
