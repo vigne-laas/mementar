@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 
 #include "mementar/RosInterface.h"
-#include "mementar/IdManager.h"
+#include "mementar/core/IdManager.h"
 
 int main(int argc, char** argv)
 {

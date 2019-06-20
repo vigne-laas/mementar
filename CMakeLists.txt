@@ -81,23 +81,23 @@ include_directories(
 ## ARCHIVING & COMPRESSION
 ##############################
 add_library(mementar_compression_lib
-  src/archiving_compressing/binaryManagement/BitFileGenerator.cpp
-  src/archiving_compressing/binaryManagement/BitFileGetter.cpp
-  src/archiving_compressing/compressing/LzCompress.cpp
-  src/archiving_compressing/compressing/LzUncompress.cpp
-  src/archiving_compressing/compressing/Huffman.cpp
-  src/archiving_compressing/archiving/Header.cpp
-  src/archiving_compressing/archiving/Archive.cpp
+  src/core/archiving_compressing/binaryManagement/BitFileGenerator.cpp
+  src/core/archiving_compressing/binaryManagement/BitFileGetter.cpp
+  src/core/archiving_compressing/compressing/LzCompress.cpp
+  src/core/archiving_compressing/compressing/LzUncompress.cpp
+  src/core/archiving_compressing/compressing/Huffman.cpp
+  src/core/archiving_compressing/archiving/Header.cpp
+  src/core/archiving_compressing/archiving/Archive.cpp
 )
 
 add_library(mementar_tree_lib
-  src/EpisodicTree/CompressedLeaf.cpp
-  src/EpisodicTree/CompressedLeafNode.cpp
-  src/EpisodicTree/Context.cpp
-  src/EpisodicTree/CompressedLeafSession.cpp
-  src/EpisodicTree/CompressedLeafNodeSession.cpp
-  src/EpisodicTree/ArchivedLeaf.cpp
-  src/EpisodicTree/ArchivedLeafNode.cpp
+  src/core/EpisodicTree/CompressedLeaf.cpp
+  src/core/EpisodicTree/CompressedLeafNode.cpp
+  src/core/EpisodicTree/Context.cpp
+  src/core/EpisodicTree/CompressedLeafSession.cpp
+  src/core/EpisodicTree/CompressedLeafNodeSession.cpp
+  src/core/EpisodicTree/ArchivedLeaf.cpp
+  src/core/EpisodicTree/ArchivedLeafNode.cpp
 )
 target_link_libraries(mementar_tree_lib
   mementar_compression_lib

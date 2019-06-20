@@ -4,7 +4,7 @@
 
 #include <ros/callback_queue.h>
 
-#include "mementar/utility/error_code.h"
+#include "mementar/core/utility/error_code.h"
 
 namespace mementar
 {

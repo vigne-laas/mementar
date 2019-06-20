@@ -8,7 +8,7 @@
 
 #include "mementar/MementarService.h"
 
-#include "mementar/EpisodicTree/ArchivedLeafNode.h"
+#include "mementar/core/EpisodicTree/ArchivedLeafNode.h"
 
 namespace mementar
 {
