@@ -80,6 +80,10 @@ include_directories(
 ##############################
 ## ARCHIVING & COMPRESSION
 ##############################
+
+##############################
+## TREES
+##############################
 add_library(mementar_compression_lib
   src/core/archiving_compressing/binaryManagement/BitFileGenerator.cpp
   src/core/archiving_compressing/binaryManagement/BitFileGetter.cpp
@@ -102,6 +106,14 @@ add_library(mementar_tree_lib
 target_link_libraries(mementar_tree_lib
   mementar_compression_lib
   pthread
+)
+
+##############################
+## EVENTS
+##############################
+
+add_library(mementar_events_lib
+  src/core/Events/Subscription.cpp
 )
 
 ##############################
