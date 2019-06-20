@@ -59,7 +59,6 @@ find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  INCLUDE_DIRS include/mementar
   LIBRARIES mementar_lib
   CATKIN_DEPENDS roscpp rospy std_msgs
 )
@@ -112,9 +111,9 @@ target_link_libraries(mementar_tree_lib
 add_library(mementar_interface
   src/RosInterface.cpp
 )
-target_link_libraries(mementar_interface
- mementar_tree_lib
-)
+target_link_libraries(mementar_interface mementar_tree_lib)
+target_link_libraries(mementar_interface ${catkin_LIBRARIES})
+add_dependencies(mementar_interface ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 ##############################
 ## Declare a C++ executable
