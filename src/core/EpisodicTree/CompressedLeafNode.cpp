@@ -430,7 +430,7 @@ void CompressedLeafNode::createSession(size_t index)
 
 void CompressedLeafNode::clean()
 {
-  size_t rate = 1000000 / 1000; // clean rate / look up rate;
+  size_t rate = 100000 / 1000; // clean rate / look up rate;
   size_t cpt = rate;
   while(running_ == true)
   {
