@@ -10,17 +10,24 @@ size_t Subscription::subscribe(const Fact& patern, size_t count)
   fact_paterns_.insert(std::pair<size_t, Fact>(id, patern));
   counts_[id] = count;
   map_mut_.unlock();
-  
+
   return id;
 }
 
-void Subscription::unsubscribe(size_t id)
+bool Subscription::unsubscribe(size_t id)
 {
+  bool res = true;
   map_mut_.lock();
-  fact_paterns_.erase(id);
-  counts_.erase(id);
-  id_manager_.removeId(id);
+  if(id_manager_.removeId(id))
+  {
+    fact_paterns_.erase(id);
+    counts_.erase(id);
+  }
+  else
+    res = false;
+
   map_mut_.unlock();
+  return res;
 }
 
 bool Subscription::isFinished(size_t id)

@@ -13,7 +13,7 @@ int main(int argc, char** argv)
   mementar::RosInterface interface(&n, directory);
 
   interface.run();
-  
+
   ROS_DEBUG("KILL mementar");
 
   return 0;

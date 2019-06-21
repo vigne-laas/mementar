@@ -10,6 +10,7 @@
 #include "mementar/StampedString.h"
 
 #include "mementar/core/EpisodicTree/ArchivedLeafNode.h"
+#include "mementar/core/Events/EventsManager.h"
 
 namespace mementar
 {
@@ -28,6 +29,7 @@ public:
 private:
   ros::NodeHandle* n_;
   ArchivedLeafNode* tree_;
+  EventsManager events_;
 
   std::string name_;
   std::atomic<bool> run_;

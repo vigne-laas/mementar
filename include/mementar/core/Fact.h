@@ -17,7 +17,7 @@ public:
     object_ = object;
   }
 
-  Fact(const std::string& triplet)
+  Fact(const std::string& triplet = "")
   {
     std::vector<std::string> splitted = split(triplet, "|");
     if(splitted.size() >= 1)

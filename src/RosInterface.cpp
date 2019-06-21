@@ -1,6 +1,7 @@
 #include "mementar/RosInterface.h"
 
 #include <experimental/filesystem>
+#include <thread>
 
 #include <ros/callback_queue.h>
 
@@ -9,7 +10,8 @@
 namespace mementar
 {
 
-RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order, std::string name) : run_(true)
+RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order, std::string name) : events_(n, name),
+                                                                                                               run_(true)
 {
   n_ = n;
 
@@ -44,12 +46,17 @@ void RosInterface::run()
   service_name = (name_ == "") ? "mementar/actions" : "mementar/actions/" + name_;
   ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
 
+  std::thread event_thread(&EventsManager::run, &events_);
+
   ROS_DEBUG("%s mementar ready", name_.c_str());
 
   while (ros::ok() && isRunning())
   {
     ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));
   }
+
+  events_.stop();
+  event_thread.join();
 }
 
 /***************
@@ -62,7 +69,10 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
   Fact fact(msg->data);
   if(fact.valid())
+  {
     tree_->insert(time(0), fact);
+    events_.add(fact);
+  }
 }
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)

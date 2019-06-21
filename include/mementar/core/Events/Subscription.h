@@ -15,9 +15,10 @@ class Subscription
 {
 public:
   size_t subscribe(const Fact& patern, size_t count);
-  void unsubscribe(size_t id);
+  bool unsubscribe(size_t id);
 
   bool isFinished(size_t id);
+  bool empty() { return fact_paterns_.size() == 0; }
 
   std::vector<size_t> evaluate(const Fact& fact);
 

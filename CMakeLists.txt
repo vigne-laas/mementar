@@ -114,7 +114,10 @@ target_link_libraries(mementar_tree_lib
 
 add_library(mementar_events_lib
   src/core/Events/Subscription.cpp
+  src/core/Events/EventsManager.cpp
 )
+target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
+add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 ##############################
 ## INTERFACE
@@ -123,7 +126,7 @@ add_library(mementar_events_lib
 add_library(mementar_interface
   src/RosInterface.cpp
 )
-target_link_libraries(mementar_interface mementar_tree_lib)
+target_link_libraries(mementar_interface mementar_tree_lib mementar_events_lib)
 target_link_libraries(mementar_interface ${catkin_LIBRARIES})
 add_dependencies(mementar_interface ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
