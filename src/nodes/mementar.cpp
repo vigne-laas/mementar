@@ -9,7 +9,7 @@ int main(int argc, char** argv)
   std::string directory = std::string(argv[1]);
   std::cout << "directory " << directory << std::endl;
 
-  ros::NodeHandle n;
+  ros::NodeHandle n("mementar");
   mementar::RosInterface interface(&n, directory);
 
   interface.run();

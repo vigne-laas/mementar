@@ -36,14 +36,14 @@ void RosInterface::run()
 {
   std::string service_name;
 
-  service_name = (name_ == "") ? "mementar/insert" : "mementar/insert/" + name_;
+  service_name = (name_ == "") ? "insert" : "insert/" + name_;
   ros::Subscriber knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::knowledgeCallback, this);
 
-  service_name = (name_ == "") ? "mementar/insert_stamped" : "mementar/insert_stamped/" + name_;
+  service_name = (name_ == "") ? "insert_stamped" : "insert_stamped/" + name_;
   ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::stampedKnowledgeCallback, this);
 
   // Start up ROS service with callbacks
-  service_name = (name_ == "") ? "mementar/actions" : "mementar/actions/" + name_;
+  service_name = (name_ == "") ? "actions" : "actions/" + name_;
   ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
 
   std::thread event_thread(&EventsManager::run, &events_);

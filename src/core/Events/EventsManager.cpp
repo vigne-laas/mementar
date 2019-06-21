@@ -6,15 +6,15 @@ namespace mementar
 {
 
 EventsManager::EventsManager(ros::NodeHandle* n, std::string name) : run_(false),
-                                                                     pub_(n->advertise<mementar::MementarEvent>((name == "") ? "mementar/events" : "mementar/events/" + name, 1000))
+                                                                     pub_(n->advertise<mementar::MementarEvent>((name == "") ? "events" : "events/" + name, 1000))
 {
   n_ = n;
   std::string service_name;
 
-  service_name = (name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name;
+  service_name = (name == "") ? "subscribe" : "subscribe/" + name;
   sub_service_ = n_->advertiseService(service_name, &EventsManager::SubscribeCallback, this);
 
-  service_name = (name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name;
+  service_name = (name == "") ? "unsubscribe" : "unsubscribe/" + name;
   unsub_service_ = n_->advertiseService(service_name, &EventsManager::UnsubscribeCallback, this);
 }
 
