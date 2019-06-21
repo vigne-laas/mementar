@@ -1,0 +1,5 @@
+<launch>
+  <arg name="intern_directory" default="$(find mementar)/file_intern"/>
+
+  <node name="mementar_core" pkg="mementar" type="mementar_multi" output="screen" args="$(arg intern_directory)"> </node>
+</launch>

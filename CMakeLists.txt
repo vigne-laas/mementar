@@ -141,6 +141,11 @@ target_link_libraries(mementar mementar_interface)
 target_link_libraries(mementar ${catkin_LIBRARIES})
 add_dependencies(mementar ${catkin_EXPORTED_TARGETS})
 
+add_executable(mementar_multi src/nodes/mementar_multi.cpp)
+target_link_libraries(mementar_multi mementar_interface)
+target_link_libraries(mementar_multi ${catkin_LIBRARIES})
+add_dependencies(mementar_multi ${catkin_EXPORTED_TARGETS})
+
 ##############################
 ## Install
 ##############################
