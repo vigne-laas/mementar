@@ -82,7 +82,7 @@ include_directories(
 ##############################
 
 ##############################
-## TREES
+## CORE
 ##############################
 add_library(mementar_compression_lib
   src/core/archiving_compressing/binaryManagement/BitFileGenerator.cpp
@@ -94,7 +94,7 @@ add_library(mementar_compression_lib
   src/core/archiving_compressing/archiving/Archive.cpp
 )
 
-add_library(mementar_tree_lib
+add_library(mementar_core_lib
   src/core/EpisodicTree/CompressedLeaf.cpp
   src/core/EpisodicTree/CompressedLeafNode.cpp
   src/core/EpisodicTree/Context.cpp
@@ -103,7 +103,7 @@ add_library(mementar_tree_lib
   src/core/EpisodicTree/ArchivedLeaf.cpp
   src/core/EpisodicTree/ArchivedLeafNode.cpp
 )
-target_link_libraries(mementar_tree_lib
+target_link_libraries(mementar_core_lib
   mementar_compression_lib
   pthread
 )
@@ -120,13 +120,24 @@ target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
 add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 ##############################
+## API
+##############################
+
+add_library(mementar_lib
+  src/API/clients/ManagerClient.cpp
+  src/API/clients/ClientBase.cpp
+)
+target_link_libraries(mementar_lib ${catkin_LIBRARIES})
+add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
+
+##############################
 ## INTERFACE
 ##############################
 
 add_library(mementar_interface
   src/RosInterface.cpp
 )
-target_link_libraries(mementar_interface mementar_tree_lib mementar_events_lib)
+target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib)
 target_link_libraries(mementar_interface ${catkin_LIBRARIES})
 add_dependencies(mementar_interface ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
@@ -150,19 +161,19 @@ add_dependencies(mementar_multi ${catkin_EXPORTED_TARGETS})
 ## Install
 ##############################
 
-#install(TARGETS
-#  mementar_lib
-#  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-#  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-#)
+install(TARGETS
+  mementar_lib
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
-#install(DIRECTORY include/${PROJECT_NAME}/
-#  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#  FILES_MATCHING PATTERN "*.h"
-#  PATTERN ".svn" EXCLUDE
-#)
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
 
 ##############################
 ## Tests
