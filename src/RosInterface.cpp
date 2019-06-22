@@ -14,15 +14,15 @@ RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, siz
                                                                                                                run_(true)
 {
   n_ = n;
-
-  std::string dir = directory;
+  order_ = order;
+  directory_ = directory;
   if(name == "")
-    dir += "/mementar";
+    directory_ += "/mementar";
   else
-    dir += "/" + name;
+    directory_ += "/" + name;
 
-  std::experimental::filesystem::create_directories(dir);
-  tree_ = new ArchivedLeafNode(dir, order);
+  std::experimental::filesystem::create_directories(directory_);
+  tree_ = new ArchivedLeafNode(directory_, order_);
 
   name_ = name;
 }
@@ -59,6 +59,16 @@ void RosInterface::run()
   event_thread.join();
 }
 
+void RosInterface::reset()
+{
+  mut_.lock();
+  delete tree_;
+  std::experimental::filesystem::remove_all(directory_);
+  std::experimental::filesystem::create_directories(directory_);
+  tree_ = new ArchivedLeafNode(directory_, order_);
+  mut_.unlock();
+}
+
 /***************
 *
 * Callbacks
@@ -70,7 +80,9 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
   Fact fact(msg->data);
   if(fact.valid())
   {
+    mut_.lock_shared();
     tree_->insert(time(0), fact);
+    mut_.unlock_shared();
     events_.add(fact);
   }
 }
@@ -79,7 +91,11 @@ void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
   Fact fact(msg->data);
   if(fact.valid())
+  {
+    mut_.lock_shared();
     tree_->insert(msg->stamp.sec, fact);
+    mut_.unlock_shared();
+  }
 }
 
 bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
@@ -94,12 +110,22 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
   {
     Fact fact(req.param);
     if(fact.valid())
+    {
+      mut_.lock_shared();
       tree_->remove(req.stamp.sec, req.param);
+      mut_.unlock_shared();
+    }
     else
       res.code = REQUEST_ERROR;
   }
   else if(req.action == "newSession")
+  {
+    mut_.lock_shared();
     tree_->newSession();
+    mut_.unlock_shared();
+  }
+  else if(req.action == "reset")
+    reset();
   else
     res.code = UNKNOW_ACTION;
 
