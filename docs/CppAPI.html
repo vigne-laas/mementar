@@ -1,7 +1,7 @@
 <html lang="en_US">
 
 <head>
-  <title>Install | Mementar 0.0.2</title>
+  <title>C++ API | Mementar 0.0.2</title>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <link href="style/mementar_api.css" rel="stylesheet" type="text/css">
   <link href="img/logo/favicon.ico" rel="shortcut icon">
@@ -34,10 +34,10 @@
     <div class="navigationbar">
       <ul class="sub-navigation">
         <li><a href="https://github.com/sarthou/mementar/tree/master/src/API">C++ API sources</a></li>
-        <li><a href="https://github.com/sarthou/mementar/tree/master/include/API/utility">C++ API headers</a></li>
+        <li><a href="https://github.com/sarthou/mementar/tree/master/include/mementar/API">C++ API headers</a></li>
         <li><a href="https://gitlab.com/sarthou/mementar/pipelines">Pipelines</a></li>
       </ul>
-      <h1>Mementar Documentation</h1>
+      <h1>Mementar API Documentation</h1>
     </div>
 
     <div class="content">
@@ -48,7 +48,7 @@
           <h3>Getting Start</h3>
           <ul style="display: block;">
             <li class="level1"><a href="Download.html">Download</a></li>
-            <li class="level1"><a href="InstallMementar.html"><b>Install Mementar</b></a></li>
+            <li class="level1"><a href="InstallMementar.html">Install Mementar</a></li>
             <li class="level1"><a href="SetUp.html">Set Up Your Environnement</a></li>
             <li class="level1"><a href="Tutorials.html">Tutorials</a></li>
           </ul>
@@ -68,38 +68,18 @@
       </div>
 
       <div class="context">
-        <h1 class="title">Install Mementar</h1>
-        <p>Since Mementar is a ROS package, make sure that ROS is installed on your platform. Mementar is fully supported and maintained by <a class="type" href="http://wiki.ros.org/kinetic/Installation">ROS Kinetic Kame</a> and <a class="type" href="http://wiki.ros.org/melodic/Installation">ROS Melodic Morenia</a>. Desktop ROS configuration is not required for use of mementar.</p>
+        <h1 class="title">All C++ Classes</h1>
 
-        <p>Clone the package on your catkin workspace:</p>
-        <div class="code_block">
-          <p>cd ~/catkin_ws/src/</br></br>git clone https://github.com/sarthou/mementar.git</br></br>cd ..</br></br>catkin_make</p>
-        </div>
-
-        <h2>Troubles</h2>
-        <p>If you have the following error :</p>
-        <div class="code_block">
-          <p>Could not find a package configuration file provided by "qt_build" with any of the following names:<br><br>    qt_buildConfig.cmake<br>    qt_build-config.cmake</p>
-        </div>
-        <p>You just have to install qt-build:</p>
-        <div class="code_block">
-          <p>sudo apt-get install ros-DISTRO-qt-build</p>
-        </div>
-        <!--
-        <h2>Test Mementar installation</h2>
-        <p>Just run rostest to check if all the features work well on your platform:</p>
-        <div class="code_block">
-          <p>catkin_make run_tests_mementar_rostest</p>
-        </div>
-        <p class="tip">Some asynchronous mechanisms are used. A computer with little computing power can therefore affect some tests due to a slow response time.</p>
-        -->
-        <nav class="course-pagination">
-          <span class="course-pagination__separator"></span>
-          <a href="SetUp.html" class="course-pagination__btn">
-            <span>Set Up Your Environnement</span>
-            <i class="fas fa-angle-right"></i>
-          </a>
-        </nav>
+        <h3><a href="ClientBase.html"><b>ClientBase</b></a></h3>
+        <p>The ClientBase class provides a common ROS service abstraction.</p>
+        <h3><a href="EventsPublisher.html"><b>EventsPublisher</b></a></h3>
+        <p>The EventsPublisher class provides an abstraction for mementar insertion topic. </p>
+        <h3><a href="ManagerClient.html"><b>ManagerClient</b></a></h3>
+        <p>The ManagerClient class provides an abstraction for mementar manage service.</p>
+        <h3><a href="TimelineManipulator.html"><b>TimelineManipulator</b></a></h3>
+        <p>The OntologyManipulator class is an object with instances of all classes needed to manipulate an ontology.</p>
+        <h3><a href="TimelinesManipulator.html"><b>TimelinesManipulator</b></a></h3>
+        <p>The OntologiesManipulator class is an interface to manage several instance of OntologyManipulator in a multi-ontology usage.</p>
 
       </div>
     </div>
