@@ -11,14 +11,9 @@ EventsPublisher::EventsPublisher(ros::NodeHandle* n, const std::string& name) :
   n_ = n;
 }
 
-void EventsPublisher::insert(const std::string& subject, const std::string& predicat, const std::string& object, time_t stamp)
+void EventsPublisher::insert(const Event& event, time_t stamp)
 {
-  publish(subject + "|" + predicat + "|" + object, stamp);
-}
-
-void EventsPublisher::insert(const std::string& data, time_t stamp)
-{
-  publish(data, stamp);
+  publish(event(), stamp);
 }
 
 void EventsPublisher::publish(const std::string& str, time_t stamp)

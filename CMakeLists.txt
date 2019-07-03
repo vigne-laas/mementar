@@ -129,6 +129,7 @@ add_library(mementar_lib
   src/API/clients/ManagerClient.cpp
   src/API/clients/ClientBase.cpp
   src/API/EventsPublisher.cpp
+  src/API/EventsSubscriber.cpp
 )
 target_link_libraries(mementar_lib ${catkin_LIBRARIES})
 add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
