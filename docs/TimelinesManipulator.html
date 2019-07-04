@@ -67,6 +67,7 @@
           <h3><a href="CppAPI.html">All C++ Classes</a></h3>
           <ul style="display: block;">
             <li class="level1"><a href="ClientBase.html">ClientBase</a></li>
+            <li class="level1"><a href="Event.html">Event</a></li>
             <li class="level1"><a href="EventsPublisher.html">EventsPublisher</a></li>
             <li class="level1"><a href="ManagerClient.html">ManagerClient</a></li>
             <li class="level1"><a href="TimelineManipulator.html">TimelineManipulator</a></li>
@@ -96,7 +97,7 @@
               <tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="TimelinesManipulator.html#waitInit">waitInit</a></b>(int32_t <i>timeout</i> = -1)</td></tr>
               <tr><td class="memItemLeft rightAlign topAlign"> TimelineManipulator* </td><td class="memItemRight bottomAlign"><b><a href="TimelinesManipulator.html#operator">operator[]</a></b>(const std::string&amp; <i>name</i>)</td></tr>
               <tr><td class="memItemLeft rightAlign topAlign"> TimelineManipulator* </td><td class="memItemRight bottomAlign"><b><a href="TimelinesManipulator.html#get">get</a></b>(const std::string&amp; <i>name</i>)</td></tr>
-              <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="TimelinesManipulator.html#verbose">verbose</a></b>(bool verbose)</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="TimelinesManipulator.html#verbose">verbose</a></b>(bool verbose)</td></tr>
             </tbody>
           </table>
         </div>
@@ -140,7 +141,7 @@
           <p>Return a pointer on the TimelineManipulator instance named <i>name</i>.</p>
           <p>Return nullptr if no TimelineManipulator instance is named <i>name</i>.</p>
 
-          <h3 class="fn" id="verbose"><a name="verbose"></a><span class="type"></span> TimelineManipulator::<span class="name">verbose</span>(<span class="type">bool</span> verbose)</h3>
+          <h3 class="fn" id="verbose"><a name="verbose"></a><span class="type">void</span> TimelineManipulator::<span class="name">verbose</span>(<span class="type">bool</span> verbose)</h3>
           <p>If verbose is set to true, the clients will post messages about the failure to call the services and about their restoration.</p>
 
           <h2>Reimplemented Public Functions Documentation</h2>
