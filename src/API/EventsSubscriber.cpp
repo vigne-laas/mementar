@@ -16,10 +16,10 @@ EventsSubscriber::EventsSubscriber(ros::NodeHandle* n, std::function<void(const 
   client_cancel_ = n_->serviceClient<MementarEventUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
 }
 
-bool EventsSubscriber::subscribe(const Event& patern, size_t count)
+bool EventsSubscriber::subscribe(const Event& pattern, size_t count)
 {
   MementarEventSubscription srv;
-  srv.request.data = patern();
+  srv.request.data = pattern();
   srv.request.count = count;
 
   if(client_subscribe_.call(srv))

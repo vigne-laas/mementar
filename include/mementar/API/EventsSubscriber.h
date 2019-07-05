@@ -16,8 +16,9 @@ class EventsSubscriber
 {
 public:
   EventsSubscriber(ros::NodeHandle* n, std::function<void(const Event&)> callback, const std::string& name = "");
+  ~EventsSubscriber() { cancel(); }
 
-  bool subscribe(const Event& patern, size_t count = -1);
+  bool subscribe(const Event& pattern, size_t count = -1);
   bool cancel();
 
   bool end() { return ids_.size() == 0; }
