@@ -95,6 +95,7 @@ void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
     mut_.lock_shared();
     tree_->insert(msg->stamp.sec, fact);
     mut_.unlock_shared();
+    events_.add(fact);
   }
 }
 
