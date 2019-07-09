@@ -42,6 +42,19 @@ EventsSubscriber::EventsSubscriber(std::function<void(const Event&)> callback, b
     spin_thread_ = nullptr;
 }
 
+EventsSubscriber::~EventsSubscriber()
+{
+  cancel();
+  if(spin_thread_)
+  {
+    terminate_mutex_.lock();
+    need_to_terminate_ = true;
+    terminate_mutex_.unlock();
+    spin_thread_->join();
+    delete spin_thread_;
+  }
+}
+
 bool EventsSubscriber::subscribe(const Event& pattern, size_t count)
 {
   MementarEventSubscription srv;

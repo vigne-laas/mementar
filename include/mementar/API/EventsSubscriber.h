@@ -20,7 +20,7 @@ class EventsSubscriber
 public:
   EventsSubscriber(std::function<void(const Event&)> callback, const std::string& name = "", bool spin_thread = true);
   EventsSubscriber(std::function<void(const Event&)> callback, bool spin_thread);
-  ~EventsSubscriber() { cancel(); }
+  ~EventsSubscriber();
 
   bool subscribe(const Event& pattern, size_t count = -1);
   bool cancel();
