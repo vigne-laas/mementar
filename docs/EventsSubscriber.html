@@ -93,7 +93,8 @@
         <div class="table">
           <table class="alignedsummary">
             <tbody>
-              <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="EventsSubscriber.html#EventsSubscriber">EventsSubscriber</a></b>(ros::NodeHandle* <i>n</i>, std::function&lt;void(const <a href="Event.html">Event</a>&amp;)&gt; <i>callback</i>, const std::string&amp; <i>name</i> = "")</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="EventsSubscriber.html#EventsSubscriber">EventsSubscriber</a></b>(std::function&lt;void(const <a href="Event.html">Event</a>&amp;)&gt; <i>callback</i>, const std::string&amp; <i>name</i> = "", bool <i>spin_thread</i> = true)</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="EventsSubscriber.html#EventsSubscriber2">EventsSubscriber</a></b>(std::function&lt;void(const <a href="Event.html">Event</a>&amp;)&gt; <i>callback</i>, bool <i>spin_thread</i>)</td></tr>
               <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="EventsSubscriber.html#EventsSubscriber_dest">~EventsSubscriber</a></b>()</td></tr>
               <tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="EventsSubscriber.html#subscribe">subscribe</a></b>(const<a href="Event.html">Event</a> &amp; <i>pattern</i>, size_t <i>count</i> = -1)</td></tr>
               <tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="EventsSubscriber.html#cancel">cancel</a></b>()</td></tr>
@@ -112,9 +113,14 @@
         <div class="func">
           <h2>Public Functions Documentation</h2>
 
-          <h3 class="fn" id="EventsSubscriber"><a name="EventsSubscriber"></a>EventsSubscriber::<span class="name">EventsSubscriber</span>(<span class="type">ros::NodeHandle</span>*<i> n</i>, const <span class="type">std::function&lt;void(<a href="Event.html">Event</a>&amp;)&gt;</span> <i>callback</i>, const <span class="type">std::string</span>&amp; <i>name</i> = "")</h3>
-          <p>Constructs an EventsSubscriber with a pointer to a NodeHandle <i>n</i> and a callback function <i>callback</i>.</p>
+          <h3 class="fn" id="EventsSubscriber"><a name="EventsSubscriber"></a>EventsSubscriber::<span class="name">EventsSubscriber</span>(const <span class="type">std::function&lt;void(<a href="Event.html">Event</a>&amp;)&gt;</span> <i>callback</i>, const <span class="type">std::string</span>&amp; <i>name</i> = "", <span class="type">bool</span> <i>spin_thread</i> = true)</h3>
+          <p>Constructs an EventsSubscriber with a callback function <i>callback</i>.</p>
+          <p>The EventsSubscriber constructor also takes a boolean option to automatically spin a thread. If you prefer not to use threads (and you want the EventsSubscriber to do the 'thread magic' behind the scenes), this is a good option for you.</p>
           <p>Can be used in a multi-process mode by specifying the name of the mementar instance <i>name</i>. For classic use, <i>name</i> should be defined as &quot;&quot;.</p>
+
+          <h3 class="fn" id="EventsSubscriber2"><a name="EventsSubscriber2"></a>EventsSubscriber::<span class="name">EventsSubscriber</span>(const <span class="type">std::function&lt;void(<a href="Event.html">Event</a>&amp;)&gt;</span> <i>callback</i>, <span class="type">bool</span> <i>spin_thread</i>)</h3>
+          <p>Constructs an EventsSubscriber with a callback function <i>callback</i>.</p>
+          <p>The EventsSubscriber constructor also takes a boolean option to automatically spin a thread. If you prefer not to use threads (and you want the EventsSubscriber to do the 'thread magic' behind the scenes), this is a good option for you.</p>
 
           <h3 class="fn" id="EventsSubscriber_dest"><a name="EventsSubscriber_dest"></a>EventsSubscriber::<span class="name">~EventsSubscriber</span>()</h3>
           <p>The EventsSubscriber destructor cancel all the subscriptions previous done.</p>

@@ -6,14 +6,40 @@
 namespace mementar
 {
 
-EventsSubscriber::EventsSubscriber(ros::NodeHandle* n, std::function<void(const Event&)> callback, const std::string& name)
+EventsSubscriber::EventsSubscriber(std::function<void(const Event&)> callback, const std::string& name, bool spin_thread)
 {
-  n_ = n;
   callback_ = callback;
 
-  sub_ = n_->subscribe((name == "") ? "mementar/events" : "mementar/events/" + name, 1000, &EventsSubscriber::eventCallback, this);
-  client_subscribe_ = n_->serviceClient<MementarEventSubscription>((name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name);
-  client_cancel_ = n_->serviceClient<MementarEventUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
+  sub_ = n_.subscribe((name == "") ? "mementar/events" : "mementar/events/" + name, 1000, &EventsSubscriber::eventCallback, this);
+  client_subscribe_ = n_.serviceClient<MementarEventSubscription>((name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name);
+  client_cancel_ = n_.serviceClient<MementarEventUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
+
+  if(spin_thread)
+  {
+    need_to_terminate_ = false;
+    n_.setCallbackQueue(&callback_queue_);
+    spin_thread_ = new std::thread(std::bind(&EventsSubscriber::spinThread, this));
+  }
+  else
+    spin_thread_ = nullptr;
+}
+
+EventsSubscriber::EventsSubscriber(std::function<void(const Event&)> callback, bool spin_thread)
+{
+  callback_ = callback;
+
+  sub_ = n_.subscribe("mementar/events", 1000, &EventsSubscriber::eventCallback, this);
+  client_subscribe_ = n_.serviceClient<MementarEventSubscription>("mementar/subscribe");
+  client_cancel_ = n_.serviceClient<MementarEventUnsubscription>("mementar/unsubscribe");
+
+  if(spin_thread)
+  {
+    need_to_terminate_ = false;
+    n_.setCallbackQueue(&callback_queue_);
+    spin_thread_ = new std::thread(std::bind(&EventsSubscriber::spinThread, this));
+  }
+  else
+    spin_thread_ = nullptr;
 }
 
 bool EventsSubscriber::subscribe(const Event& pattern, size_t count)
@@ -63,6 +89,18 @@ void EventsSubscriber::eventCallback(MementarEvent msg)
     callback_(Event(msg.data));
     if(msg.last == true)
       ids_.erase(it);
+  }
+}
+
+void EventsSubscriber::spinThread()
+{
+  while(n_.ok())
+  {
+    terminate_mutex_.lock();
+    if(need_to_terminate_)
+      break;
+    terminate_mutex_.unlock();
+    callback_queue_.callAvailable(ros::WallDuration(0.1));
   }
 }
 
