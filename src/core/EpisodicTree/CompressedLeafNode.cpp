@@ -117,7 +117,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
         createNewTreeChild(key);
         mut_.lock_shared();
         last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
-        contexts_[keys_.size()].insert(data);
+        contexts_[keys_.size() - 1].insert(data);
       }
       else
       {
