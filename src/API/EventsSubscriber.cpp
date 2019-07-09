@@ -77,7 +77,7 @@ bool EventsSubscriber::cancel()
   {
     MementarEventUnsubscription srv;
     srv.request.id = ids_[i];
-    if(client_subscribe_.call(srv))
+    if(client_cancel_.call(srv))
     {
       if(srv.response.id != (int)ids_[i])
         done = false;
