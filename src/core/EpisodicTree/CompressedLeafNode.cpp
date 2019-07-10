@@ -16,8 +16,8 @@ CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
   earlier_key_ = 0;
   ask_for_new_tree_ = false;
 
-  loadStoredData();
-  Context::loadContexts(contexts_, directory_);
+  if(loadStoredData())
+    Context::loadContexts(contexts_, directory_);
 
   running_ = true;
   session_cleaner_ = std::move(std::thread(&CompressedLeafNode::clean, this));
@@ -117,7 +117,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
         createNewTreeChild(key);
         mut_.lock_shared();
         last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
-        contexts_[keys_.size()].insert(data);
+        contexts_[keys_.size() - 1].insert(data);
       }
       else
       {
@@ -328,10 +328,14 @@ int CompressedLeafNode::getKeyIndex(const time_t& key)
   return index;
 }
 
-void CompressedLeafNode::loadStoredData()
+bool CompressedLeafNode::loadStoredData()
 {
-  Display::Info("Load compressed files:");
   size_t nb_file = std::distance(std::experimental::filesystem::directory_iterator(directory_), std::experimental::filesystem::directory_iterator{});
+  if(nb_file)
+    Display::Info("Load compressed files:");
+  else
+    return false;
+
   size_t cpt_file = 0;
   Display::Percent(0);
 
@@ -368,6 +372,11 @@ void CompressedLeafNode::loadStoredData()
     createSession(compressed_childs_.size() - 1);
     earlier_key_ = compressed_sessions_tree_[compressed_childs_.size() - 1]->getLast()->getKey();
   }
+
+  if(compressed_childs_.size())
+    return true;
+  else
+    return false;
 }
 
 void CompressedLeafNode::insert(const time_t& key, const CompressedLeaf& leaf)
@@ -430,7 +439,7 @@ void CompressedLeafNode::createSession(size_t index)
 
 void CompressedLeafNode::clean()
 {
-  size_t rate = 1000000 / 1000; // clean rate / look up rate;
+  size_t rate = 100000 / 1000; // clean rate / look up rate;
   size_t cpt = rate;
   while(running_ == true)
   {
@@ -453,6 +462,7 @@ void CompressedLeafNode::clean()
 
       }
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(rate));
   }
 }
 

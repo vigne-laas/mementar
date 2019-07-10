@@ -2,6 +2,7 @@
 #define MEMENTAR_ROSINTERFACE_H
 
 #include <string>
+#include <shared_mutex>
 
 #include <ros/ros.h>
 #include "std_msgs/String.h"
@@ -10,6 +11,7 @@
 #include "mementar/StampedString.h"
 
 #include "mementar/core/EpisodicTree/ArchivedLeafNode.h"
+#include "mementar/core/Events/EventsManager.h"
 
 namespace mementar
 {
@@ -27,10 +29,16 @@ public:
 
 private:
   ros::NodeHandle* n_;
+  std::string directory_;
+  size_t order_;
   ArchivedLeafNode* tree_;
+  EventsManager events_;
 
   std::string name_;
   std::atomic<bool> run_;
+  std::shared_timed_mutex mut_;
+
+  void reset();
 
   void knowledgeCallback(const std_msgs::String::ConstPtr& msg);
   void stampedKnowledgeCallback(const StampedString::ConstPtr& msg);

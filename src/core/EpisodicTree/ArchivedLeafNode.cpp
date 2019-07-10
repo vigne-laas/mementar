@@ -10,7 +10,6 @@ namespace mementar
 
 ArchivedLeafNode::ArchivedLeafNode(const std::string& directory, size_t order)
 {
-  std::cout << "NEW ArchivedLeafNode " << directory << std::endl;
   directory_ = directory;
   order_ = order;
 
@@ -319,6 +318,8 @@ void ArchivedLeafNode::loadStoredData()
     archived_sessions_timeout_.push_back(0);
     modified_.push_back(false);
   }
+  else
+    Display::Warning("No compressed data loaded");
 
   if(archived_childs_.size())
   {
@@ -385,7 +386,7 @@ void ArchivedLeafNode::createSession(size_t index)
 
 void ArchivedLeafNode::clean()
 {
-  size_t rate = 1000000 / 1000; // clean rate / look up rate;
+  size_t rate = 100000 / 1000; // clean rate / look up rate;
   size_t cpt = rate;
   while(running_ == true)
   {
@@ -406,6 +407,7 @@ void ArchivedLeafNode::clean()
 
       }
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(rate));
   }
 }
 

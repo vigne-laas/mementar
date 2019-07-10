@@ -17,7 +17,7 @@ public:
     object_ = object;
   }
 
-  Fact(const std::string& triplet)
+  Fact(const std::string& triplet = "")
   {
     std::vector<std::string> splitted = split(triplet, "|");
     if(splitted.size() >= 1)
@@ -38,11 +38,18 @@ public:
     return subject_ + "|" + predicat_ + "|" + object_;
   }
 
-  bool operator==(const Fact& other)
+  bool operator==(const Fact& other) const
   {
     return ((subject_ == other.subject_)
             && (predicat_ == other.predicat_)
             && (object_ == other.object_));
+  }
+
+  bool fit(const Fact& other) const
+  {
+    return (((subject_ == other.subject_) || (subject_ == "?") || (other.subject_ == "?"))
+            && ((predicat_ == other.predicat_) || (predicat_ == "?") || (other.predicat_ == "?"))
+            && ((object_ == other.object_) || (object_ == "?") || (other.object_ == "?")));
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Fact& fact)

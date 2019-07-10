@@ -75,7 +75,7 @@ private:
   inline bool useNewTree();
   inline int getKeyIndex(const time_t& key);
 
-  void loadStoredData();
+  bool loadStoredData();
   void insert(const time_t& key, const CompressedLeaf& leaf);
 
   void compressFirst();

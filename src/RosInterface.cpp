@@ -1,6 +1,7 @@
 #include "mementar/RosInterface.h"
 
 #include <experimental/filesystem>
+#include <thread>
 
 #include <ros/callback_queue.h>
 
@@ -9,18 +10,19 @@
 namespace mementar
 {
 
-RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order, std::string name) : run_(true)
+RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order, std::string name) : events_(n, name),
+                                                                                                               run_(true)
 {
   n_ = n;
-
-  std::string dir = directory;
+  order_ = order;
+  directory_ = directory;
   if(name == "")
-    dir += "/mementar";
+    directory_ += "/mementar";
   else
-    dir += "/" + name;
+    directory_ += "/" + name;
 
-  std::experimental::filesystem::create_directories(dir);
-  tree_ = new ArchivedLeafNode(dir, order);
+  std::experimental::filesystem::create_directories(directory_);
+  tree_ = new ArchivedLeafNode(directory_, order_);
 
   name_ = name;
 }
@@ -34,15 +36,17 @@ void RosInterface::run()
 {
   std::string service_name;
 
-  service_name = (name_ == "") ? "mementar/insert" : "mementar/insert/" + name_;
+  service_name = (name_ == "") ? "insert" : "insert/" + name_;
   ros::Subscriber knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::knowledgeCallback, this);
 
-  service_name = (name_ == "") ? "mementar/insert_stamped" : "mementar/insert_stamped/" + name_;
+  service_name = (name_ == "") ? "insert_stamped" : "insert_stamped/" + name_;
   ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::stampedKnowledgeCallback, this);
 
   // Start up ROS service with callbacks
-  service_name = (name_ == "") ? "mementar/actions" : "mementar/actions/" + name_;
+  service_name = (name_ == "") ? "actions" : "actions/" + name_;
   ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
+
+  std::thread event_thread(&EventsManager::run, &events_);
 
   ROS_DEBUG("%s mementar ready", name_.c_str());
 
@@ -50,6 +54,19 @@ void RosInterface::run()
   {
     ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));
   }
+
+  events_.stop();
+  event_thread.join();
+}
+
+void RosInterface::reset()
+{
+  mut_.lock();
+  delete tree_;
+  std::experimental::filesystem::remove_all(directory_);
+  std::experimental::filesystem::create_directories(directory_);
+  tree_ = new ArchivedLeafNode(directory_, order_);
+  mut_.unlock();
 }
 
 /***************
@@ -62,14 +79,24 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
   Fact fact(msg->data);
   if(fact.valid())
+  {
+    mut_.lock_shared();
     tree_->insert(time(0), fact);
+    mut_.unlock_shared();
+    events_.add(fact);
+  }
 }
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
   Fact fact(msg->data);
   if(fact.valid())
+  {
+    mut_.lock_shared();
     tree_->insert(msg->stamp.sec, fact);
+    mut_.unlock_shared();
+    events_.add(fact);
+  }
 }
 
 bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
@@ -84,12 +111,22 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
   {
     Fact fact(req.param);
     if(fact.valid())
+    {
+      mut_.lock_shared();
       tree_->remove(req.stamp.sec, req.param);
+      mut_.unlock_shared();
+    }
     else
       res.code = REQUEST_ERROR;
   }
   else if(req.action == "newSession")
+  {
+    mut_.lock_shared();
     tree_->newSession();
+    mut_.unlock_shared();
+  }
+  else if(req.action == "reset")
+    reset();
   else
     res.code = UNKNOW_ACTION;
 
