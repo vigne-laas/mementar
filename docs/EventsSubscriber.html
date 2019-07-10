@@ -113,29 +113,29 @@
         <div class="func">
           <h2>Public Functions Documentation</h2>
 
-          <h3 class="fn" id="EventsSubscriber"><a name="EventsSubscriber"></a>EventsSubscriber::<span class="name">EventsSubscriber</span>(const <span class="type">std::function&lt;void(<a href="Event.html">Event</a>&amp;)&gt;</span> <i>callback</i>, const <span class="type">std::string</span>&amp; <i>name</i> = "", <span class="type">bool</span> <i>spin_thread</i> = true)</h3>
+          <h3 class="fn" id="EventsSubscriber"><a name="EventsSubscriber"></a>mementar::EventsSubscriber::<span class="name">EventsSubscriber</span>(const <span class="type">std::function&lt;void(<a href="Event.html">Event</a>&amp;)&gt;</span> <i>callback</i>, const <span class="type">std::string</span>&amp; <i>name</i> = "", <span class="type">bool</span> <i>spin_thread</i> = true)</h3>
           <p>Constructs an EventsSubscriber with a callback function <i>callback</i>.</p>
           <p>The EventsSubscriber constructor also takes a boolean option to automatically spin a thread. If you prefer not to use threads (and you want the EventsSubscriber to do the 'thread magic' behind the scenes), this is a good option for you.</p>
           <p>Can be used in a multi-process mode by specifying the name of the mementar instance <i>name</i>. For classic use, <i>name</i> should be defined as &quot;&quot;.</p>
 
-          <h3 class="fn" id="EventsSubscriber2"><a name="EventsSubscriber2"></a>EventsSubscriber::<span class="name">EventsSubscriber</span>(const <span class="type">std::function&lt;void(<a href="Event.html">Event</a>&amp;)&gt;</span> <i>callback</i>, <span class="type">bool</span> <i>spin_thread</i>)</h3>
+          <h3 class="fn" id="EventsSubscriber2"><a name="EventsSubscriber2"></a>mementar::EventsSubscriber::<span class="name">EventsSubscriber</span>(const <span class="type">std::function&lt;void(<a href="Event.html">Event</a>&amp;)&gt;</span> <i>callback</i>, <span class="type">bool</span> <i>spin_thread</i>)</h3>
           <p>Constructs an EventsSubscriber with a callback function <i>callback</i>.</p>
           <p>The EventsSubscriber constructor also takes a boolean option to automatically spin a thread. If you prefer not to use threads (and you want the EventsSubscriber to do the 'thread magic' behind the scenes), this is a good option for you.</p>
 
-          <h3 class="fn" id="EventsSubscriber_dest"><a name="EventsSubscriber_dest"></a>EventsSubscriber::<span class="name">~EventsSubscriber</span>()</h3>
+          <h3 class="fn" id="EventsSubscriber_dest"><a name="EventsSubscriber_dest"></a>mementar::EventsSubscriber::<span class="name">~EventsSubscriber</span>()</h3>
           <p>The EventsSubscriber destructor cancel all the subscriptions previous done.</p>
 
-          <h3 class="fn" id="subscribe"><a name="subscribe"></a><span class="type">bool</span> EventsPublisher::<span class="name">subscribe</span>(const <span class="type"><a href="Event.html">Event</a></span>&amp; <i>pattern</i>, <span class="type">size_t</span>&amp; <i>count</i> = -1)</h3>
+          <h3 class="fn" id="subscribe"><a name="subscribe"></a><span class="type">bool</span> mementar::EventsSubscriber::<span class="name">subscribe</span>(const <span class="type"><a href="Event.html">Event</a></span>&amp; <i>pattern</i>, <span class="type">size_t</span>&amp; <i>count</i> = -1)</h3>
           <p>Subscribe to the event pattern <i>pattern</i> defined as an Event object.</p>
           <p>A pattern can be constructed as a classic event, but each component of the triplet can also be set to the value &quot;?&quot; to represent anything.</p>
           <p>The <i>count</i> parameter defines the number of events corresponding to the model you want to know. By using the default value -1, the number of events is unlimited.</p>
           <p>Returns false if the subscription failed.<p>
 
-          <h3 class="fn" id="cancel"><a name="cancel"></a><span class="type">bool</span> EventsPublisher::<span class="name">cancel</span>()</h3>
+          <h3 class="fn" id="cancel"><a name="cancel"></a><span class="type">bool</span> mementar::EventsSubscriber::<span class="name">cancel</span>()</h3>
           <p>Cancel all subscriptions.</p>
           <p>Returns false if at least one subscription fails.<p>
 
-          <h3 class="fn" id="end"><a name="end"></a><span class="type">bool</span> EventsPublisher::<span class="name">end</span>()</h3>
+          <h3 class="fn" id="end"><a name="end"></a><span class="type">bool</span> mementar::EventsSubscriber::<span class="name">end</span>()</h3>
           <p>Returns true if no more events are expected.</p>
           <p>If at least one subscription has been made with an account set to -1, the end function will always return false until the next cancellation.</p>
 

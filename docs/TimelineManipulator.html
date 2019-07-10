@@ -130,21 +130,21 @@
         <div class="func">
           <h2>Public Functions Documentation</h2>
 
-          <h3 class="fn" id="TimelineManipulator"><a name="TimelineManipulator"></a>TimelineManipulator::<span class="name">TimelineManipulator</span>(<span class="type">ros::NodeHandle</span>*<i> n</i>, const <span class="type">std::string</span>&amp; <i>name</i> = &quot;&quot;)</h3>
+          <h3 class="fn" id="TimelineManipulator"><a name="TimelineManipulator"></a>mementar::TimelineManipulator::<span class="name">TimelineManipulator</span>(<span class="type">ros::NodeHandle</span>*<i> n</i>, const <span class="type">std::string</span>&amp; <i>name</i> = &quot;&quot;)</h3>
           <p>Constructs a manipulator for a mementar instance with a pointer to a NodeHandle <i>n</i>.</p>
           <p>Can be used in a multi-instances mode by specifying the name of the mementar instance <i>name</i>. For classic use, do not specify any name <i>name</i>.</p>
 
-          <h3 class="fn" id="waitInit"><a name="waitInit"></a><span class="type">bool</span> TimelineManipulator::<span class="name">waitInit</span>(<span class="type">int32_t</span><i> timeout</i> = -1)</h3>
+          <h3 class="fn" id="waitInit"><a name="waitInit"></a><span class="type">bool</span> mementar::TimelineManipulator::<span class="name">waitInit</span>(<span class="type">int32_t</span><i> timeout</i> = -1)</h3>
           <p>Wait for mementar services to be advertised and available for. Blocks until it is.</p>
-
           <p><i>timeout</i> is the amount of time to wait for before timing out. If timeout is -1 (default), waits until the node is shutdown.</p>
-          <h3 class="fn" id="nb"><a name="nb"></a><span class="type">size_t</span> TimelineManipulator::<span class="name">nb</span>()</h3>
+
+          <h3 class="fn" id="nb"><a name="nb"></a><span class="type">size_t</span> mementar::TimelineManipulator::<span class="name">nb</span>()</h3>
           <p>Gives the total number of service calls from all ROS clients instances since the last reset.</p>
 
-          <h3 class="fn" id="resetNb"><a name="resetNb"></a><span class="type">void</span> TimelineManipulator::<span class="name">resetNb</span>()</h3>
+          <h3 class="fn" id="resetNb"><a name="resetNb"></a><span class="type">void</span> mementar::TimelineManipulator::<span class="name">resetNb</span>()</h3>
           <p>Reset Call Counter for all instances of ROS clients.</p>
 
-          <h3 class="fn" id="verbose"><a name="verbose"></a><span class="type">void</span> TimelineManipulator::<span class="name">verbose</span>(<span class="type">bool</span> verbose)</h3>
+          <h3 class="fn" id="verbose"><a name="verbose"></a><span class="type">void</span> mementar::TimelineManipulator::<span class="name">verbose</span>(<span class="type">bool</span> verbose)</h3>
           <p>If verbose is set to true, the clients will post messages about the failure to call the services and about their restoration.</p>
 
         </div>

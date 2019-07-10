@@ -110,11 +110,11 @@
         <div class="func">
           <h2>Public Functions Documentation</h2>
 
-          <h3 class="fn" id="EventsPublisher"><a name="EventsPublisher"></a>EventsPublisher::<span class="name">EventsPublisher</span>(<span class="type">ros::NodeHandle</span>*<i> n</i>, const <span class="type">std::string</span>&amp; <i>name</i> = "")</h3>
+          <h3 class="fn" id="EventsPublisher"><a name="EventsPublisher"></a>mementar::EventsPublisher::<span class="name">EventsPublisher</span>(<span class="type">ros::NodeHandle</span>*<i> n</i>, const <span class="type">std::string</span>&amp; <i>name</i> = "")</h3>
           <p>Constructs an EventsPublisher with a pointer to a NodeHandle <i>n</i>.</p>
           <p>Can be used in a multi-process mode by specifying the name of the mementar instance <i>name</i>. For classic use, <i>name</i> should be defined as &quot;&quot;.</p>
 
-          <h3 class="fn" id="insert2"><a name="insert2"></a><span class="type">void</span> EventsPublisher::<span class="name">insert</span>(const <span class="type"><a href="Event.html">Event</a></span>&amp; <i>data</i>, <span class="type">time_t</span>&amp; <i>stamp</i> = 0)</h3>
+          <h3 class="fn" id="insert2"><a name="insert2"></a><span class="type">void</span> mementar::EventsPublisher::<span class="name">insert</span>(const <span class="type"><a href="Event.html">Event</a></span>&amp; <i>data</i>, <span class="type">time_t</span>&amp; <i>stamp</i> = 0)</h3>
           <p>Inserts the event defined in the <i>event</i> object.</p>
           <p>The event can be stamped using the <i>stamp</i> parameter. If the stamp parameter is not set (set to default 0), it will be set at the current time.</p>
 
