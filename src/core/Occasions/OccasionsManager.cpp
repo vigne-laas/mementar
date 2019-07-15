@@ -1,12 +1,12 @@
 #include "mementar/core/Occasions/OccasionsManager.h"
 
-#include "mementar/MementarEvent.h"
+#include "mementar/MementarOccasion.h"
 
 namespace mementar
 {
 
 OccasionsManager::OccasionsManager(ros::NodeHandle* n, std::string name) : run_(false),
-                                                                     pub_(n->advertise<mementar::MementarEvent>((name == "") ? "occasions" : "occasions/" + name, 1000))
+                                                                     pub_(n->advertise<mementar::MementarOccasion>((name == "") ? "occasions" : "occasions/" + name, 1000))
 {
   n_ = n;
   std::string service_name;
@@ -33,7 +33,7 @@ void OccasionsManager::run()
         std::vector<size_t> ids = subscription_.evaluate(fact);
         for(auto id : ids)
         {
-          mementar::MementarEvent msg;
+          mementar::MementarOccasion msg;
           msg.id = id;
           msg.data = fact.toString();
           msg.last = subscription_.isFinished(id);
@@ -55,8 +55,8 @@ void OccasionsManager::add(const Fact& fact)
   mutex_.unlock();
 }
 
-bool OccasionsManager::SubscribeCallback(mementar::MementarEventSubscription::Request &req,
-                                      mementar::MementarEventSubscription::Response &res)
+bool OccasionsManager::SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
+                                        mementar::MementarOccasionSubscription::Response &res)
 {
   Fact fact_patern(req.data);
   if(!fact_patern.valid())
@@ -67,8 +67,8 @@ bool OccasionsManager::SubscribeCallback(mementar::MementarEventSubscription::Re
   return true;
 }
 
-bool OccasionsManager::UnsubscribeCallback(mementar::MementarEventUnsubscription::Request &req,
-                                        mementar::MementarEventUnsubscription::Response &res)
+bool OccasionsManager::UnsubscribeCallback(mementar::MementarOcassionUnsubscription::Request &req,
+                                          mementar::MementarOcassionUnsubscription::Response &res)
 {
   if(subscription_.unsubscribe(req.id))
     res.id = req.id;

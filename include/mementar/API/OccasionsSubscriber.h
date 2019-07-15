@@ -9,7 +9,7 @@
 #include <ros/ros.h>
 #include <ros/callback_queue.h>
 
-#include "mementar/MementarEvent.h"
+#include "mementar/MementarOccasion.h"
 #include "mementar/API/Fact.h"
 
 namespace mementar
@@ -40,7 +40,7 @@ private:
 
   std::vector<size_t> ids_;
 
-  void occasionCallback(MementarEvent msg);
+  void occasionCallback(MementarOccasion msg);
 
   std::function<void(const Fact&)> callback_;
 

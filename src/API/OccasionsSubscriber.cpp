@@ -1,7 +1,7 @@
 #include "mementar/API/OccasionsSubscriber.h"
 
-#include "mementar/MementarEventSubscription.h"
-#include "mementar/MementarEventUnsubscription.h"
+#include "mementar/MementarOccasionSubscription.h"
+#include "mementar/MementarOcassionUnsubscription.h"
 
 namespace mementar
 {
@@ -11,8 +11,8 @@ OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callba
   callback_ = callback;
 
   sub_ = n_.subscribe((name == "") ? "mementar/occasions" : "mementar/occasions/" + name, 1000, &OccasionsSubscriber::occasionCallback, this);
-  client_subscribe_ = n_.serviceClient<MementarEventSubscription>((name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name);
-  client_cancel_ = n_.serviceClient<MementarEventUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
+  client_subscribe_ = n_.serviceClient<MementarOccasionSubscription>((name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name);
+  client_cancel_ = n_.serviceClient<MementarOcassionUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
 
   if(spin_thread)
   {
@@ -29,8 +29,8 @@ OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callba
   callback_ = callback;
 
   sub_ = n_.subscribe("mementar/occasions", 1000, &OccasionsSubscriber::occasionCallback, this);
-  client_subscribe_ = n_.serviceClient<MementarEventSubscription>("mementar/subscribe");
-  client_cancel_ = n_.serviceClient<MementarEventUnsubscription>("mementar/unsubscribe");
+  client_subscribe_ = n_.serviceClient<MementarOccasionSubscription>("mementar/subscribe");
+  client_cancel_ = n_.serviceClient<MementarOcassionUnsubscription>("mementar/unsubscribe");
 
   if(spin_thread)
   {
@@ -57,7 +57,7 @@ OccasionsSubscriber::~OccasionsSubscriber()
 
 bool OccasionsSubscriber::subscribe(const Fact& pattern, size_t count)
 {
-  MementarEventSubscription srv;
+  MementarOccasionSubscription srv;
   srv.request.data = pattern();
   srv.request.count = count;
 
@@ -75,7 +75,7 @@ bool OccasionsSubscriber::cancel()
   bool done = true;
   for(size_t i = 0; i < ids_.size();)
   {
-    MementarEventUnsubscription srv;
+    MementarOcassionUnsubscription srv;
     srv.request.id = ids_[i];
     if(client_cancel_.call(srv))
     {
@@ -94,7 +94,7 @@ bool OccasionsSubscriber::cancel()
   return done;
 }
 
-void OccasionsSubscriber::occasionCallback(MementarEvent msg)
+void OccasionsSubscriber::occasionCallback(MementarOccasion msg)
 {
   auto it = std::find(ids_.begin(), ids_.end(), msg.id);
   if(it != ids_.end())

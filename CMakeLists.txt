@@ -30,7 +30,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
-   MementarEvent.msg
+   MementarOccasion.msg
    StampedString.msg
  )
 
@@ -38,8 +38,8 @@ find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
  add_service_files(
   FILES
   MementarService.srv
-  MementarEventSubscription.srv
-  MementarEventUnsubscription.srv
+  MementarOccasionSubscription.srv
+  MementarOcassionUnsubscription.srv
  )
 
 ## Generate added messages and services with any dependencies listed here

@@ -7,8 +7,8 @@
 
 #include <ros/ros.h>
 
-#include "mementar/MementarEventSubscription.h"
-#include "mementar/MementarEventUnsubscription.h"
+#include "mementar/MementarOccasionSubscription.h"
+#include "mementar/MementarOcassionUnsubscription.h"
 
 #include "mementar/core/Occasions/Subscription.h"
 #include "mementar/core/Fact.h"
@@ -43,10 +43,10 @@ private:
   std::queue<Fact> fifo_1;
   std::queue<Fact> fifo_2;
 
-  bool SubscribeCallback(mementar::MementarEventSubscription::Request &req,
-                         mementar::MementarEventSubscription::Response &res);
-  bool UnsubscribeCallback(mementar::MementarEventUnsubscription::Request &req,
-                           mementar::MementarEventUnsubscription::Response &res);
+  bool SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
+                         mementar::MementarOccasionSubscription::Response &res);
+  bool UnsubscribeCallback(mementar::MementarOcassionUnsubscription::Request &req,
+                           mementar::MementarOcassionUnsubscription::Response &res);
 
   Fact get();
   bool empty();
