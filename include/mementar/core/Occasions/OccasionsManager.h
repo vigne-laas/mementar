@@ -1,5 +1,5 @@
-#ifndef MEMENTAR_EVENTSMANAGER_H
-#define MEMENTAR_EVENTSMANAGER_H
+#ifndef MEMENTAR_OCCASIONSMANAGER_H
+#define MEMENTAR_OCCASIONSMANAGER_H
 
 #include <mutex>
 #include <queue>
@@ -10,16 +10,16 @@
 #include "mementar/MementarEventSubscription.h"
 #include "mementar/MementarEventUnsubscription.h"
 
-#include "mementar/core/Events/Subscription.h"
+#include "mementar/core/Occasions/Subscription.h"
 #include "mementar/core/Fact.h"
 
 namespace mementar
 {
 
-class EventsManager
+class OccasionsManager
 {
 public:
-  EventsManager(ros::NodeHandle* n, std::string name = "");
+  OccasionsManager(ros::NodeHandle* n, std::string name = "");
 
   void run();
 
@@ -54,4 +54,4 @@ private:
 
 } // namespace mementar
 
-#endif // MEMENTAR_EVENTSMANAGER_H
+#endif // MEMENTAR_OCCASIONSMANAGER_H

@@ -113,8 +113,8 @@ target_link_libraries(mementar_core_lib
 ##############################
 
 add_library(mementar_events_lib
-  src/core/Events/Subscription.cpp
-  src/core/Events/EventsManager.cpp
+  src/core/Occasions/Subscription.cpp
+  src/core/Occasions/OccasionsManager.cpp
 )
 target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
 add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
@@ -128,8 +128,8 @@ add_library(mementar_lib
   src/API/TimelinesManipulator.cpp
   src/API/clients/ManagerClient.cpp
   src/API/clients/ClientBase.cpp
-  src/API/EventsPublisher.cpp
-  src/API/EventsSubscriber.cpp
+  src/API/OccasionsPublisher.cpp
+  src/API/OccasionsSubscriber.cpp
 )
 target_link_libraries(mementar_lib ${catkin_LIBRARIES})
 add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
@@ -166,7 +166,7 @@ add_dependencies(mementar_multi ${catkin_EXPORTED_TARGETS})
 ##############################
 
 
-add_executable(event_sub_pub src/test/event_sub_pub.cpp)
+add_executable(event_sub_pub src/test/occasions_sub_pub.cpp)
 target_link_libraries(event_sub_pub ${catkin_LIBRARIES})
 target_link_libraries(event_sub_pub mementar_lib)
 

@@ -6,7 +6,7 @@
 #include <mutex>
 
 #include "mementar/core/Fact.h"
-#include "mementar/core/Events/IdManager.h"
+#include "mementar/core/Occasions/IdManager.h"
 
 namespace mementar
 {

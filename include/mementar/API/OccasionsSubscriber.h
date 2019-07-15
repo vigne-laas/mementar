@@ -1,5 +1,5 @@
-#ifndef MEMENTAR_EVENTSSUBSCRIBER_H
-#define MEMENTAR_EVENTSSUBSCRIBER_H
+#ifndef MEMENTAR_API_OCCASIONSSUBSCRIBER_H
+#define MEMENTAR_API_OCCASIONSSUBSCRIBER_H
 
 #include <string>
 #include <vector>
@@ -10,19 +10,19 @@
 #include <ros/callback_queue.h>
 
 #include "mementar/MementarEvent.h"
-#include "mementar/API/Event.h"
+#include "mementar/API/Fact.h"
 
 namespace mementar
 {
 
-class EventsSubscriber
+class OccasionsSubscriber
 {
 public:
-  EventsSubscriber(std::function<void(const Event&)> callback, const std::string& name = "", bool spin_thread = true);
-  EventsSubscriber(std::function<void(const Event&)> callback, bool spin_thread);
-  ~EventsSubscriber();
+  OccasionsSubscriber(std::function<void(const Fact&)> callback, const std::string& name = "", bool spin_thread = true);
+  OccasionsSubscriber(std::function<void(const Fact&)> callback, bool spin_thread);
+  ~OccasionsSubscriber();
 
-  bool subscribe(const Event& pattern, size_t count = -1);
+  bool subscribe(const Fact& pattern, size_t count = -1);
   bool cancel();
 
   bool end() { return ids_.size() == 0; }
@@ -40,13 +40,13 @@ private:
 
   std::vector<size_t> ids_;
 
-  void eventCallback(MementarEvent msg);
+  void occasionCallback(MementarEvent msg);
 
-  std::function<void(const Event&)> callback_;
+  std::function<void(const Fact&)> callback_;
 
   void spinThread();
 };
 
 } // namespace mementar
 
-#endif // MEMENTAR_EVENTSSUBSCRIBER_H
+#endif // MEMENTAR_API_OCCASIONSSUBSCRIBER_H

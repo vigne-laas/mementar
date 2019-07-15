@@ -1,4 +1,4 @@
-#include "mementar/API/EventsSubscriber.h"
+#include "mementar/API/OccasionsSubscriber.h"
 
 #include "mementar/MementarEventSubscription.h"
 #include "mementar/MementarEventUnsubscription.h"
@@ -6,11 +6,11 @@
 namespace mementar
 {
 
-EventsSubscriber::EventsSubscriber(std::function<void(const Event&)> callback, const std::string& name, bool spin_thread)
+OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callback, const std::string& name, bool spin_thread)
 {
   callback_ = callback;
 
-  sub_ = n_.subscribe((name == "") ? "mementar/events" : "mementar/events/" + name, 1000, &EventsSubscriber::eventCallback, this);
+  sub_ = n_.subscribe((name == "") ? "mementar/occasions" : "mementar/occasions/" + name, 1000, &OccasionsSubscriber::occasionCallback, this);
   client_subscribe_ = n_.serviceClient<MementarEventSubscription>((name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name);
   client_cancel_ = n_.serviceClient<MementarEventUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
 
@@ -18,17 +18,17 @@ EventsSubscriber::EventsSubscriber(std::function<void(const Event&)> callback, c
   {
     need_to_terminate_ = false;
     n_.setCallbackQueue(&callback_queue_);
-    spin_thread_ = new std::thread(std::bind(&EventsSubscriber::spinThread, this));
+    spin_thread_ = new std::thread(std::bind(&OccasionsSubscriber::spinThread, this));
   }
   else
     spin_thread_ = nullptr;
 }
 
-EventsSubscriber::EventsSubscriber(std::function<void(const Event&)> callback, bool spin_thread)
+OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callback, bool spin_thread)
 {
   callback_ = callback;
 
-  sub_ = n_.subscribe("mementar/events", 1000, &EventsSubscriber::eventCallback, this);
+  sub_ = n_.subscribe("mementar/occasions", 1000, &OccasionsSubscriber::occasionCallback, this);
   client_subscribe_ = n_.serviceClient<MementarEventSubscription>("mementar/subscribe");
   client_cancel_ = n_.serviceClient<MementarEventUnsubscription>("mementar/unsubscribe");
 
@@ -36,13 +36,13 @@ EventsSubscriber::EventsSubscriber(std::function<void(const Event&)> callback, b
   {
     need_to_terminate_ = false;
     n_.setCallbackQueue(&callback_queue_);
-    spin_thread_ = new std::thread(std::bind(&EventsSubscriber::spinThread, this));
+    spin_thread_ = new std::thread(std::bind(&OccasionsSubscriber::spinThread, this));
   }
   else
     spin_thread_ = nullptr;
 }
 
-EventsSubscriber::~EventsSubscriber()
+OccasionsSubscriber::~OccasionsSubscriber()
 {
   cancel();
   if(spin_thread_)
@@ -55,7 +55,7 @@ EventsSubscriber::~EventsSubscriber()
   }
 }
 
-bool EventsSubscriber::subscribe(const Event& pattern, size_t count)
+bool OccasionsSubscriber::subscribe(const Fact& pattern, size_t count)
 {
   MementarEventSubscription srv;
   srv.request.data = pattern();
@@ -70,7 +70,7 @@ bool EventsSubscriber::subscribe(const Event& pattern, size_t count)
     return false;
 }
 
-bool EventsSubscriber::cancel()
+bool OccasionsSubscriber::cancel()
 {
   bool done = true;
   for(size_t i = 0; i < ids_.size();)
@@ -94,18 +94,18 @@ bool EventsSubscriber::cancel()
   return done;
 }
 
-void EventsSubscriber::eventCallback(MementarEvent msg)
+void OccasionsSubscriber::occasionCallback(MementarEvent msg)
 {
   auto it = std::find(ids_.begin(), ids_.end(), msg.id);
   if(it != ids_.end())
   {
-    callback_(Event(msg.data));
+    callback_(Fact(msg.data));
     if(msg.last == true)
       ids_.erase(it);
   }
 }
 
-void EventsSubscriber::spinThread()
+void OccasionsSubscriber::spinThread()
 {
   while(n_.ok())
   {

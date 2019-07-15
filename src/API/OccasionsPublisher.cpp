@@ -1,22 +1,22 @@
-#include "mementar/API/EventsPublisher.h"
+#include "mementar/API/OccasionsPublisher.h"
 
 #include "mementar/StampedString.h"
 
 namespace mementar
 {
 
-EventsPublisher::EventsPublisher(ros::NodeHandle* n, const std::string& name) :
+OccasionsPublisher::OccasionsPublisher(ros::NodeHandle* n, const std::string& name) :
             pub_(n->advertise<StampedString>((name == "") ? "mementar/insert_stamped" : "mementar/insert_stamped/" + name, 1000))
 {
   n_ = n;
 }
 
-void EventsPublisher::insert(const Event& event, time_t stamp)
+void OccasionsPublisher::insert(const Fact& fact, time_t stamp)
 {
-  publish(event(), stamp);
+  publish(fact(), stamp);
 }
 
-void EventsPublisher::publish(const std::string& str, time_t stamp)
+void OccasionsPublisher::publish(const std::string& str, time_t stamp)
 {
   StampedString msg;
   msg.data = str;

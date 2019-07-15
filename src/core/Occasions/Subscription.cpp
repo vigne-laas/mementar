@@ -1,4 +1,4 @@
-#include "mementar/core/Events/Subscription.h"
+#include "mementar/core/Occasions/Subscription.h"
 
 namespace mementar
 {

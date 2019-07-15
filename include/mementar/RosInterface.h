@@ -11,7 +11,7 @@
 #include "mementar/StampedString.h"
 
 #include "mementar/core/EpisodicTree/ArchivedLeafNode.h"
-#include "mementar/core/Events/EventsManager.h"
+#include "mementar/core/Occasions/OccasionsManager.h"
 
 namespace mementar
 {
@@ -32,7 +32,7 @@ private:
   std::string directory_;
   size_t order_;
   ArchivedLeafNode* tree_;
-  EventsManager events_;
+  OccasionsManager occasions_;
 
   std::string name_;
   std::atomic<bool> run_;

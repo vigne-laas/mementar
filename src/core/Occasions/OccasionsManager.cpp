@@ -1,24 +1,24 @@
-#include "mementar/core/Events/EventsManager.h"
+#include "mementar/core/Occasions/OccasionsManager.h"
 
 #include "mementar/MementarEvent.h"
 
 namespace mementar
 {
 
-EventsManager::EventsManager(ros::NodeHandle* n, std::string name) : run_(false),
-                                                                     pub_(n->advertise<mementar::MementarEvent>((name == "") ? "events" : "events/" + name, 1000))
+OccasionsManager::OccasionsManager(ros::NodeHandle* n, std::string name) : run_(false),
+                                                                     pub_(n->advertise<mementar::MementarEvent>((name == "") ? "occasions" : "occasions/" + name, 1000))
 {
   n_ = n;
   std::string service_name;
 
   service_name = (name == "") ? "subscribe" : "subscribe/" + name;
-  sub_service_ = n_->advertiseService(service_name, &EventsManager::SubscribeCallback, this);
+  sub_service_ = n_->advertiseService(service_name, &OccasionsManager::SubscribeCallback, this);
 
   service_name = (name == "") ? "unsubscribe" : "unsubscribe/" + name;
-  unsub_service_ = n_->advertiseService(service_name, &EventsManager::UnsubscribeCallback, this);
+  unsub_service_ = n_->advertiseService(service_name, &OccasionsManager::UnsubscribeCallback, this);
 }
 
-void EventsManager::run()
+void OccasionsManager::run()
 {
   run_ = true;
   ros::Rate r(50);
@@ -45,7 +45,7 @@ void EventsManager::run()
   }
 }
 
-void EventsManager::add(const Fact& fact)
+void OccasionsManager::add(const Fact& fact)
 {
   mutex_.lock();
   if(queue_choice_ == true)
@@ -55,7 +55,7 @@ void EventsManager::add(const Fact& fact)
   mutex_.unlock();
 }
 
-bool EventsManager::SubscribeCallback(mementar::MementarEventSubscription::Request &req,
+bool OccasionsManager::SubscribeCallback(mementar::MementarEventSubscription::Request &req,
                                       mementar::MementarEventSubscription::Response &res)
 {
   Fact fact_patern(req.data);
@@ -67,7 +67,7 @@ bool EventsManager::SubscribeCallback(mementar::MementarEventSubscription::Reque
   return true;
 }
 
-bool EventsManager::UnsubscribeCallback(mementar::MementarEventUnsubscription::Request &req,
+bool OccasionsManager::UnsubscribeCallback(mementar::MementarEventUnsubscription::Request &req,
                                         mementar::MementarEventUnsubscription::Response &res)
 {
   if(subscription_.unsubscribe(req.id))
@@ -78,7 +78,7 @@ bool EventsManager::UnsubscribeCallback(mementar::MementarEventUnsubscription::R
   return true;
 }
 
-Fact EventsManager::get()
+Fact OccasionsManager::get()
 {
   Fact res;
   mutex_.lock();
@@ -108,7 +108,7 @@ Fact EventsManager::get()
   return res;
 }
 
-bool EventsManager::empty()
+bool OccasionsManager::empty()
 {
   bool res = true;
   mutex_.lock();

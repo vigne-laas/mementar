@@ -3,7 +3,7 @@
 namespace mementar
 {
 
-TimelineManipulator::TimelineManipulator(ros::NodeHandle* n, const std::string& name) : EventsPublisher(n, name)
+TimelineManipulator::TimelineManipulator(ros::NodeHandle* n, const std::string& name) : OccasionsPublisher(n, name)
 {
   n_ = n;
   name_ = name;
