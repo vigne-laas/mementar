@@ -6,7 +6,7 @@
 #include <atomic>
 #include <shared_mutex>
 
-#include "mementar/core/Fact.h"
+#include "mementar/core/LinkedFact.h"
 #include "mementar/core/Btree/Btree.h"
 #include "mementar/core/EpisodicTree/CompressedLeafSession.h"
 #include "mementar/core/EpisodicTree/Context.h"
@@ -23,12 +23,12 @@ public:
   CompressedLeafNodeSession(const std::string& file_name);
   ~CompressedLeafNodeSession();
 
-  void insert(const time_t& key, const Fact& data);
-  bool remove(const time_t& key, const Fact& data);
-  BtreeLeaf<time_t, Fact>* find(const time_t& key);
-  BtreeLeaf<time_t, Fact>* findNear(const time_t& key);
-  BtreeLeaf<time_t, Fact>* getFirst();
-  BtreeLeaf<time_t, Fact>* getLast();
+  void insert(const time_t& key, const LinkedFact& data);
+  bool remove(const time_t& key, const LinkedFact& data);
+  BtreeLeaf<time_t, LinkedFact>* find(const time_t& key);
+  BtreeLeaf<time_t, LinkedFact>* findNear(const time_t& key);
+  BtreeLeaf<time_t, LinkedFact>* getFirst();
+  BtreeLeaf<time_t, LinkedFact>* getLast();
 
   time_t getKey()
   {
@@ -49,7 +49,7 @@ private:
   // keys_[i] correspond to the first key of child i
   std::vector<Context> contexts_;
   std::vector<CompressedLeafSession> childs_;
-  std::vector<Btree<time_t,Fact>*> sessions_tree_;
+  std::vector<Btree<time_t,LinkedFact>*> sessions_tree_;
   std::vector<bool> modified_;
 
   time_t earlier_key_;

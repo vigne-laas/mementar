@@ -18,7 +18,7 @@ public:
   std::string getDirectory() { return directory_; }
   time_t getKey() { return key_; }
 
-  Btree<time_t, Fact>* getTree(size_t i);
+  Btree<time_t, LinkedFact>* getTree(size_t i);
   std::vector<Context> getContexts();
 
 private:

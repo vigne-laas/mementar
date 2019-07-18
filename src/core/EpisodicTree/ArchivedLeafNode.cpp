@@ -50,7 +50,7 @@ ArchivedLeafNode::~ArchivedLeafNode()
   mut_.unlock();
 }
 
-void ArchivedLeafNode::insert(const time_t& key, const Fact& data)
+void ArchivedLeafNode::insert(const time_t& key, const LinkedFact& data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -117,7 +117,7 @@ void ArchivedLeafNode::insert(const time_t& key, const Fact& data)
     earlier_key_ = key;
 }
 
-void ArchivedLeafNode::remove(const time_t& key, const Fact& data)
+void ArchivedLeafNode::remove(const time_t& key, const LinkedFact& data)
 {
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -137,9 +137,9 @@ void ArchivedLeafNode::remove(const time_t& key, const Fact& data)
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::find(const time_t& key)
+BtreeLeaf<time_t, LinkedFact>* ArchivedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -159,9 +159,9 @@ BtreeLeaf<time_t, Fact>* ArchivedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::findNear(const time_t& key)
+BtreeLeaf<time_t, LinkedFact>* ArchivedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -182,9 +182,9 @@ BtreeLeaf<time_t, Fact>* ArchivedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getFirst()
+BtreeLeaf<time_t, LinkedFact>* ArchivedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
 
   mut_.lock_shared();
   if(archived_childs_.size())
@@ -201,9 +201,9 @@ BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getLast()
+BtreeLeaf<time_t, LinkedFact>* ArchivedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
