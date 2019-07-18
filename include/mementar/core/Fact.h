@@ -28,12 +28,12 @@ public:
       object_ = splitted[2];
   }
 
-  bool valid()
+  bool valid() const
   {
     return((subject_ != "") && (predicat_ != "") && (object_ != ""));
   }
 
-  std::string toString()
+  std::string toString() const
   {
     return subject_ + "|" + predicat_ + "|" + object_;
   }

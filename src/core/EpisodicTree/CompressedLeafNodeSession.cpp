@@ -58,7 +58,7 @@ int CompressedLeafNodeSession::getKeyIndex(const time_t& key)
   return index;
 }
 
-void CompressedLeafNodeSession::insert(const time_t& key, const LinkedFact& data)
+void CompressedLeafNodeSession::insert(const time_t& key, const LinkedFact* data)
 {
   mut_.lock_shared();
   if(contexts_.size() == 0)
@@ -78,7 +78,7 @@ void CompressedLeafNodeSession::insert(const time_t& key, const LinkedFact& data
     createSession(index);
     mut_.lock_shared();
     sessions_tree_[index]->insert(key, data);
-    contexts_[index].insert(&data);
+    contexts_[index].insert(data);
     modified_[index] = true;
   }
 
@@ -200,13 +200,13 @@ std::vector<char> CompressedLeafNodeSession::treeToRaw(size_t index)
 {
   std::string res;
 
-  std::vector<LinkedFact> tmp_data;
+  std::vector<const LinkedFact*> tmp_data;
   BtreeLeaf<time_t, LinkedFact>* it = sessions_tree_[index]->getFirst();
   while(it != nullptr)
   {
     tmp_data = it->getData();
-    for(auto& data : tmp_data)
-      res += "[" + std::to_string(it->getKey()) + "]" + data.toString() + "\n";
+    for(auto data : tmp_data)
+      res += "[" + std::to_string(it->getKey()) + "]" + data->toString() + "\n";
     it = it->next_;
   }
 

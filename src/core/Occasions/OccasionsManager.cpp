@@ -27,15 +27,15 @@ void OccasionsManager::run()
   {
     while(!empty())
     {
-      Fact fact = get();
-      if(fact.valid())
+      const Fact* fact = get();
+      if(fact->valid())
       {
-        std::vector<size_t> ids = subscription_.evaluate(fact);
+        std::vector<size_t> ids = subscription_.evaluate(*fact);
         for(auto id : ids)
         {
           mementar::MementarOccasion msg;
           msg.id = id;
-          msg.data = fact.toString();
+          msg.data = fact->toString();
           msg.last = subscription_.isFinished(id);
           pub_.publish(msg);
         }
@@ -45,7 +45,7 @@ void OccasionsManager::run()
   }
 }
 
-void OccasionsManager::add(const Fact& fact)
+void OccasionsManager::add(const Fact* fact)
 {
   mutex_.lock();
   if(queue_choice_ == true)
@@ -78,9 +78,9 @@ bool OccasionsManager::UnsubscribeCallback(mementar::MementarOcassionUnsubscript
   return true;
 }
 
-Fact OccasionsManager::get()
+const Fact* OccasionsManager::get()
 {
-  Fact res;
+  const Fact* res;
   mutex_.lock();
   if(queue_choice_ == true)
   {

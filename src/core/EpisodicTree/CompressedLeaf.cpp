@@ -53,7 +53,7 @@ Btree<time_t, LinkedFact>* CompressedLeaf::getTree()
     {
       if(std::regex_match(line, match, regex))
       {
-        LinkedFact fact(match[2].str(), match[3].str(), match[4].str());
+        LinkedFact* fact = new LinkedFact(match[2].str(), match[3].str(), match[4].str());
         time_t key;
         std::istringstream iss(match[1].str());
         iss >> key;
@@ -71,13 +71,13 @@ Btree<time_t, LinkedFact>* CompressedLeaf::getTree()
 std::string CompressedLeaf::treeToString(Btree<time_t, LinkedFact>* tree)
 {
   std::string res;
-  std::vector<LinkedFact> tmp_data;
+  std::vector<const LinkedFact*> tmp_data;
   BtreeLeaf<time_t, LinkedFact>* it = tree->getFirst();
   while(it != nullptr)
   {
     tmp_data = it->getData();
-    for(auto& data : tmp_data)
-      res += "[" + std::to_string(it->getKey()) + "]" + data.toString() + "\n";
+    for(auto data : tmp_data)
+      res += "[" + std::to_string(it->getKey()) + "]" + data->toString() + "\n";
     it = it->next_;
   }
 

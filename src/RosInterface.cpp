@@ -77,8 +77,8 @@ void RosInterface::reset()
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
-  LinkedFact fact(msg->data);
-  if(fact.valid())
+  LinkedFact* fact = new LinkedFact(msg->data);
+  if(fact->valid())
   {
     mut_.lock_shared();
     tree_->insert(time(0), fact);
@@ -89,8 +89,8 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  LinkedFact fact(msg->data);
-  if(fact.valid())
+  LinkedFact* fact = new LinkedFact(msg->data);
+  if(fact->valid())
   {
     mut_.lock_shared();
     tree_->insert(msg->stamp.sec, fact);

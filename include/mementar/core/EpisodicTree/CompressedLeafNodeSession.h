@@ -23,7 +23,7 @@ public:
   CompressedLeafNodeSession(const std::string& file_name);
   ~CompressedLeafNodeSession();
 
-  void insert(const time_t& key, const LinkedFact& data);
+  void insert(const time_t& key, const LinkedFact* data);
   bool remove(const time_t& key, const LinkedFact& data);
   BtreeLeaf<time_t, LinkedFact>* find(const time_t& key);
   BtreeLeaf<time_t, LinkedFact>* findNear(const time_t& key);

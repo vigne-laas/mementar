@@ -23,7 +23,7 @@ public:
 
   void run();
 
-  void add(const Fact& fact);
+  void add(const Fact* fact);
 
   void stop() {run_ = false; }
   inline bool isRunning() {return run_; }
@@ -40,15 +40,15 @@ private:
   std::mutex mutex_;
 
   bool queue_choice_;
-  std::queue<Fact> fifo_1;
-  std::queue<Fact> fifo_2;
+  std::queue<const Fact*> fifo_1;
+  std::queue<const Fact*> fifo_2;
 
   bool SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
                          mementar::MementarOccasionSubscription::Response &res);
   bool UnsubscribeCallback(mementar::MementarOcassionUnsubscription::Request &req,
                            mementar::MementarOcassionUnsubscription::Response &res);
 
-  Fact get();
+  const Fact* get();
   bool empty();
 };
 

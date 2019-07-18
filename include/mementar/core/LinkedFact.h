@@ -21,6 +21,12 @@ public:
     prev_ = nullptr;
   }
 
+  bool isEventPart(const LinkedFact& other) const
+  {
+    return ((subject_ == other.subject_)
+            && (predicat_ == other.predicat_));
+  }
+
   LinkedFact* next_;
   LinkedFact* prev_;
 };

@@ -16,7 +16,7 @@ public:
 
   ~BtreeLeafNode() {}
 
-  BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
+  BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata* data);
   bool remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
@@ -31,7 +31,7 @@ private:
 };
 
 template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
+BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const Tdata* data)
 {
   BtreeLeaf<Tkey,Tdata>* res = nullptr;
 
@@ -196,10 +196,10 @@ void BtreeLeafNode<Tkey,Tdata>::display(size_t depth)
   {
     for(size_t j = 0; j < depth; j++)
       std::cout << "\t";
-    std::vector<Tdata> datas = leafs_[i]->getData();
+    std::vector<const Tdata*> datas = leafs_[i]->getData();
     std::cout << this->keys_[i] << " => ";
     for(auto data : datas)
-      std::cout << data << " : ";
+      std::cout << *data << " : ";
     std::cout << std::endl;
   }
 }

@@ -13,7 +13,7 @@ template<typename Tkey, typename Tdata>
 class BtreeLeaf
 {
 public:
-  BtreeLeaf(const Tkey& key, const Tdata& data)
+  BtreeLeaf(const Tkey& key, const Tdata* data)
   {
     next_ = nullptr;
     prev_ = nullptr;
@@ -23,9 +23,14 @@ public:
     data_.push_back(data);
   }
 
-  ~BtreeLeaf() {}
+  ~BtreeLeaf()
+  {
+    for(auto data : data_)
+      delete data;
+    data_.clear();
+  }
 
-  void push_back(const Tdata& data) { data_.push_back(data); }
+  void push_back(const Tdata* data) { data_.push_back(data); }
   void remove(const Tdata& data);
 
   BtreeLeaf* next_;
@@ -44,15 +49,15 @@ public:
   bool operator<=(const BtreeLeaf* other) { return ((key_ < other->key_) || (key_ == other->key_)); }
 
   Tkey getKey() const { return key_; }
-  std::vector<Tdata> getData() const { return data_; }
-  void getData(std::vector<Tdata>& data) { data = data_; }
+  std::vector<const Tdata*> getData() const { return data_; }
+  void getData(std::vector<const Tdata*>& data) { data = data_; }
 
   void setMother(BtreeLeafNode<Tkey,Tdata>* mother) { mother_ = mother; }
   BtreeLeafNode<Tkey,Tdata>* getMother() { return mother_; }
 
 private:
   Tkey key_;
-  std::vector<Tdata> data_;
+  std::vector<const Tdata*> data_;
   BtreeLeafNode<Tkey,Tdata>* mother_;
 };
 
@@ -61,7 +66,7 @@ void BtreeLeaf<Tkey,Tdata>::remove(const Tdata& data)
 {
   for(size_t i = 0; i < data_.size();)
   {
-    if(data_[i] == data)
+    if(data_[i]->operator==(data))
       data_.erase(data_.begin() + i);
     else
       i++;

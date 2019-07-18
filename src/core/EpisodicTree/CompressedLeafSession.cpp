@@ -32,7 +32,7 @@ Btree<time_t, LinkedFact>* CompressedLeafSession::getTree(Header& header, Archiv
   {
     if(std::regex_match(line, match, regex))
     {
-      LinkedFact fact(match[2].str(), match[3].str(), match[4].str());
+      LinkedFact* fact = new LinkedFact(match[2].str(), match[3].str(), match[4].str());
       time_t key;
       std::istringstream iss(match[1].str());
       iss >> key;

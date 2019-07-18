@@ -88,7 +88,7 @@ CompressedLeafNode* CompressedLeafNode::split()
   return new_one;
 }
 
-void CompressedLeafNode::insert(const time_t& key, const LinkedFact& data)
+void CompressedLeafNode::insert(const time_t& key, const LinkedFact* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -97,7 +97,7 @@ void CompressedLeafNode::insert(const time_t& key, const LinkedFact& data)
     createNewTreeChild(key);
     mut_.lock_shared();
     last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
-    contexts_[0].insert(&data);
+    contexts_[0].insert(data);
   }
   else
   {
@@ -117,7 +117,7 @@ void CompressedLeafNode::insert(const time_t& key, const LinkedFact& data)
         createNewTreeChild(key);
         mut_.lock_shared();
         last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
-        contexts_[keys_.size() - 1].insert(&data);
+        contexts_[keys_.size() - 1].insert(data);
       }
       else
       {
@@ -125,7 +125,7 @@ void CompressedLeafNode::insert(const time_t& key, const LinkedFact& data)
         createSession(index);
         mut_.lock_shared();
         compressed_sessions_tree_[index]->insert(key, data);
-        contexts_[index].insert(&data);
+        contexts_[index].insert(data);
         modified_[index] = true;
       }
     }
@@ -135,7 +135,7 @@ void CompressedLeafNode::insert(const time_t& key, const LinkedFact& data)
       createNewTreeChild(key);
       mut_.lock_shared();
       last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(key, data);
-      contexts_[keys_.size() - 1].insert(&data);
+      contexts_[keys_.size() - 1].insert(data);
 
       //verify if a chld need to be compressed
       if(btree_childs_.size() > 2)
@@ -148,12 +148,12 @@ void CompressedLeafNode::insert(const time_t& key, const LinkedFact& data)
     else if(index - keys_.size() + 1 == 0) // if insert in more recent tree
     {
       last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(key,data);
-      contexts_[index].insert(&data);
+      contexts_[index].insert(data);
     }
     else
     {
       btree_childs_[index - compressed_childs_.size()]->insert(key,data);
-      contexts_[index].insert(&data);
+      contexts_[index].insert(data);
     }
   }
   mut_.unlock_shared();
