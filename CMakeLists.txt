@@ -165,10 +165,12 @@ add_dependencies(mementar_multi ${catkin_EXPORTED_TARGETS})
 ## Test executables
 ##############################
 
-
 add_executable(event_sub_pub src/test/occasions_sub_pub.cpp)
 target_link_libraries(event_sub_pub ${catkin_LIBRARIES})
 target_link_libraries(event_sub_pub mementar_lib)
+
+add_executable(eventLink src/test/EventLink.cpp)
+target_link_libraries(eventLink mementar_core_lib)
 
 ##############################
 ## Install

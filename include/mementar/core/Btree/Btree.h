@@ -24,7 +24,7 @@ public:
     nb_data_ = 0;
   }
 
-  ~Btree()
+  virtual ~Btree()
   {
     if(root_ != nullptr)
       delete root_;
@@ -38,7 +38,7 @@ public:
     }
   }
 
-  size_t insert(const Tkey& key, Tdata* data);
+  virtual size_t insert(const Tkey& key, Tdata* data);
   bool remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);

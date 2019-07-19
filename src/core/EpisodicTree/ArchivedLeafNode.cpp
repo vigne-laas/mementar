@@ -64,7 +64,7 @@ void ArchivedLeafNode::insert(const time_t& key, LinkedFact* data)
   {
     if(key < keys_[0])
     {
-      std::cout << "[ERROR] try to insert fact in past that do not exist" << std::endl;
+      Display::Error("try to insert fact in past that do not exist");
       return;
     }
 

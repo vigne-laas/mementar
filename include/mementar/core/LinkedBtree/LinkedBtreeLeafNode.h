@@ -4,6 +4,8 @@
 #include "mementar/core/Btree/BtreeLeafNode.h"
 #include "mementar/core/LinkedFact.h"
 
+#include "mementar/core/utility/Display.h"
+
 namespace mementar
 {
 
@@ -34,9 +36,11 @@ BtreeLeaf<Tkey,LinkedFact>* LinkedBtreeLeafNode<Tkey>::insert(const Tkey& key, L
 
   if(res != nullptr)
   {
-    std::cout << "insert using LinkedBtreeLeafNode" << std::endl;
-    data->next_ = getNext(res, data);
-    data->prev_ = getPrev(res, data);
+    auto next = getNext(res, data);
+    auto prev = getPrev(res, data);
+
+    linkPrev(data, prev, next);
+    linkNext(data, next, prev);
   }
 
   return res;
@@ -61,7 +65,7 @@ bool LinkedBtreeLeafNode<Tkey>::remove(const Tkey& key, LinkedFact* data)
         this->keys_.erase(this->keys_.begin() + i);
 
         if(this->leafs_.size() == 0)
-          std::cout << "a node is empty but will not be destroyed" << std::endl;
+          Display::Info("a node is empty but will not be destroyed");
       }
       return true;
     }
@@ -103,16 +107,13 @@ LinkedFact* LinkedBtreeLeafNode<Tkey>::getPrev(BtreeLeaf<Tkey,LinkedFact>* curre
 {
   LinkedFact* res = nullptr;
 
-  BtreeLeaf<Tkey,LinkedFact>* leaf = current;
-  while(leaf->prev_ != nullptr)
+  BtreeLeaf<Tkey,LinkedFact>* leaf = current->prev_;
+  while(leaf != nullptr)
   {
-    for(auto data : leaf->getData())
+    for(auto ld : leaf->getData())
     {
-      if(data->isEventPart(*data))
-      {
-        res = data;
-        break;
-      }
+      if(data->isEventPart(*ld))
+        return ld;
     }
     leaf = leaf->prev_;
   }
@@ -125,16 +126,13 @@ LinkedFact* LinkedBtreeLeafNode<Tkey>::getNext(BtreeLeaf<Tkey,LinkedFact>* curre
 {
   LinkedFact* res = nullptr;
 
-  BtreeLeaf<Tkey,LinkedFact>* leaf = current;
-  while(leaf->next_ != nullptr)
+  BtreeLeaf<Tkey,LinkedFact>* leaf = current->next_;
+  while(leaf != nullptr)
   {
-    for(auto data : leaf->getData())
+    for(auto ld : leaf->getData())
     {
-      if(data->isEventPart(*data))
-      {
-        res = data;
-        break;
-      }
+      if(data->isEventPart(*ld))
+        return ld;
     }
     leaf = leaf->next_;
   }
@@ -145,6 +143,9 @@ LinkedFact* LinkedBtreeLeafNode<Tkey>::getNext(BtreeLeaf<Tkey,LinkedFact>* curre
 template<typename Tkey>
 void LinkedBtreeLeafNode<Tkey>::linkPrev(LinkedFact* current, LinkedFact* prev, LinkedFact* next)
 {
+  if(prev == nullptr)
+    return;
+
   if(current->operator==(*prev))
   {
     if(next == nullptr)
@@ -171,6 +172,9 @@ void LinkedBtreeLeafNode<Tkey>::linkPrev(LinkedFact* current, LinkedFact* prev, 
 template<typename Tkey>
 void LinkedBtreeLeafNode<Tkey>::linkNext(LinkedFact* current, LinkedFact* next, LinkedFact* prev)
 {
+  if(next == nullptr)
+    return;
+
   if(current->operator==(*next))
   {
     if(prev == nullptr)
@@ -179,13 +183,13 @@ void LinkedBtreeLeafNode<Tkey>::linkNext(LinkedFact* current, LinkedFact* next, 
       next->toLinkPrev.clear();
       current->toLinkPrev.push_back(next);
     }
-    current->next_ = prev->next_;
+    current->next_ = next->next_;
   }
   else
   {
     current->next_ = next;
-    prev->prev_ = current;
-    if(prev->toLinkPrev.size())
+    next->prev_ = current;
+    if(next->toLinkPrev.size())
     {
       for(auto d : next->toLinkPrev)
         d->prev_ = current;
