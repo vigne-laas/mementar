@@ -88,7 +88,7 @@ CompressedLeafNode* CompressedLeafNode::split()
   return new_one;
 }
 
-void CompressedLeafNode::insert(const time_t& key, const LinkedFact* data)
+void CompressedLeafNode::insert(const time_t& key, LinkedFact* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -295,7 +295,7 @@ void CompressedLeafNode::init()
 void CompressedLeafNode::createNewTreeChild(const time_t& key)
 {
   mut_.lock();
-  btree_childs_.push_back(new Btree<time_t,LinkedFact>(order_));
+  btree_childs_.push_back(new LinkedBtree<time_t>(order_));
   keys_.push_back(key);
   contexts_.push_back(Context(key));
   mut_.unlock();

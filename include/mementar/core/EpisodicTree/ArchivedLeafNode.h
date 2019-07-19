@@ -14,7 +14,7 @@ public:
   ArchivedLeafNode(const std::string& directory, size_t order = 10);
   ~ArchivedLeafNode();
 
-  void insert(const time_t& key, const LinkedFact* data);
+  void insert(const time_t& key, LinkedFact* data);
   void remove(const time_t& key, const LinkedFact& data);
   BtreeLeaf<time_t, LinkedFact>* find(const time_t& key);
   BtreeLeaf<time_t, LinkedFact>* findNear(const time_t& key);

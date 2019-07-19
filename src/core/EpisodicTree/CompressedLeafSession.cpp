@@ -13,7 +13,7 @@ CompressedLeafSession::CompressedLeafSession(const time_t& key, size_t index)
   index_ = index;
 }
 
-Btree<time_t, LinkedFact>* CompressedLeafSession::getTree(Header& header, Archive& arch)
+LinkedBtree<time_t>* CompressedLeafSession::getTree(Header& header, Archive& arch)
 {
   std::string comp = arch.extractFile(index_, header);
 
@@ -21,7 +21,7 @@ Btree<time_t, LinkedFact>* CompressedLeafSession::getTree(Header& header, Archiv
   LzUncompress lz;
   std::vector<char> comp_data(comp.begin(), comp.end());
   lz.uncompress(comp_data, out);
-  Btree<time_t, LinkedFact>* tree = new Btree<time_t, LinkedFact>();
+  LinkedBtree<time_t>* tree = new LinkedBtree<time_t>();
 
   std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
   std::smatch match;

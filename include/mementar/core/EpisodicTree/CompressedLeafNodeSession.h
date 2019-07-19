@@ -7,7 +7,7 @@
 #include <shared_mutex>
 
 #include "mementar/core/LinkedFact.h"
-#include "mementar/core/Btree/Btree.h"
+#include "mementar/core/LinkedBtree/LinkedBtree.h"
 #include "mementar/core/EpisodicTree/CompressedLeafSession.h"
 #include "mementar/core/EpisodicTree/Context.h"
 
@@ -23,7 +23,7 @@ public:
   CompressedLeafNodeSession(const std::string& file_name);
   ~CompressedLeafNodeSession();
 
-  void insert(const time_t& key, const LinkedFact* data);
+  void insert(const time_t& key, LinkedFact* data);
   bool remove(const time_t& key, const LinkedFact& data);
   BtreeLeaf<time_t, LinkedFact>* find(const time_t& key);
   BtreeLeaf<time_t, LinkedFact>* findNear(const time_t& key);
@@ -49,7 +49,7 @@ private:
   // keys_[i] correspond to the first key of child i
   std::vector<Context> contexts_;
   std::vector<CompressedLeafSession> childs_;
-  std::vector<Btree<time_t,LinkedFact>*> sessions_tree_;
+  std::vector<LinkedBtree<time_t>*> sessions_tree_;
   std::vector<bool> modified_;
 
   time_t earlier_key_;

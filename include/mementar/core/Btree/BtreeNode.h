@@ -25,7 +25,7 @@ public:
       delete child;
   }
 
-  virtual BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata* data);
+  virtual BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, Tdata* data);
   void insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& key);
   virtual bool remove(const Tkey& key, const Tdata& data);
   virtual BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
@@ -53,7 +53,7 @@ protected:
 };
 
 template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey,Tdata>* BtreeNode<Tkey,Tdata>::insert(const Tkey& key, const Tdata* data)
+BtreeLeaf<Tkey,Tdata>* BtreeNode<Tkey,Tdata>::insert(const Tkey& key, Tdata* data)
 {
   size_t index = childs_.size() - 1;
   for(size_t i = 0; i < this->keys_.size(); i++)

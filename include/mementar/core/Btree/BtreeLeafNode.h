@@ -16,22 +16,22 @@ public:
 
   ~BtreeLeafNode() {}
 
-  BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata* data);
-  bool remove(const Tkey& key, const Tdata& data);
+  virtual BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, Tdata* data);
+  virtual bool remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
 
   virtual void display(size_t depth = 0);
-private:
+protected:
   std::vector<BtreeLeaf<Tkey,Tdata>*> leafs_;
 
   virtual bool needBalancing();
-  void split();
+  virtual void split();
 };
 
 template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const Tdata* data)
+BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, Tdata* data)
 {
   BtreeLeaf<Tkey,Tdata>* res = nullptr;
 
@@ -196,7 +196,7 @@ void BtreeLeafNode<Tkey,Tdata>::display(size_t depth)
   {
     for(size_t j = 0; j < depth; j++)
       std::cout << "\t";
-    std::vector<const Tdata*> datas = leafs_[i]->getData();
+    std::vector<Tdata*> datas = leafs_[i]->getData();
     std::cout << this->keys_[i] << " => ";
     for(auto data : datas)
       std::cout << *data << " : ";

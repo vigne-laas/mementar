@@ -4,7 +4,7 @@
 #include <string>
 #include <ctime>
 
-#include "mementar/core/Btree/Btree.h"
+#include "mementar/core/LinkedBtree/LinkedBtree.h"
 #include "mementar/core/LinkedFact.h"
 
 namespace mementar
@@ -19,7 +19,7 @@ public:
   std::string getDirectory() { return directory_; }
   time_t getKey() { return key_; }
 
-  Btree<time_t, LinkedFact>* getTree();
+  LinkedBtree<time_t>* getTree();
 private:
   time_t key_;
   std::string directory_;

@@ -33,7 +33,7 @@ CompressedLeaf::CompressedLeaf(const time_t& key, const std::string& directory)
   directory_ = directory.substr(0, dot_pose);
 }
 
-Btree<time_t, LinkedFact>* CompressedLeaf::getTree()
+LinkedBtree<time_t>* CompressedLeaf::getTree()
 {
   std::string out;
 
@@ -42,7 +42,7 @@ Btree<time_t, LinkedFact>* CompressedLeaf::getTree()
   if(lz.readBinaryFile(data, directory_ + ".mlz"))
   {
     lz.uncompress(data, out);
-    Btree<time_t, LinkedFact>* tree = new Btree<time_t, LinkedFact>();
+    LinkedBtree<time_t>* tree = new LinkedBtree<time_t>();
 
     std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
     std::smatch match;
@@ -71,7 +71,7 @@ Btree<time_t, LinkedFact>* CompressedLeaf::getTree()
 std::string CompressedLeaf::treeToString(Btree<time_t, LinkedFact>* tree)
 {
   std::string res;
-  std::vector<const LinkedFact*> tmp_data;
+  std::vector<LinkedFact*> tmp_data;
   BtreeLeaf<time_t, LinkedFact>* it = tree->getFirst();
   while(it != nullptr)
   {

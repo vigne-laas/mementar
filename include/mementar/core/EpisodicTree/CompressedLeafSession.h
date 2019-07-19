@@ -4,7 +4,7 @@
 #include "mementar/core/archiving_compressing/archiving/Archive.h"
 #include "mementar/core/archiving_compressing/archiving/Header.h"
 
-#include "mementar/core/Btree/Btree.h"
+#include "mementar/core/LinkedBtree/LinkedBtree.h"
 #include "mementar/core/LinkedFact.h"
 
 namespace mementar
@@ -18,7 +18,7 @@ public:
   time_t getKey() { return key_; }
   size_t getIndex() { return index_; }
 
-  Btree<time_t, LinkedFact>* getTree(Header& header, Archive& arch);
+  LinkedBtree<time_t>* getTree(Header& header, Archive& arch);
   std::vector<char> getRawData(Header& header, Archive& arch);
 private:
   time_t key_;

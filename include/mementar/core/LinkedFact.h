@@ -1,6 +1,8 @@
 #ifndef MEMENTAR_LINKEDFACT_H
 #define MEMENTAR_LINKEDFACT_H
 
+#include <vector>
+
 #include "mementar/core/Fact.h"
 
 namespace mementar
@@ -29,6 +31,9 @@ public:
 
   LinkedFact* next_;
   LinkedFact* prev_;
+
+  std::vector<LinkedFact*> toLinkNext;
+  std::vector<LinkedFact*> toLinkPrev;
 };
 
 } // namespace mementar

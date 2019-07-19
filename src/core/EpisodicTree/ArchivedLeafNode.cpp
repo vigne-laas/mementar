@@ -50,7 +50,7 @@ ArchivedLeafNode::~ArchivedLeafNode()
   mut_.unlock();
 }
 
-void ArchivedLeafNode::insert(const time_t& key, const LinkedFact* data)
+void ArchivedLeafNode::insert(const time_t& key, LinkedFact* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)

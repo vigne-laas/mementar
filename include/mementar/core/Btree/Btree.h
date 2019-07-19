@@ -38,7 +38,7 @@ public:
     }
   }
 
-  size_t insert(const Tkey& key, const Tdata* data);
+  size_t insert(const Tkey& key, Tdata* data);
   bool remove(const Tkey& key, const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
@@ -59,7 +59,7 @@ public:
 
   void display(int count = -1);
 
-private:
+protected:
   BtreeNode<Tkey, Tdata>* root_;
   BtreeLeaf<Tkey, Tdata>* last_;
   size_t order_;
@@ -68,7 +68,7 @@ private:
 };
 
 template<typename Tkey, typename Tdata>
-size_t Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata* data)
+size_t Btree<Tkey,Tdata>::insert(const Tkey& key, Tdata* data)
 {
   nb_data_++;
   if(last_ == nullptr)
@@ -139,7 +139,7 @@ void Btree<Tkey,Tdata>::display(int count)
   std::cout << "******" << std::endl;
   while((tmp != nullptr) && ((cpt < count) || (count == -1)))
   {
-    std::vector<const Tdata*> datas = tmp->getData();
+    std::vector<Tdata*> datas = tmp->getData();
     std::cout << tmp->getKey() << " => ";
     for(auto data : datas)
       std::cout << *data << " : ";

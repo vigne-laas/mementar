@@ -58,7 +58,7 @@ ArchivedLeaf::ArchivedLeaf(const time_t& key, const std::string& directory)
   directory_ = directory.substr(0, dot_pose);
 }
 
-Btree<time_t, LinkedFact>* ArchivedLeaf::getTree(size_t i)
+LinkedBtree<time_t>* ArchivedLeaf::getTree(size_t i)
 {
   mementar::Archive arch;
   std::cout << "ArchivedLeaf::getTree READ BINARY FILE " << directory_ << ".mar" << std::endl;
@@ -71,7 +71,7 @@ Btree<time_t, LinkedFact>* ArchivedLeaf::getTree(size_t i)
   LzUncompress lz;
   std::vector<char> comp_data(comp.begin(), comp.end());
   lz.uncompress(comp_data, out);
-  Btree<time_t, LinkedFact>* tree = new Btree<time_t, LinkedFact>();
+  LinkedBtree<time_t>* tree = new LinkedBtree<time_t>();
 
   std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
   std::smatch match;
