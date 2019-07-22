@@ -148,7 +148,8 @@ void Btree<Tkey,Tdata>::display(int count)
     cpt++;
   }
   std::cout << "******" << std::endl;
-  root_->display();
+  if(root_)
+    root_->display();
 }
 
 } // namespace mementar
