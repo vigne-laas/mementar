@@ -96,7 +96,7 @@ void BtreeNode<Tkey,Tdata>::insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& 
         if(key < this->keys_[i])
         {
           this->keys_.insert(this->keys_.begin() + i, key);
-          this->childs_.insert(this->childs_.begin() + i, new_node);
+          this->childs_.insert(this->childs_.begin() + i + 1, new_node);
           new_node->setMother(this);
           break;
         }
