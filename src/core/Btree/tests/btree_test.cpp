@@ -6,12 +6,35 @@
 #include "mementar/core/Btree/BtreeLeaf.h"
 #include "mementar/core/Btree/Btree.h"
 
+#include "mementar/core/Data/StampedData.h"
+
 using namespace std::chrono;
+
+class stampedInt : public mementar::StampedData<int>
+{
+public:
+  stampedInt(int stamp, int data) : StampedData(stamp)
+  {
+    data_ = data;
+  }
+  int data_;
+
+  friend std::ostream& operator<<(std::ostream& os, const stampedInt& data)
+  {
+    os << data.data_;
+    return os;
+  }
+
+  bool operator==(const stampedInt& other) const
+  {
+    return (data_ == other.data_);
+  }
+};
 
 int main()
 {
-  mementar::BtreeLeaf<int, int> leaf1(0, 2);
-  mementar::BtreeLeaf<int, int> leaf2(1, 3);
+  mementar::BtreeLeaf<int, stampedInt> leaf1(new stampedInt(0, 2));
+  mementar::BtreeLeaf<int, stampedInt> leaf2(new stampedInt(1, 3));
 
   if(leaf1.operator<(&leaf2))
     std::cout << "inf" << std::endl;
@@ -24,9 +47,9 @@ int main()
   {
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-    mementar::Btree<size_t, size_t> tree(3);
+    mementar::Btree<int, stampedInt> tree(3);
     for(size_t i = 0; i < nb; i++)
-      tree.insert(i, i);
+      tree.insert(new stampedInt(i, i));
 
     //tree.display();
 
@@ -43,8 +66,8 @@ int main()
     res = tree.getFirst();
     if(res) std::cout << res->getKey() << std::endl;
 
-    tree.remove(40,40);
-    tree.insert(40,41);
+    tree.remove(stampedInt(40,40));
+    tree.insert(new stampedInt(40,41));
     tree.display();
 
     std::cout << "estimation = " << tree.estimateMinLeaves() << std::endl;

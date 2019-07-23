@@ -21,7 +21,7 @@ int main()
   for(size_t i = 0; i < 400000; i++)
   {
     //std::cout << i << std::endl;
-    compressed_node.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
+    compressed_node.insert(new mementar::LinkedFact<time_t>(i, "bob", "hasValue", std::to_string(i)));
     //usleep(1);
   }
   std::cout << " *************" << std::endl;
@@ -30,8 +30,8 @@ int main()
   duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
   std::cout << "took " << time_span.count() << std::endl;
 
-  compressed_node.remove(102,mementar::Fact("bob", "hasValue", std::to_string(102)));
-  compressed_node.insert(0, mementar::Fact("bob", "hasValue", std::to_string(0)));
+  compressed_node.remove(mementar::LinkedFact<time_t>(102, "bob", "hasValue", std::to_string(102)));
+  compressed_node.insert(new mementar::LinkedFact<time_t>(0, "bob", "hasValue", std::to_string(0)));
 
   std::cout << " *************" << std::endl;
   /*//compressed_node.display(150000);

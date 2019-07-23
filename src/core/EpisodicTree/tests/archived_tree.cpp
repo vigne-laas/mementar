@@ -19,7 +19,7 @@ int main()
   std::cout << " *************" << std::endl;
   for(size_t i = 0; i < 400000; i++)
   {
-    archived_node.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
+    archived_node.insert(new mementar::LinkedFact<time_t>(i, "bob", "hasValue", std::to_string(i)));
     if(i == 250000)
       archived_node.newSession();
   }
@@ -30,9 +30,9 @@ int main()
   std::cout << "took " << time_span.count() << std::endl;
 
   std::cout << "will remove" << std::endl;
-  archived_node.remove(102,mementar::Fact("bob", "hasValue", std::to_string(102)));
+  archived_node.remove(mementar::LinkedFact<time_t>(102, "bob", "hasValue", std::to_string(102)));
   std::cout << "removed" << std::endl;
-  archived_node.insert(0, mementar::Fact("bob", "hasValue", std::to_string(0)));
+  archived_node.insert(new mementar::LinkedFact<time_t>(0, "bob", "hasValue", std::to_string(0)));
   std::cout << "inserted" << std::endl;
 
   std::cout << " *************" << std::endl;
