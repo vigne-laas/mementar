@@ -12,33 +12,35 @@ namespace mementar
 template<typename Tkey>
 class LinkedBtreeLeafNode : public BtreeLeafNode<Tkey, LinkedFact<Tkey>>
 {
+  typedef LinkedFact<Tkey> LinkedFact_;
+  typedef BtreeLeaf<Tkey,LinkedFact_> LinkedBtreeLeaf_;
 public:
-  LinkedBtreeLeafNode(size_t order = 10) : BtreeLeafNode<Tkey,LinkedFact<Tkey>>(order)
+  LinkedBtreeLeafNode(size_t order = 10) : BtreeLeafNode<Tkey,LinkedFact_>(order)
   {}
 
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* insert(LinkedFact<Tkey>* data);
-  bool remove(const LinkedFact<Tkey>& data);
+  BtreeLeaf<Tkey,LinkedFact_>* insert(LinkedFact_* data);
+  bool remove(const LinkedFact_& data);
 
 private:
   void split();
 
-  LinkedFact<Tkey>* getPrev(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data);
-  std::vector<LinkedFact<Tkey>*> getPrevs(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data);
-  LinkedFact<Tkey>* getNext(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data);
-  std::vector<LinkedFact<Tkey>*> getNexts(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data);
+  LinkedFact_* getPrev(LinkedBtreeLeaf_* current, LinkedFact_* data);
+  std::vector<LinkedFact_*> getPrevs(LinkedBtreeLeaf_* current, LinkedFact_* data);
+  LinkedFact_* getNext(LinkedBtreeLeaf_* current, LinkedFact_* data);
+  std::vector<LinkedFact_*> getNexts(LinkedBtreeLeaf_* current, LinkedFact_* data);
 
-  void linkPrev(LinkedFact<Tkey>* current, LinkedFact<Tkey>* prev, LinkedFact<Tkey>* next);
-  void linkNext(LinkedFact<Tkey>* current, LinkedFact<Tkey>* next, LinkedFact<Tkey>* prev);
+  void linkPrev(LinkedFact_* current, LinkedFact_* prev, LinkedFact_* next);
+  void linkNext(LinkedFact_* current, LinkedFact_* next, LinkedFact_* prev);
 
-  void unlink(LinkedFact<Tkey>* current_data, BtreeLeaf<Tkey,LinkedFact<Tkey>>* current_leaf);
-  void unlinkPrev(LinkedFact<Tkey>* current, std::vector<LinkedFact<Tkey>*> prev, LinkedFact<Tkey>* next);
-  void unlinkNext(LinkedFact<Tkey>* current, std::vector<LinkedFact<Tkey>*> next, LinkedFact<Tkey>* prev);
+  void unlink(LinkedFact_* current_data, LinkedBtreeLeaf_* current_leaf);
+  void unlinkPrev(LinkedFact_* current, std::vector<LinkedFact_*> prev, LinkedFact_* next);
+  void unlinkNext(LinkedFact_* current, std::vector<LinkedFact_*> next, LinkedFact_* prev);
 };
 
 template<typename Tkey>
 BtreeLeaf<Tkey,LinkedFact<Tkey>>* LinkedBtreeLeafNode<Tkey>::insert(LinkedFact<Tkey>* data)
 {
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* res = BtreeLeafNode<Tkey,LinkedFact<Tkey>>::insert(data);
+  LinkedBtreeLeaf_* res = BtreeLeafNode<Tkey, LinkedFact<Tkey>>::insert(data);
 
   if(res != nullptr)
   {
@@ -59,7 +61,7 @@ bool LinkedBtreeLeafNode<Tkey>::remove( const LinkedFact<Tkey>& data)
   {
     if(this->keys_[i] == data.getStamp())
     {
-      LinkedFact<Tkey>* current_data = this->leafs_[i]->getData(data);
+      LinkedFact_* current_data = this->leafs_[i]->getData(data);
       unlink(current_data, this->leafs_[i]);
       this->leafs_[i]->remove(data);
       if(this->leafs_[i]->getData().size() == 0)
@@ -103,7 +105,7 @@ void LinkedBtreeLeafNode<Tkey>::split()
   }
   else
   {
-    BtreeNode<Tkey,LinkedFact<Tkey>>* new_mother = new BtreeNode<Tkey,LinkedFact<Tkey>>(this->order_);
+    BtreeNode<Tkey,LinkedFact_>* new_mother = new BtreeNode<Tkey,LinkedFact_>(this->order_);
     new_mother->setLevel(this->level_ + 1);
     new_mother->insert(this, this->keys_[0]);
     new_mother->insert(new_node, new_node->keys_[0]);
@@ -113,9 +115,9 @@ void LinkedBtreeLeafNode<Tkey>::split()
 template<typename Tkey>
 LinkedFact<Tkey>* LinkedBtreeLeafNode<Tkey>::getPrev(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data)
 {
-  LinkedFact<Tkey>* res = nullptr;
+  LinkedFact_* res = nullptr;
 
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* leaf = current->prev_;
+  LinkedBtreeLeaf_* leaf = current->prev_;
   while(leaf != nullptr)
   {
     for(auto ld : leaf->getData())
@@ -132,10 +134,10 @@ LinkedFact<Tkey>* LinkedBtreeLeafNode<Tkey>::getPrev(BtreeLeaf<Tkey,LinkedFact<T
 template<typename Tkey>
 std::vector<LinkedFact<Tkey>*> LinkedBtreeLeafNode<Tkey>::getPrevs(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data)
 {
-  std::vector<LinkedFact<Tkey>*> res;
+  std::vector<LinkedFact_*> res;
   bool end = false;
 
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* leaf = current->prev_;
+  LinkedBtreeLeaf_* leaf = current->prev_;
   if(leaf == nullptr)
     end = true;
 
@@ -163,9 +165,9 @@ std::vector<LinkedFact<Tkey>*> LinkedBtreeLeafNode<Tkey>::getPrevs(BtreeLeaf<Tke
 template<typename Tkey>
 LinkedFact<Tkey>* LinkedBtreeLeafNode<Tkey>::getNext(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data)
 {
-  LinkedFact<Tkey>* res = nullptr;
+  LinkedFact_* res = nullptr;
 
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* leaf = current->next_;
+  LinkedBtreeLeaf_* leaf = current->next_;
   while(leaf != nullptr)
   {
     for(auto ld : leaf->getData())
@@ -182,10 +184,10 @@ LinkedFact<Tkey>* LinkedBtreeLeafNode<Tkey>::getNext(BtreeLeaf<Tkey,LinkedFact<T
 template<typename Tkey>
 std::vector<LinkedFact<Tkey>*> LinkedBtreeLeafNode<Tkey>::getNexts(BtreeLeaf<Tkey,LinkedFact<Tkey>>* current, LinkedFact<Tkey>* data)
 {
-  std::vector<LinkedFact<Tkey>*> res;
+  std::vector<LinkedFact_*> res;
   bool end = false;
 
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* leaf = current->next_;
+  LinkedBtreeLeaf_* leaf = current->next_;
   if(leaf == nullptr)
     end = true;
 
@@ -271,8 +273,8 @@ void LinkedBtreeLeafNode<Tkey>::linkNext(LinkedFact<Tkey>* current, LinkedFact<T
 template<typename Tkey>
 void LinkedBtreeLeafNode<Tkey>::unlink(LinkedFact<Tkey>* current_data, BtreeLeaf<Tkey,LinkedFact<Tkey>>* current_leaf)
 {
-  std::vector<LinkedFact<Tkey>*> prev;
-  std::vector<LinkedFact<Tkey>*> next;
+  std::vector<LinkedFact_*> prev;
+  std::vector<LinkedFact_*> next;
 
   prev = getPrevs(current_leaf, current_data);
   next = getNexts(current_leaf, current_data);
