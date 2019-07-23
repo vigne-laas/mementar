@@ -9,7 +9,7 @@
 namespace mementar
 {
 
-CompressedLeaf::CompressedLeaf(Btree<time_t, LinkedFact>* tree, const std::string& directory)
+CompressedLeaf::CompressedLeaf(Btree<time_t, LinkedFact<time_t>>* tree, const std::string& directory)
 {
   if(tree == nullptr)
     return;
@@ -56,7 +56,7 @@ LinkedBtree<time_t>* CompressedLeaf::getTree()
         time_t key;
         std::istringstream iss(match[1].str());
         iss >> key;
-        LinkedFact* fact = new LinkedFact(key, match[2].str(), match[3].str(), match[4].str());
+        LinkedFact<time_t>* fact = new LinkedFact<time_t>(key, match[2].str(), match[3].str(), match[4].str());
 
         tree->insert(key, fact);
       }
@@ -68,11 +68,11 @@ LinkedBtree<time_t>* CompressedLeaf::getTree()
   return nullptr;
 }
 
-std::string CompressedLeaf::treeToString(Btree<time_t, LinkedFact>* tree)
+std::string CompressedLeaf::treeToString(Btree<time_t, LinkedFact<time_t>>* tree)
 {
   std::string res;
-  std::vector<LinkedFact*> tmp_data;
-  BtreeLeaf<time_t, LinkedFact>* it = tree->getFirst();
+  std::vector<LinkedFact<time_t>*> tmp_data;
+  BtreeLeaf<time_t, LinkedFact<time_t>>* it = tree->getFirst();
   while(it != nullptr)
   {
     tmp_data = it->getData();

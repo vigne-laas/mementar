@@ -16,7 +16,7 @@ namespace mementar
 template<typename Tkey, typename Tdata>
 class Btree
 {
-  //static_assert(std::is_base_of<StampedData,Tdata>::value, "Tdata must be derived from StampedData");
+  static_assert(std::is_base_of<StampedData<Tkey>,Tdata>::value, "Tdata must be derived from StampedData<Tkey>");
 public:
   Btree(size_t order = 10)
   {

@@ -8,32 +8,33 @@
 namespace mementar
 {
 
-class LinkedFact : public Fact<time_t>
+template<typename T>
+class LinkedFact : public Fact<T>
 {
 public:
-  LinkedFact(time_t stamp, const std::string& subject, const std::string& predicat, const std::string& object) : Fact<time_t>(stamp, subject, predicat, object)
+  LinkedFact(T stamp, const std::string& subject, const std::string& predicat, const std::string& object) : Fact<T>(stamp, subject, predicat, object)
   {
     next_ = nullptr;
     prev_ = nullptr;
   }
 
-  LinkedFact(time_t stamp, const std::string& triplet = "") : Fact<time_t>(stamp, triplet)
+  LinkedFact(T stamp, const std::string& triplet = "") : Fact<T>(stamp, triplet)
   {
     next_ = nullptr;
     prev_ = nullptr;
   }
 
-  bool isEventPart(const LinkedFact& other) const
+  bool isEventPart(const LinkedFact<T>& other) const
   {
-    return ((subject_ == other.subject_)
-            && (predicat_ == other.predicat_));
+    return ((this->subject_ == other.subject_)
+            && (this->predicat_ == other.predicat_));
   }
 
-  LinkedFact* next_;
-  LinkedFact* prev_;
+  LinkedFact<T>* next_;
+  LinkedFact<T>* prev_;
 
-  std::vector<LinkedFact*> toLinkNext;
-  std::vector<LinkedFact*> toLinkPrev;
+  std::vector<LinkedFact<T>*> toLinkNext;
+  std::vector<LinkedFact<T>*> toLinkPrev;
 };
 
 } // namespace mementar

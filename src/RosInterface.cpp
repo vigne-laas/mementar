@@ -77,7 +77,7 @@ void RosInterface::reset()
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
-  LinkedFact* fact = new LinkedFact(time(0), msg->data);
+  LinkedFact<time_t>* fact = new LinkedFact<time_t>(time(0), msg->data);
   if(fact->valid())
   {
     mut_.lock_shared();
@@ -89,7 +89,7 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  LinkedFact* fact = new LinkedFact(msg->stamp.sec, msg->data);
+  LinkedFact<time_t>* fact = new LinkedFact<time_t>(msg->stamp.sec, msg->data);
   if(fact->valid())
   {
     mut_.lock_shared();
@@ -109,7 +109,7 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
 
   if(req.action == "remove")
   {
-    LinkedFact fact(req.stamp.sec, req.param);
+    LinkedFact<time_t> fact(req.stamp.sec, req.param);
     if(fact.valid())
     {
       mut_.lock_shared();

@@ -13,7 +13,7 @@ namespace mementar
 class CompressedLeaf
 {
 public:
-  CompressedLeaf(Btree<time_t, LinkedFact>* tree, const std::string& directory);
+  CompressedLeaf(Btree<time_t, LinkedFact<time_t>>* tree, const std::string& directory);
   CompressedLeaf(const time_t& key, const std::string& directory);
 
   std::string getDirectory() { return directory_; }
@@ -24,7 +24,7 @@ private:
   time_t key_;
   std::string directory_;
 
-  std::string treeToString(Btree<time_t, LinkedFact>* tree);
+  std::string treeToString(Btree<time_t, LinkedFact<time_t>>* tree);
 };
 
 } // namespace mementar

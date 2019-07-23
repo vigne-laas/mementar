@@ -35,7 +35,7 @@ LinkedBtree<time_t>* CompressedLeafSession::getTree(Header& header, Archive& arc
       time_t key;
       std::istringstream iss(match[1].str());
       iss >> key;
-      LinkedFact* fact = new LinkedFact(key, match[2].str(), match[3].str(), match[4].str());
+      LinkedFact<time_t>* fact = new LinkedFact<time_t>(key, match[2].str(), match[3].str(), match[4].str());
 
       tree->insert(key, fact);
     }

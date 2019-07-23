@@ -88,7 +88,7 @@ CompressedLeafNode* CompressedLeafNode::split()
   return new_one;
 }
 
-void CompressedLeafNode::insert(const time_t& key, LinkedFact* data)
+void CompressedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -162,7 +162,7 @@ void CompressedLeafNode::insert(const time_t& key, LinkedFact* data)
     earlier_key_ = key;
 }
 
-void CompressedLeafNode::remove(const time_t& key, const LinkedFact& data)
+void CompressedLeafNode::remove(const time_t& key, const LinkedFact<time_t>& data)
 {
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -188,9 +188,9 @@ void CompressedLeafNode::remove(const time_t& key, const LinkedFact& data)
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t, LinkedFact>* CompressedLeafNode::find(const time_t& key)
+BtreeLeaf<time_t, LinkedFact<time_t>>* CompressedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact<time_t>>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -210,9 +210,9 @@ BtreeLeaf<time_t, LinkedFact>* CompressedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, LinkedFact>* CompressedLeafNode::findNear(const time_t& key)
+BtreeLeaf<time_t, LinkedFact<time_t>>* CompressedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact<time_t>>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -233,9 +233,9 @@ BtreeLeaf<time_t, LinkedFact>* CompressedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, LinkedFact>* CompressedLeafNode::getFirst()
+BtreeLeaf<time_t, LinkedFact<time_t>>* CompressedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact<time_t>>* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
@@ -252,9 +252,9 @@ BtreeLeaf<time_t, LinkedFact>* CompressedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, LinkedFact>* CompressedLeafNode::getLast()
+BtreeLeaf<time_t, LinkedFact<time_t>>* CompressedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, LinkedFact>* res = nullptr;
+  BtreeLeaf<time_t, LinkedFact<time_t>>* res = nullptr;
 
   mut_.lock_shared();
   if(btree_childs_.size())

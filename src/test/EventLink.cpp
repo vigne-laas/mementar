@@ -1,7 +1,7 @@
 #include "mementar/core/LinkedBtree/LinkedBtree.h"
 
 
-void displayLink(mementar::LinkedBtree<size_t>* t)
+void displayLink(mementar::LinkedBtree<time_t>* t)
 {
   auto first = t->getFirst();
   while(first != nullptr)
@@ -24,19 +24,19 @@ void displayLink(mementar::LinkedBtree<size_t>* t)
 
 int main()
 {
-  mementar::LinkedBtree<size_t> tree;
+  mementar::LinkedBtree<time_t> tree;
 
   for(int i = 20; i >= 0; i--)
   {
     if(i % 2)
-      tree.insert(i, new mementar::LinkedFact(i, "max", "hasCounted", std::to_string(i-1)));
+      tree.insert(i, new mementar::LinkedFact<time_t>(i, "max", "hasCounted", std::to_string(i-1)));
     else
-      tree.insert(i, new mementar::LinkedFact(i, "max", "hasCounted", std::to_string(i)));
+      tree.insert(i, new mementar::LinkedFact<time_t>(i, "max", "hasCounted", std::to_string(i)));
   }
 
-  tree.remove(4, mementar::LinkedFact(4, "max", "hasCounted", std::to_string(4)));
-  tree.remove(5, mementar::LinkedFact(4, "max", "hasCounted", std::to_string(4)));
-  tree.remove(6, mementar::LinkedFact(6, "max", "hasCounted", std::to_string(6)));
+  tree.remove(4, mementar::LinkedFact<time_t>(4, "max", "hasCounted", std::to_string(4)));
+  tree.remove(5, mementar::LinkedFact<time_t>(4, "max", "hasCounted", std::to_string(4)));
+  tree.remove(6, mementar::LinkedFact<time_t>(6, "max", "hasCounted", std::to_string(6)));
   displayLink(&tree);
   //tree.display();
   auto leaf = tree.find(1);
@@ -44,10 +44,10 @@ int main()
   std::cout << "+++++++++++++" << std::endl;
   if(leaf)
   {
-    std::vector<mementar::LinkedFact*> datas = leaf->getData();
+    std::vector<mementar::LinkedFact<time_t>*> datas = leaf->getData();
     if(datas.size())
     {
-      mementar::LinkedFact* c = datas[0];
+      mementar::LinkedFact<time_t>* c = datas[0];
       while(c != nullptr)
       {
         std::cout << *c << std::endl;

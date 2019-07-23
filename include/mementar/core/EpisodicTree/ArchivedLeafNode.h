@@ -14,12 +14,12 @@ public:
   ArchivedLeafNode(const std::string& directory, size_t order = 10);
   ~ArchivedLeafNode();
 
-  void insert(const time_t& key, LinkedFact* data);
-  void remove(const time_t& key, const LinkedFact& data);
-  BtreeLeaf<time_t, LinkedFact>* find(const time_t& key);
-  BtreeLeaf<time_t, LinkedFact>* findNear(const time_t& key);
-  BtreeLeaf<time_t, LinkedFact>* getFirst();
-  BtreeLeaf<time_t, LinkedFact>* getLast();
+  void insert(const time_t& key, LinkedFact<time_t>* data);
+  void remove(const time_t& key, const LinkedFact<time_t>& data);
+  BtreeLeaf<time_t, LinkedFact<time_t>>* find(const time_t& key);
+  BtreeLeaf<time_t, LinkedFact<time_t>>* findNear(const time_t& key);
+  BtreeLeaf<time_t, LinkedFact<time_t>>* getFirst();
+  BtreeLeaf<time_t, LinkedFact<time_t>>* getLast();
 
   void display(time_t key);
 

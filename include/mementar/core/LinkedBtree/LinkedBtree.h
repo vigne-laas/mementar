@@ -9,18 +9,18 @@ namespace mementar
 {
 
 template<typename Tkey>
-class LinkedBtree : public Btree<Tkey, LinkedFact>
+class LinkedBtree : public Btree<Tkey, LinkedFact<Tkey>>
 {
 public:
-  LinkedBtree(size_t order = 10) : Btree<Tkey, LinkedFact>(order) {}
+  LinkedBtree(size_t order = 10) : Btree<Tkey, LinkedFact<Tkey>>(order) {}
 
-  size_t insert(const Tkey& key, LinkedFact* data);
+  size_t insert(const Tkey& key, LinkedFact<Tkey>* data);
 
 private:
 };
 
 template<typename Tkey>
-size_t LinkedBtree<Tkey>::insert(const Tkey& key, LinkedFact* data)
+size_t LinkedBtree<Tkey>::insert(const Tkey& key, LinkedFact<Tkey>* data)
 {
   this->nb_data_++;
   if(this->last_ == nullptr)
@@ -31,7 +31,7 @@ size_t LinkedBtree<Tkey>::insert(const Tkey& key, LinkedFact* data)
   }
   else
   {
-    BtreeLeaf<Tkey, LinkedFact>* tmp = this->root_->insert(key, data);
+    BtreeLeaf<Tkey, LinkedFact<Tkey>>* tmp = this->root_->insert(key, data);
     if(tmp != nullptr)
     {
       if(tmp->operator>(this->last_))
