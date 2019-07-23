@@ -29,14 +29,14 @@ int main()
   for(int i = 20; i >= 0; i--)
   {
     if(i % 2)
-      tree.insert(i, new mementar::LinkedFact<time_t>(i, "max", "hasCounted", std::to_string(i-1)));
+      tree.insert(new mementar::LinkedFact<time_t>(i, "max", "hasCounted", std::to_string(i-1)));
     else
-      tree.insert(i, new mementar::LinkedFact<time_t>(i, "max", "hasCounted", std::to_string(i)));
+      tree.insert(new mementar::LinkedFact<time_t>(i, "max", "hasCounted", std::to_string(i)));
   }
 
-  tree.remove(4, mementar::LinkedFact<time_t>(4, "max", "hasCounted", std::to_string(4)));
-  tree.remove(5, mementar::LinkedFact<time_t>(4, "max", "hasCounted", std::to_string(4)));
-  tree.remove(6, mementar::LinkedFact<time_t>(6, "max", "hasCounted", std::to_string(6)));
+  tree.remove(mementar::LinkedFact<time_t>(4, "max", "hasCounted", std::to_string(4)));
+  tree.remove(mementar::LinkedFact<time_t>(4, "max", "hasCounted", std::to_string(4)));
+  tree.remove(mementar::LinkedFact<time_t>(6, "max", "hasCounted", std::to_string(6)));
   displayLink(&tree);
   //tree.display();
   auto leaf = tree.find(1);

@@ -58,7 +58,7 @@ LinkedBtree<time_t>* CompressedLeaf::getTree()
         iss >> key;
         LinkedFact<time_t>* fact = new LinkedFact<time_t>(key, match[2].str(), match[3].str(), match[4].str());
 
-        tree->insert(key, fact);
+        tree->insert(fact);
       }
     }
 

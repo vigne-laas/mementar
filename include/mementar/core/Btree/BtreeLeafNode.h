@@ -16,8 +16,8 @@ public:
 
   ~BtreeLeafNode() {}
 
-  virtual BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, Tdata* data);
-  virtual bool remove(const Tkey& key, const Tdata& data);
+  virtual BtreeLeaf<Tkey,Tdata>* insert(Tdata* data);
+  virtual bool remove(const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
@@ -31,14 +31,14 @@ protected:
 };
 
 template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, Tdata* data)
+BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(Tdata* data)
 {
   BtreeLeaf<Tkey,Tdata>* res = nullptr;
 
   if(leafs_.size() == 0)
   {
-    this->keys_.push_back(key);
-    res = new BtreeLeaf<Tkey,Tdata>(key, data);
+    this->keys_.push_back(data->getStamp());
+    res = new BtreeLeaf<Tkey,Tdata>(data);
     leafs_.push_back(res);
     res->setMother(this);
   }
@@ -48,17 +48,17 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, Tdata*
     if(leafs_.size())
       last = leafs_[leafs_.size() - 1];
 
-    if(key > this->keys_[this->keys_.size() - 1])
+    if(data->getStamp() > this->keys_[this->keys_.size() - 1])
     {
-      this->keys_.push_back(key);
-      res = new BtreeLeaf<Tkey,Tdata>(key, data);
+      this->keys_.push_back(data->getStamp());
+      res = new BtreeLeaf<Tkey,Tdata>(data);
       leafs_.push_back(res);
       res->next_ = last->next_;
       last->next_ = res;
       res->prev_ = last;
       res->setMother(this);
     }
-    else if(this->keys_[this->keys_.size() - 1] == key)
+    else if(this->keys_[this->keys_.size() - 1] == data->getStamp())
     {
       last->push_back(data);
     }
@@ -66,15 +66,15 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, Tdata*
     {
       for(size_t i = 0; i < this->keys_.size(); i++)
       {
-        if(this->keys_[i] >= key)
+        if(this->keys_[i] >= data->getStamp())
         {
-          if(this->keys_[i] == key)
+          if(this->keys_[i] == data->getStamp())
           {
             leafs_[i]->push_back(data);
           }
           else
           {
-            res = new BtreeLeaf<Tkey,Tdata>(key, data);
+            res = new BtreeLeaf<Tkey,Tdata>(data);
             // here last is the next node of res
             last = leafs_[i];
             res->next_ = last;
@@ -83,7 +83,7 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, Tdata*
               res->prev_->next_ = res;
             if(res->next_)
               res->next_->prev_ = res;
-            this->keys_.insert(this->keys_.begin() + i, key);
+            this->keys_.insert(this->keys_.begin() + i, data->getStamp());
             this->leafs_.insert(this->leafs_.begin() + i, res);
             res->setMother(this);
           }
@@ -100,11 +100,11 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, Tdata*
 }
 
 template<typename Tkey, typename Tdata>
-bool BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+bool BtreeLeafNode<Tkey,Tdata>::remove(const Tdata& data)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
-    if(this->keys_[i] == key)
+    if(this->keys_[i] == data.getStamp())
     {
       leafs_[i]->remove(data);
       if(leafs_[i]->getData().size() == 0)

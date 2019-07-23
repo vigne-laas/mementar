@@ -25,8 +25,8 @@ public:
 
   CompressedLeafNode* split();
 
-  void insert(const time_t& key, LinkedFact<time_t>* data);
-  void remove(const time_t& key, const LinkedFact<time_t>& data);
+  void insert(LinkedFact<time_t>* data);
+  void remove(const LinkedFact<time_t>& data);
   BtreeLeaf<time_t, LinkedFact<time_t>>* find(const time_t& key);
   BtreeLeaf<time_t, LinkedFact<time_t>>* findNear(const time_t& key);
   BtreeLeaf<time_t, LinkedFact<time_t>>* getFirst();

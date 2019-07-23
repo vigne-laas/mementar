@@ -50,41 +50,41 @@ ArchivedLeafNode::~ArchivedLeafNode()
   mut_.unlock();
 }
 
-void ArchivedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
+void ArchivedLeafNode::insert(LinkedFact<time_t>* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
   {
     mut_.unlock_shared();
-    createNewCompressedChild(key);
+    createNewCompressedChild(data->getStamp());
     mut_.lock_shared();
-    compressed_childs_[0]->insert(key, data);
+    compressed_childs_[0]->insert(data);
   }
   else
   {
-    if(key < keys_[0])
+    if(data->getStamp() < keys_[0])
     {
       Display::Error("try to insert fact in past that do not exist");
       return;
     }
 
-    size_t index = getKeyIndex(key);
+    size_t index = getKeyIndex(data->getStamp());
 
     if(index < archived_childs_.size())
     {
-      if((index == archived_childs_.size() - 1) && (keys_.size() == archived_childs_.size()) && (key > earlier_key_))
+      if((index == archived_childs_.size() - 1) && (keys_.size() == archived_childs_.size()) && (data->getStamp() > earlier_key_))
       {
         mut_.unlock_shared();
-        createNewCompressedChild(key);
+        createNewCompressedChild(data->getStamp());
         mut_.lock_shared();
-        compressed_childs_[0]->insert(key, data);
+        compressed_childs_[0]->insert(data);
       }
       else
       {
         mut_.unlock_shared();
         createSession(index);
         mut_.lock_shared();
-        archived_sessions_tree_[index]->insert(key, data);
+        archived_sessions_tree_[index]->insert(data);
         modified_[index] = true;
       }
     }
@@ -96,7 +96,7 @@ void ArchivedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
       keys_.push_back(compressed_childs_[compressed_childs_.size() - 1]->getKey());
       mut_.unlock();
       mut_.lock_shared();
-      compressed_childs_[compressed_childs_.size() - 1]->insert(key, data);
+      compressed_childs_[compressed_childs_.size() - 1]->insert(data);
 
       //verify if a chld need to be compressed
       if(compressed_childs_.size() > 1)
@@ -108,19 +108,19 @@ void ArchivedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
     }
     else
     {
-      compressed_childs_[index - archived_childs_.size()]->insert(key,data);
+      compressed_childs_[index - archived_childs_.size()]->insert(data);
     }
   }
   mut_.unlock_shared();
 
-  if(earlier_key_ < key)
-    earlier_key_ = key;
+  if(earlier_key_ < data->getStamp())
+    earlier_key_ = data->getStamp();
 }
 
-void ArchivedLeafNode::remove(const time_t& key, const LinkedFact<time_t>& data)
+void ArchivedLeafNode::remove(const LinkedFact<time_t>& data)
 {
   mut_.lock_shared();
-  int index = getKeyIndex(key);
+  int index = getKeyIndex(data.getStamp());
   if(index >= 0)
   {
     if((size_t)index < archived_childs_.size())
@@ -128,11 +128,11 @@ void ArchivedLeafNode::remove(const time_t& key, const LinkedFact<time_t>& data)
       mut_.unlock_shared();
       createSession(index);
       mut_.lock_shared();
-      if(archived_sessions_tree_[index]->remove(key, data))
+      if(archived_sessions_tree_[index]->remove(data))
         modified_[index] = true;
     }
     else
-      compressed_childs_[index - archived_childs_.size()]->remove(key, data);
+      compressed_childs_[index - archived_childs_.size()]->remove(data);
   }
   mut_.unlock_shared();
 }

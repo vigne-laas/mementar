@@ -81,7 +81,7 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
   if(fact->valid())
   {
     mut_.lock_shared();
-    tree_->insert(time(0), fact);
+    tree_->insert(fact);
     mut_.unlock_shared();
     occasions_.add(fact);
   }
@@ -93,7 +93,7 @@ void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
   if(fact->valid())
   {
     mut_.lock_shared();
-    tree_->insert(msg->stamp.sec, fact);
+    tree_->insert(fact);
     mut_.unlock_shared();
     occasions_.add(fact);
   }
@@ -113,7 +113,7 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
     if(fact.valid())
     {
       mut_.lock_shared();
-      tree_->remove(req.stamp.sec, fact);
+      tree_->remove(fact);
       mut_.unlock_shared();
     }
     else

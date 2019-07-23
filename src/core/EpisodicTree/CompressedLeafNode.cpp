@@ -88,35 +88,35 @@ CompressedLeafNode* CompressedLeafNode::split()
   return new_one;
 }
 
-void CompressedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
+void CompressedLeafNode::insert(LinkedFact<time_t>* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
   {
     mut_.unlock_shared();
-    createNewTreeChild(key);
+    createNewTreeChild(data->getStamp());
     mut_.lock_shared();
-    last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
+    last_tree_nb_leafs_ = btree_childs_[0]->insert(data);
     contexts_[0].insert(data);
   }
   else
   {
-    if(key < keys_[0])
+    if(data->getStamp() < keys_[0])
     {
       Display::Error("try to insert fact in past that do not exist");
       return;
     }
 
-    size_t index = getKeyIndex(key);
+    size_t index = getKeyIndex(data->getStamp());
 
     if(index < compressed_childs_.size())
     {
-      if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()) && (key > earlier_key_))
+      if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()) && (data->getStamp() > earlier_key_))
       {
         mut_.unlock_shared();
-        createNewTreeChild(key);
+        createNewTreeChild(data->getStamp());
         mut_.lock_shared();
-        last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
+        last_tree_nb_leafs_ = btree_childs_[0]->insert(data);
         contexts_[keys_.size() - 1].insert(data);
       }
       else
@@ -124,7 +124,7 @@ void CompressedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
         mut_.unlock_shared();
         createSession(index);
         mut_.lock_shared();
-        compressed_sessions_tree_[index]->insert(key, data);
+        compressed_sessions_tree_[index]->insert(data);
         contexts_[index].insert(data);
         modified_[index] = true;
       }
@@ -132,9 +132,9 @@ void CompressedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
     else if(useNewTree())
     {
       mut_.unlock_shared();
-      createNewTreeChild(key);
+      createNewTreeChild(data->getStamp());
       mut_.lock_shared();
-      last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(key, data);
+      last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(data);
       contexts_[keys_.size() - 1].insert(data);
 
       //verify if a chld need to be compressed
@@ -147,25 +147,25 @@ void CompressedLeafNode::insert(const time_t& key, LinkedFact<time_t>* data)
     }
     else if(index - keys_.size() + 1 == 0) // if insert in more recent tree
     {
-      last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(key,data);
+      last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(data);
       contexts_[index].insert(data);
     }
     else
     {
-      btree_childs_[index - compressed_childs_.size()]->insert(key,data);
+      btree_childs_[index - compressed_childs_.size()]->insert(data);
       contexts_[index].insert(data);
     }
   }
   mut_.unlock_shared();
 
-  if(earlier_key_ < key)
-    earlier_key_ = key;
+  if(earlier_key_ < data->getStamp())
+    earlier_key_ = data->getStamp();
 }
 
-void CompressedLeafNode::remove(const time_t& key, const LinkedFact<time_t>& data)
+void CompressedLeafNode::remove(const LinkedFact<time_t>& data)
 {
   mut_.lock_shared();
-  int index = getKeyIndex(key);
+  int index = getKeyIndex(data.getStamp());
   if(index >= 0)
   {
     if((size_t)index < compressed_childs_.size())
@@ -173,7 +173,7 @@ void CompressedLeafNode::remove(const time_t& key, const LinkedFact<time_t>& dat
       mut_.unlock_shared();
       createSession(index);
       mut_.lock_shared();
-      if(compressed_sessions_tree_[index]->remove(key, data))
+      if(compressed_sessions_tree_[index]->remove(data))
       {
         modified_[index] = true;
         contexts_[index].remove(&data);
@@ -181,7 +181,7 @@ void CompressedLeafNode::remove(const time_t& key, const LinkedFact<time_t>& dat
     }
     else
     {
-      if(btree_childs_[index - compressed_childs_.size()]->remove(key, data))
+      if(btree_childs_[index - compressed_childs_.size()]->remove(data))
         contexts_[index].remove(&data);
     }
   }

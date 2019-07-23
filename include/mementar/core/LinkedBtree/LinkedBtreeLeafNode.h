@@ -16,8 +16,8 @@ public:
   LinkedBtreeLeafNode(size_t order = 10) : BtreeLeafNode<Tkey,LinkedFact<Tkey>>(order)
   {}
 
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* insert(const Tkey& key, LinkedFact<Tkey>* data);
-  bool remove(const Tkey& key, const LinkedFact<Tkey>& data);
+  BtreeLeaf<Tkey,LinkedFact<Tkey>>* insert(LinkedFact<Tkey>* data);
+  bool remove(const LinkedFact<Tkey>& data);
 
 private:
   void split();
@@ -36,9 +36,9 @@ private:
 };
 
 template<typename Tkey>
-BtreeLeaf<Tkey,LinkedFact<Tkey>>* LinkedBtreeLeafNode<Tkey>::insert(const Tkey& key, LinkedFact<Tkey>* data)
+BtreeLeaf<Tkey,LinkedFact<Tkey>>* LinkedBtreeLeafNode<Tkey>::insert(LinkedFact<Tkey>* data)
 {
-  BtreeLeaf<Tkey,LinkedFact<Tkey>>* res = BtreeLeafNode<Tkey,LinkedFact<Tkey>>::insert(key, data);
+  BtreeLeaf<Tkey,LinkedFact<Tkey>>* res = BtreeLeafNode<Tkey,LinkedFact<Tkey>>::insert(data);
 
   if(res != nullptr)
   {
@@ -53,11 +53,11 @@ BtreeLeaf<Tkey,LinkedFact<Tkey>>* LinkedBtreeLeafNode<Tkey>::insert(const Tkey& 
 }
 
 template<typename Tkey>
-bool LinkedBtreeLeafNode<Tkey>::remove(const Tkey& key, const LinkedFact<Tkey>& data)
+bool LinkedBtreeLeafNode<Tkey>::remove( const LinkedFact<Tkey>& data)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
-    if(this->keys_[i] == key)
+    if(this->keys_[i] == data.getStamp())
     {
       LinkedFact<Tkey>* current_data = this->leafs_[i]->getData(data);
       unlink(current_data, this->leafs_[i]);

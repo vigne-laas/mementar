@@ -13,7 +13,7 @@ public:
     stamp_ = stamp;
   }
 
-  T getStamp()
+  T getStamp() const
   {
     return stamp_;
   }

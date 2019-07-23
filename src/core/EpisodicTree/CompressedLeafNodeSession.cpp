@@ -58,7 +58,7 @@ int CompressedLeafNodeSession::getKeyIndex(const time_t& key)
   return index;
 }
 
-void CompressedLeafNodeSession::insert(const time_t& key, LinkedFact<time_t>* data)
+void CompressedLeafNodeSession::insert(LinkedFact<time_t>* data)
 {
   mut_.lock_shared();
   if(contexts_.size() == 0)
@@ -67,17 +67,17 @@ void CompressedLeafNodeSession::insert(const time_t& key, LinkedFact<time_t>* da
   }
   else
   {
-    if(key < contexts_[0].getKey())
+    if(data->getStamp() < contexts_[0].getKey())
     {
       Display::Error("try to insert fact in past that do not exist");
       return;
     }
 
-    size_t index = getKeyIndex(key);
+    size_t index = getKeyIndex(data->getStamp());
     mut_.unlock_shared();
     createSession(index);
     mut_.lock_shared();
-    sessions_tree_[index]->insert(key, data);
+    sessions_tree_[index]->insert(data);
     contexts_[index].insert(data);
     modified_[index] = true;
   }
@@ -85,17 +85,17 @@ void CompressedLeafNodeSession::insert(const time_t& key, LinkedFact<time_t>* da
   mut_.unlock_shared();
 }
 
-bool CompressedLeafNodeSession::remove(const time_t& key, const LinkedFact<time_t>& data)
+bool CompressedLeafNodeSession::remove(const LinkedFact<time_t>& data)
 {
   bool res = false;
   mut_.lock_shared();
-  int index = getKeyIndex(key);
+  int index = getKeyIndex(data.getStamp());
   if(index >= 0)
   {
     mut_.unlock_shared();
     createSession(index);
     mut_.lock_shared();
-    if(sessions_tree_[index]->remove(key, data))
+    if(sessions_tree_[index]->remove(data))
     {
       modified_[index] = true;
       contexts_[index].remove(&data);

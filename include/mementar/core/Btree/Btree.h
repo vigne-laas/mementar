@@ -41,8 +41,8 @@ public:
     }
   }
 
-  virtual size_t insert(const Tkey& key, Tdata* data);
-  bool remove(const Tkey& key, const Tdata& data);
+  virtual size_t insert(Tdata* data);
+  bool remove(const Tdata& data);
   BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
   BtreeLeaf<Tkey, Tdata>* getFirst();
@@ -71,18 +71,18 @@ protected:
 };
 
 template<typename Tkey, typename Tdata>
-size_t Btree<Tkey,Tdata>::insert(const Tkey& key, Tdata* data)
+size_t Btree<Tkey,Tdata>::insert(Tdata* data)
 {
   nb_data_++;
   if(last_ == nullptr)
   {
     root_ = new BtreeLeafNode<Tkey, Tdata>(order_);
     level_ = root_->getLevel();
-    last_ = root_->insert(key, data);
+    last_ = root_->insert(data);
   }
   else
   {
-    BtreeLeaf<Tkey, Tdata>* tmp = root_->insert(key, data);
+    BtreeLeaf<Tkey, Tdata>* tmp = root_->insert(data);
     if(tmp != nullptr)
     {
       if(tmp->operator>(last_))
@@ -99,11 +99,11 @@ size_t Btree<Tkey,Tdata>::insert(const Tkey& key, Tdata* data)
 }
 
 template<typename Tkey, typename Tdata>
-bool Btree<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+bool Btree<Tkey,Tdata>::remove(const Tdata& data)
 {
   nb_data_--;
   if(root_ != nullptr)
-    return root_->remove(key, data);
+    return root_->remove(data);
   return false;
 }
 

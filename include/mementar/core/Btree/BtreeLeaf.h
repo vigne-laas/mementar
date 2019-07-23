@@ -13,13 +13,13 @@ template<typename Tkey, typename Tdata>
 class BtreeLeaf
 {
 public:
-  BtreeLeaf(const Tkey& key, Tdata* data)
+  BtreeLeaf(Tdata* data)
   {
     next_ = nullptr;
     prev_ = nullptr;
     mother_ = nullptr;
 
-    key_ = key;
+    key_ = data->getStamp();
     data_.push_back(data);
   }
 
