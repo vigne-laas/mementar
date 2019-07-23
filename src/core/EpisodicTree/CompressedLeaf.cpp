@@ -53,10 +53,10 @@ LinkedBtree<time_t>* CompressedLeaf::getTree()
     {
       if(std::regex_match(line, match, regex))
       {
-        LinkedFact* fact = new LinkedFact(match[2].str(), match[3].str(), match[4].str());
         time_t key;
         std::istringstream iss(match[1].str());
         iss >> key;
+        LinkedFact* fact = new LinkedFact(key, match[2].str(), match[3].str(), match[4].str());
 
         tree->insert(key, fact);
       }

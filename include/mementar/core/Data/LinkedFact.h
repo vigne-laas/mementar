@@ -3,21 +3,21 @@
 
 #include <vector>
 
-#include "mementar/core/Fact.h"
+#include "mementar/core/Data/Fact.h"
 
 namespace mementar
 {
 
-class LinkedFact : public Fact
+class LinkedFact : public Fact<time_t>
 {
 public:
-  LinkedFact(const std::string& subject, const std::string& predicat, const std::string& object, time_t stamp = 0) : Fact(subject, predicat, object, stamp)
+  LinkedFact(time_t stamp, const std::string& subject, const std::string& predicat, const std::string& object) : Fact<time_t>(stamp, subject, predicat, object)
   {
     next_ = nullptr;
     prev_ = nullptr;
   }
 
-  LinkedFact(const std::string& triplet = "", time_t stamp = 0) : Fact(triplet, stamp)
+  LinkedFact(time_t stamp, const std::string& triplet = "") : Fact<time_t>(stamp, triplet)
   {
     next_ = nullptr;
     prev_ = nullptr;

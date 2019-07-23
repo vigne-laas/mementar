@@ -4,21 +4,23 @@
 #include <string>
 #include <vector>
 
+#include "mementar/core/Data/StampedData.h"
+
 namespace mementar
 {
 
-class Fact
+template<typename T>
+class Fact : public StampedData<T>
 {
 public:
-  Fact(const std::string& subject, const std::string& predicat, const std::string& object, time_t stamp = 0)
+  Fact(T stamp, const std::string& subject, const std::string& predicat, const std::string& object) : StampedData<T>(stamp)
   {
     subject_ = subject;
     predicat_ = predicat;
     object_ = object;
-    stamp_ = stamp;
   }
 
-  Fact(const std::string& triplet = "", time_t stamp = 0)
+  Fact(T stamp, const std::string& triplet = "") : StampedData<T>(stamp)
   {
     std::vector<std::string> splitted = split(triplet, "|");
     if(splitted.size() >= 1)
@@ -27,8 +29,6 @@ public:
       predicat_ = splitted[1];
     if(splitted.size() >= 3)
       object_ = splitted[2];
-
-    stamp_ = stamp;
   }
 
   bool valid() const
@@ -65,7 +65,6 @@ public:
   std::string subject_;
   std::string predicat_;
   std::string object_;
-  time_t stamp_;
 
 private:
 

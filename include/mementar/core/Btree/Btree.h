@@ -8,12 +8,15 @@
 #include "mementar/core/Btree/BtreeLeafNode.h"
 #include "mementar/core/Btree/BtreeLeaf.h"
 
+#include "mementar/core/Data/StampedData.h"
+
 namespace mementar
 {
 
 template<typename Tkey, typename Tdata>
 class Btree
 {
+  //static_assert(std::is_base_of<StampedData,Tdata>::value, "Tdata must be derived from StampedData");
 public:
   Btree(size_t order = 10)
   {

@@ -7,14 +7,14 @@ void displayLink(mementar::LinkedBtree<size_t>* t)
   while(first != nullptr)
   {
     auto data = first->getData()[0];
-    std::cout << data->stamp_ << " : " << *data << std::endl;
+    std::cout << data->getStamp() << " : " << *data << std::endl;
     if(data->next_)
-      std::cout << "\tN = " << data->next_->stamp_ << " : " << *(data->next_) << std::endl;
+      std::cout << "\tN = " << data->next_->getStamp() << " : " << *(data->next_) << std::endl;
     else
       std::cout << "\tN = nullptr" << std::endl;
 
     if(data->prev_)
-      std::cout << "\tP = " << data->prev_->stamp_ << " : " << *(data->prev_) << std::endl;
+      std::cout << "\tP = " << data->prev_->getStamp() << " : " << *(data->prev_) << std::endl;
     else
       std::cout << "\tP = nullptr" << std::endl;
 
@@ -29,14 +29,14 @@ int main()
   for(int i = 20; i >= 0; i--)
   {
     if(i % 2)
-      tree.insert(i, new mementar::LinkedFact("max", "hasCounted", std::to_string(i-1), i));
+      tree.insert(i, new mementar::LinkedFact(i, "max", "hasCounted", std::to_string(i-1)));
     else
-      tree.insert(i, new mementar::LinkedFact("max", "hasCounted", std::to_string(i), i));
+      tree.insert(i, new mementar::LinkedFact(i, "max", "hasCounted", std::to_string(i)));
   }
 
-  tree.remove(4, mementar::LinkedFact("max", "hasCounted", std::to_string(4)));
-  tree.remove(5, mementar::LinkedFact("max", "hasCounted", std::to_string(4)));
-  tree.remove(6, mementar::LinkedFact("max", "hasCounted", std::to_string(6)));
+  tree.remove(4, mementar::LinkedFact(4, "max", "hasCounted", std::to_string(4)));
+  tree.remove(5, mementar::LinkedFact(4, "max", "hasCounted", std::to_string(4)));
+  tree.remove(6, mementar::LinkedFact(6, "max", "hasCounted", std::to_string(6)));
   displayLink(&tree);
   //tree.display();
   auto leaf = tree.find(1);

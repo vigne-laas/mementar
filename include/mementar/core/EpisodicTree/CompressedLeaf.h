@@ -5,7 +5,7 @@
 #include <ctime>
 
 #include "mementar/core/LinkedBtree/LinkedBtree.h"
-#include "mementar/core/LinkedFact.h"
+#include "mementar/core/Data/LinkedFact.h"
 
 namespace mementar
 {

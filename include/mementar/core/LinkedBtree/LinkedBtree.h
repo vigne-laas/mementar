@@ -3,7 +3,7 @@
 
 #include "mementar/core/Btree/Btree.h"
 #include "mementar/core/LinkedBtree/LinkedBtreeLeafNode.h"
-#include "mementar/core/LinkedFact.h"
+#include "mementar/core/Data/LinkedFact.h"
 
 namespace mementar
 {

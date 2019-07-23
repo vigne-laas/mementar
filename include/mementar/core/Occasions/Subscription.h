@@ -5,7 +5,7 @@
 #include <vector>
 #include <mutex>
 
-#include "mementar/core/Fact.h"
+#include "mementar/core/Data/Fact.h"
 #include "mementar/core/Occasions/IdManager.h"
 
 namespace mementar
@@ -14,16 +14,16 @@ namespace mementar
 class Subscription
 {
 public:
-  size_t subscribe(const Fact& patern, size_t count);
+  size_t subscribe(const Fact<time_t>& patern, size_t count);
   bool unsubscribe(size_t id);
 
   bool isFinished(size_t id);
   bool empty() { return fact_paterns_.size() == 0; }
 
-  std::vector<size_t> evaluate(const Fact& fact);
+  std::vector<size_t> evaluate(const Fact<time_t>& fact);
 
 private:
-  std::map<size_t, Fact> fact_paterns_;
+  std::map<size_t, Fact<time_t>> fact_paterns_;
   std::map<size_t, size_t> counts_;
   std::mutex map_mut_;
 

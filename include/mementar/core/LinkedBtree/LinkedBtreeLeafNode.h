@@ -2,7 +2,7 @@
 #define MEMENTAR_LINKEDBTREELEAFNODE_H
 
 #include "mementar/core/Btree/BtreeLeafNode.h"
-#include "mementar/core/LinkedFact.h"
+#include "mementar/core/Data/LinkedFact.h"
 
 #include "mementar/core/utility/Display.h"
 

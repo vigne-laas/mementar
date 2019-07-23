@@ -11,7 +11,7 @@
 #include "mementar/MementarOcassionUnsubscription.h"
 
 #include "mementar/core/Occasions/Subscription.h"
-#include "mementar/core/Fact.h"
+#include "mementar/core/Data/Fact.h"
 
 namespace mementar
 {
@@ -23,7 +23,7 @@ public:
 
   void run();
 
-  void add(const Fact* fact);
+  void add(const Fact<time_t>* fact);
 
   void stop() {run_ = false; }
   inline bool isRunning() {return run_; }
@@ -40,15 +40,15 @@ private:
   std::mutex mutex_;
 
   bool queue_choice_;
-  std::queue<const Fact*> fifo_1;
-  std::queue<const Fact*> fifo_2;
+  std::queue<const Fact<time_t>*> fifo_1;
+  std::queue<const Fact<time_t>*> fifo_2;
 
   bool SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
                          mementar::MementarOccasionSubscription::Response &res);
   bool UnsubscribeCallback(mementar::MementarOcassionUnsubscription::Request &req,
                            mementar::MementarOcassionUnsubscription::Response &res);
 
-  const Fact* get();
+  const Fact<time_t>* get();
   bool empty();
 };
 

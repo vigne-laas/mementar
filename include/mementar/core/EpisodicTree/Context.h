@@ -5,7 +5,7 @@
 #include <string>
 #include <ctime>
 
-#include "mementar/core/Fact.h"
+#include "mementar/core/Data/Fact.h"
 
 namespace mementar
 {
@@ -15,8 +15,8 @@ class Context
 public:
   Context(time_t key) { key_ = key; }
 
-  void insert(const Fact* fact);
-  void remove(const Fact* fact);
+  void insert(const Fact<time_t>* fact);
+  void remove(const Fact<time_t>* fact);
 
   bool exist(const std::string& name);
   bool subjectExist(const std::string& subject);

@@ -6,7 +6,7 @@
 #include <atomic>
 #include <shared_mutex>
 
-#include "mementar/core/LinkedFact.h"
+#include "mementar/core/Data/LinkedFact.h"
 #include "mementar/core/LinkedBtree/LinkedBtree.h"
 #include "mementar/core/EpisodicTree/CompressedLeaf.h"
 #include "mementar/core/EpisodicTree/Context.h"

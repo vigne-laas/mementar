@@ -10,7 +10,7 @@
 namespace mementar
 {
 
-void Context::insert(const Fact* fact)
+void Context::insert(const Fact<time_t>* fact)
 {
   std::map<std::string, size_t>::iterator it;
 
@@ -36,7 +36,7 @@ void Context::insert(const Fact* fact)
   }
 }
 
-void Context::remove(const Fact* fact)
+void Context::remove(const Fact<time_t>* fact)
 {
   std::map<std::string, size_t>::iterator it;
 

@@ -3,11 +3,11 @@
 namespace mementar
 {
 
-size_t Subscription::subscribe(const Fact& patern, size_t count)
+size_t Subscription::subscribe(const Fact<time_t>& patern, size_t count)
 {
   map_mut_.lock();
   size_t id = id_manager_.getNewId();
-  fact_paterns_.insert(std::pair<size_t, Fact>(id, patern));
+  fact_paterns_.insert(std::pair<size_t, Fact<time_t>>(id, patern));
   counts_[id] = count;
   map_mut_.unlock();
 
@@ -42,7 +42,7 @@ bool Subscription::isFinished(size_t id)
   return res;
 }
 
-std::vector<size_t> Subscription::evaluate(const Fact& fact)
+std::vector<size_t> Subscription::evaluate(const Fact<time_t>& fact)
 {
   std::vector<size_t> res;
 
