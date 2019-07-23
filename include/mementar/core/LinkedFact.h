@@ -11,13 +11,13 @@ namespace mementar
 class LinkedFact : public Fact
 {
 public:
-  LinkedFact(const std::string& subject, const std::string& predicat, const std::string& object) : Fact(subject, predicat, object)
+  LinkedFact(const std::string& subject, const std::string& predicat, const std::string& object, time_t stamp = 0) : Fact(subject, predicat, object, stamp)
   {
     next_ = nullptr;
     prev_ = nullptr;
   }
 
-  LinkedFact(const std::string& triplet = "") : Fact(triplet)
+  LinkedFact(const std::string& triplet = "", time_t stamp = 0) : Fact(triplet, stamp)
   {
     next_ = nullptr;
     prev_ = nullptr;

@@ -51,6 +51,7 @@ public:
   Tkey getKey() const { return key_; }
   std::vector<Tdata*> getData() const { return data_; }
   void getData(std::vector<Tdata*>& data) { data = data_; }
+  Tdata* getData(const Tdata& data);
 
   void setMother(BtreeLeafNode<Tkey,Tdata>* mother) { mother_ = mother; }
   BtreeLeafNode<Tkey,Tdata>* getMother() { return mother_; }
@@ -67,10 +68,24 @@ void BtreeLeaf<Tkey,Tdata>::remove(const Tdata& data)
   for(size_t i = 0; i < data_.size();)
   {
     if(data_[i]->operator==(data))
+    {
+      delete data_[i];
       data_.erase(data_.begin() + i);
+    }
     else
       i++;
   }
+}
+
+template<typename Tkey, typename Tdata>
+Tdata* BtreeLeaf<Tkey,Tdata>::getData(const Tdata& data)
+{
+  for(size_t i = 0; i < data_.size(); i++)
+  {
+    if(data_[i]->operator==(data))
+      return data_[i];
+  }
+  return nullptr;
 }
 
 } // mementar
