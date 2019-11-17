@@ -283,7 +283,7 @@ void ArchivedLeafNode::loadStoredData()
 
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
-    std::string complete_dir = entry.path();
+    std::string complete_dir = entry.path().generic_string();
     std::string dir = complete_dir.substr(directory_.size());
     if(dir[0] == '/')
       dir.erase(dir.begin());
