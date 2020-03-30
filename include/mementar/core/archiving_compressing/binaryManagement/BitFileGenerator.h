@@ -11,18 +11,20 @@ class BitFileGenerator
 {
 public:
   BitFileGenerator(uint8_t size_1 = 0, uint8_t size_2 = 0, uint8_t size_3 = 0, uint8_t size_4 = 0);
+  void resize(size_t size) { data_.resize(size, 0); };
 
   void writeType1(uint32_t value);
   void writeType2(uint32_t value);
   void writeType3(uint32_t value);
   void writeType4(uint32_t value);
   void writeN(size_t size, uint32_t value);
+  void writeNReverse(size_t size, uint32_t value);
   void writeChar(char value);
 
   void writeBitTrue();
   void writeBitFalse();
 
-  std::vector<char> get() { return data_; }
+  std::vector<char> get() { return std::vector<char>(data_.begin(), data_.begin() + major_index_); }
   void get(std::vector<char>& out) { out = data_; }
 
 private:
