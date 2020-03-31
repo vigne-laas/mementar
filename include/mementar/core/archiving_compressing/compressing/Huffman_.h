@@ -48,8 +48,8 @@ public:
   void getTreeCode(std::vector<char>& out);
   void getDataCode(const std::vector<char>& data, std::vector<char>& out);
 
-  size_t setTree(std::vector<char>& in);
-  std::string getFile(std::vector<char>& data);
+  size_t setTree(const std::vector<char>& in);
+  std::string getFile(const std::vector<char>& data);
 
 private:
   NodeList nodes_{};

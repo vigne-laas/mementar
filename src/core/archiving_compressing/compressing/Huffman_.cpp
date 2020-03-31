@@ -130,7 +130,7 @@ namespace mementar {
     out.insert(out.end(), tmp.begin(), tmp.end());
   }
 
-  size_t Huffman_::setTree(std::vector<char>& in)
+  size_t Huffman_::setTree(const std::vector<char>& in)
   {
     BitFileGetter bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
     bit.set(in);
@@ -149,7 +149,7 @@ namespace mementar {
       HuffNode_t::Index data = bit.getType1();
       nodes_[data].code.size_ = bit.getType2();
       nodes_[data].code.value_ = bit.getType3();
-      heap.push((HuffNode_t::Index)data);
+      heap.push(data);
     }
 
     HuffNode_t::Index bind_node_index = leaf_count;  // bind nodes are stored after all leaves
@@ -177,29 +177,41 @@ namespace mementar {
     return tree_bit_size / 8 + 1;
   }
 
-  std::string Huffman_::getFile(std::vector<char>& data)
+  std::string Huffman_::getFile(const std::vector<char>& data)
   {
     std::string out = "";
-    BitFileGetter bit(8);
-    bit.set(data);
 
-    auto out_file_size = toInteger<size_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
+    const auto out_file_size = toInteger<size_t>({(uint8_t)data[0], (uint8_t)data[1], (uint8_t)data[2], (uint8_t)data[3]});
     out.reserve(out_file_size);
 
     auto nodes = nodes_.data();
     auto node = &nodes_[root_node_];
-    while(out.size() < out_file_size)
+    auto root_node =  nodes + root_node_;
+
+    uint8_t mask = 0x00;
+    uint8_t bit_data = 0x00;
+
+    uint32_t index = 3;
+
+    for(;;)
     {
-      node = nodes + root_node_;
-      while(node->right != HuffNode_t::invalid_index)
+      node = root_node;
+      while(node->right - HuffNode_t::invalid_index)
       {
-        if(bit.getBit())
+        if((mask<<=1) == 0x00)
+        {
+          bit_data = data[++index];
+          mask = 0x01;
+        }
+
+        if(bit_data & mask)
           node = nodes + node->left;
         else
           node = nodes + node->right;
-        //node = nodes + (bit.getBit() ? node->left : node->right);
       }
       out += (char)(node - nodes);
+      if(out.size() == out_file_size)
+        break;
     }
 
     return out;
