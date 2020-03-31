@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "mementar/core/archiving_compressing/binaryManagement/BitFileGenerator.h"
+#include "mementar/core/archiving_compressing/binaryManagement/BitFileGetter.h"
 
 #define TREE_CHAR_SIZE 8
 #define TREE_VALUE_SIZE 6
@@ -46,6 +47,26 @@ namespace mementar {
     bool operator()(HuffNode_t::Index l, HuffNode_t::Index r)
     {
       return nodes_[l].freq > nodes_[r].freq;
+    }
+
+  private:
+    const NodeList& nodes_;
+  };
+
+  struct NodeValueCompare
+  {
+  public:
+    explicit NodeValueCompare(const NodeList& nodes) : nodes_{nodes} {}
+    bool operator()(HuffNode_t::Index l, HuffNode_t::Index r)
+    {
+      if(nodes_[l].code.size_ < nodes_[r].code.size_)
+        return true;
+      else if(nodes_[l].code.size_ > nodes_[r].code.size_)
+        return false;
+      else if(nodes_[l].code.value_ < nodes_[r].code.value_)
+        return false;
+      else
+        return true;
     }
 
   private:
@@ -104,9 +125,84 @@ namespace mementar {
 
     for(const std::uint8_t& c : data)
       bit.writeNReverse(nodes_[c].code.size_, nodes_[c].code.value_);
-    
+
     std::vector<char> tmp = bit.get();
     out.insert(out.end(), tmp.begin(), tmp.end());
+  }
+
+  size_t Huffman_::setTree(std::vector<char>& in)
+  {
+    BitFileGetter bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
+    bit.set(in);
+
+    auto nb_leaf = toInteger<uint16_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
+
+    using minheap = std::priority_queue<
+                    HuffNode_t::Index,
+                    std::vector<HuffNode_t::Index, static_alloc<HuffNode_t::Index, leaf_count>>,
+                    NodeValueCompare>;
+
+    minheap heap{NodeValueCompare{nodes_}};
+
+    for(size_t i = 0; i < nb_leaf; i++)
+    {
+      HuffNode_t::Index data = bit.getType1();
+      nodes_[data].code.size_ = bit.getType2();
+      nodes_[data].code.value_ = bit.getType3();
+      heap.push((HuffNode_t::Index)data);
+    }
+
+    HuffNode_t::Index bind_node_index = leaf_count;  // bind nodes are stored after all leaves
+
+    while(heap.size() != 1)
+    {
+      auto right = heap.top();
+      heap.pop();
+      auto left = heap.top();
+      heap.pop();
+
+      nodes_[bind_node_index].right = right;
+      nodes_[bind_node_index].left = left;
+      nodes_[bind_node_index].code.size_ = nodes_[right].code.size_ - 1;
+      nodes_[bind_node_index].code.value_ = (nodes_[right].code.value_ >> 1) & 0xefffffff;
+
+      heap.push(bind_node_index);
+      ++bind_node_index;
+    }
+
+    root_node_ = bind_node_index - 1;
+
+    size_t tree_bit_size = (2*8 + nb_leaf*(TREE_CHAR_SIZE + TREE_VALUE_SIZE + TREE_VALUE_SIZE_SIZE));
+
+    return tree_bit_size / 8 + 1;
+  }
+
+  std::string Huffman_::getFile(std::vector<char>& data)
+  {
+    std::string out = "";
+    BitFileGetter bit(8);
+    bit.set(data);
+
+    auto out_file_size = toInteger<size_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
+    out.reserve(out_file_size);
+
+    auto nodes = nodes_.data();
+    auto node = &nodes_[root_node_];
+    while(out.size() < out_file_size)
+    {
+      node = nodes + root_node_;
+      while(node->right != HuffNode_t::invalid_index)
+      {
+        if(bit.getBit())
+          node = nodes + node->left;
+        else
+          node = nodes + node->right;
+        //node = nodes + (bit.getBit() ? node->left : node->right);
+      }
+      out += (char)(node - nodes);
+    }
+
+    return out;
   }
 
   void Huffman_::sum(const FrequencyMap& other, FrequencyMap& into)

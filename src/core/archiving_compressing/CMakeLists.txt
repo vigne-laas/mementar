@@ -32,3 +32,6 @@ target_link_libraries(archive mementar_compression_lib)
 
 add_executable(huffman_in tests/perfs/huffman_in.cpp)
 target_link_libraries(huffman_in mementar_compression_lib pthread)
+
+add_executable(huffman_out tests/perfs/huffman_out.cpp)
+target_link_libraries(huffman_out mementar_compression_lib pthread)

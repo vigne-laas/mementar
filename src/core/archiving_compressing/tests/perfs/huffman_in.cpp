@@ -54,21 +54,10 @@ float testHuffman(size_t nb, const std::string& input_file)
     std::vector<char> in_vect(in.begin(), in.end());
 
     mementar::Huffman_ huff;
-    high_resolution_clock::time_point t11 = high_resolution_clock::now();
     huff.generateTree(in);
-    high_resolution_clock::time_point t12 = high_resolution_clock::now();
     std::vector<char> out_vect;
     huff.getTreeCode(out_vect);
-    high_resolution_clock::time_point t13 = high_resolution_clock::now();
     huff.getDataCode(in_vect, out_vect);
-    high_resolution_clock::time_point t14 = high_resolution_clock::now();
-
-    duration<double> time_span = duration_cast<duration<double>>(t12 - t11);
-    std::cout << "2-1 " << time_span.count()*1000 << std::endl;
-    time_span = duration_cast<duration<double>>(t13 - t12);
-    std::cout << "3-2 " << time_span.count()*1000 << std::endl;
-    time_span = duration_cast<duration<double>>(t14 - t13);
-    std::cout << "4-3 " << time_span.count()*1000 << std::endl;
 
     if(i == 0)
     {

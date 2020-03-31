@@ -180,7 +180,7 @@ bool BitFileGetter::getBit()
 {
   bool res = (data_[major_index_] >> minor_index_) & 0x01;
 
-  if(minor_index_ >= 7)
+  if(minor_index_ > 6)
   {
     minor_index_ = 0;
     major_index_++;

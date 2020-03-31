@@ -48,8 +48,12 @@ public:
   void getTreeCode(std::vector<char>& out);
   void getDataCode(const std::vector<char>& data, std::vector<char>& out);
 
+  size_t setTree(std::vector<char>& in);
+  std::string getFile(std::vector<char>& data);
+
 private:
   NodeList nodes_{};
+  HuffNode_t::Index root_node_{HuffNode_t::invalid_index};
 
   void sum(const FrequencyMap& other, FrequencyMap& into);
   FrequencyMap count_char(const std::string& text, std::size_t jobs = 1);

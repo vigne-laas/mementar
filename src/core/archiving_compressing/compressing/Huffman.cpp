@@ -186,6 +186,7 @@ void Huffman::getFile(std::vector<char>& data, std::string& out)
   bit.set(data);
 
   auto out_file_size = toInteger<size_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
+  out.reserve(out_file_size);
   while(out.size() < out_file_size)
   {
     HuffNode_t* node = heap_[0];
@@ -196,7 +197,7 @@ void Huffman::getFile(std::vector<char>& data, std::string& out)
       else
         node = node->right_;
     }
-    out.push_back(node->data_);
+    out += node->data_;
   }
 }
 
