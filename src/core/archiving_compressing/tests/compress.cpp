@@ -99,14 +99,12 @@ int main (int argc, char* argv[])
   }
   else if(code_type == huffman)
   {
-    std::vector<char> in_vect(in.begin(), in.end());
-
     mementar::Huffman huff;
-    huff.analyse(in_vect);
-    huff.generateTree();
+    huff.analyse(in);
+    huff.generateCode();
     std::vector<char> out_vect;
     huff.getTreeCode(out_vect);
-    huff.getDataCode(in_vect, out_vect);
+    huff.getDataCode(in, out_vect);
 
     huff.displayCompressionRate(in.size(), out_vect.size());
     huff.saveToFile(out_vect, output_file);

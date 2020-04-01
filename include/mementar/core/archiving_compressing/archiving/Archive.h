@@ -20,7 +20,7 @@ public:
   }
 
   void load(std::vector<char>& out);
-  void load(std::vector<char>& out, std::vector<std::vector<char> >& raw_datas);
+  void load(std::vector<char>& out, std::vector<std::string>& raw_datas);
 
   Header getHeader(std::vector<char>& data);
   Header getHeader() { return getHeader(data_); }

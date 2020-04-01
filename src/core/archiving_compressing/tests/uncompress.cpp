@@ -97,7 +97,7 @@ int main (int argc, char* argv[])
     {
       size_t tree_size = huff.setTree(data);
       data = std::vector<char>(data.begin() + tree_size, data.end());
-      huff.getFile(data, out);
+      out = huff.getFile(data);
     }
   }
 

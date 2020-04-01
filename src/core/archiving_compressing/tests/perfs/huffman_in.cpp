@@ -7,7 +7,7 @@
 #include <time.h>       /* time */
 
 //#include "mementar/core/archiving_compressing/compressing/Huffman.h"
-#include "mementar/core/archiving_compressing/compressing/Huffman_.h"
+#include "mementar/core/archiving_compressing/compressing/Huffman.h"
 
 using namespace std::chrono;
 
@@ -51,13 +51,12 @@ float testHuffman(size_t nb, const std::string& input_file)
 
   for(size_t i = 0; i < nb; i++)
   {
-    std::vector<char> in_vect(in.begin(), in.end());
-
-    mementar::Huffman_ huff;
-    huff.generateTree(in);
+    mementar::Huffman huff;
+    huff.analyse(in);
+    huff.generateCode();
     std::vector<char> out_vect;
     huff.getTreeCode(out_vect);
-    huff.getDataCode(in_vect, out_vect);
+    huff.getDataCode(in, out_vect);
 
     if(i == 0)
     {

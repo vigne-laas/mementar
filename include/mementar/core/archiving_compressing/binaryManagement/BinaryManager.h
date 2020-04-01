@@ -44,6 +44,14 @@ public:
     else
       return false;
   }
+
+  std::string readBinaryFile(const std::string& file_name)
+  {
+    std::ifstream infile(file_name, std::ios::binary | std::ios::ate);
+    std::string res((std::istreambuf_iterator<char>(infile)),
+                     std::istreambuf_iterator<char>());
+    return res;
+  }
 private:
   std::string extension_;
 };

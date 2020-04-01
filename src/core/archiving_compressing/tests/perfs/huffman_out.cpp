@@ -9,9 +9,9 @@
 #define NEW_V
 
 #ifdef NEW_V
-#include "mementar/core/archiving_compressing/compressing/Huffman_.h"
-#else
 #include "mementar/core/archiving_compressing/compressing/Huffman.h"
+#else
+#include "mementar/core/archiving_compressing/compressing/Huffman_old.h"
 #endif
 
 
@@ -29,9 +29,9 @@ float testHuffman(size_t nb, const std::string& input_file)
   for(size_t i = 0; i < nb; i++)
   {
     #ifdef NEW_V
-    mementar::Huffman_ huff;
-    #else
     mementar::Huffman huff;
+    #else
+    mementar::Huffman_ huff;
     #endif
     std::vector<char> data;
     if(huff.readBinaryFile(data, input_file))

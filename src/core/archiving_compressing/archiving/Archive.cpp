@@ -49,17 +49,16 @@ void Archive::load(std::vector<char>& out)
   header_.description_file_.size_ = out_vect.size();
   out_vect = std::vector<char>();
 
-  std::vector<std::vector<char> > input_files;
+  std::vector<std::string> input_files;
   Huffman huff;
   for(const auto& file : header_.input_files_)
   {
-    std::vector<char> in_vect;
-    huff.readBinaryFile(in_vect, file.path_);
-    input_files.push_back(in_vect);
-    huff.analyse(in_vect);
+    auto str = huff.readBinaryFile(file.path_);
+    input_files.push_back(str);
+    huff.analyse(str);
   }
 
-  huff.generateTree();
+  huff.generateCode();
   huff.getTreeCode(out_vect);
   out.insert(out.end(), out_vect.begin(), out_vect.end());
   offset += out_vect.size();
@@ -79,7 +78,7 @@ void Archive::load(std::vector<char>& out)
   out.insert(out.begin(), out_vect.begin(), out_vect.end());
 }
 
-void Archive::load(std::vector<char>& out, std::vector<std::vector<char> >& raw_datas)
+void Archive::load(std::vector<char>& out, std::vector<std::string>& raw_datas)
 {
   if(raw_datas.size() != header_.input_files_.size())
   {
@@ -101,7 +100,7 @@ void Archive::load(std::vector<char>& out, std::vector<std::vector<char> >& raw_
   for(auto& raw_data : raw_datas)
     huff.analyse(raw_data);
 
-  huff.generateTree();
+  huff.generateCode();
   huff.getTreeCode(out_vect);
   out.insert(out.end(), out_vect.begin(), out_vect.end());
   offset += out_vect.size();
@@ -144,7 +143,7 @@ std::string Archive::extractFile(size_t index, Header& head, std::vector<char>& 
   std::vector<char> tree_data(data.begin() + head.description_file_.offset_ + head.description_file_.size_, data.end());
   huff.setTree(tree_data);
   std::vector<char> tmp_data(data.begin() + head.input_files_[index].offset_, data.begin() + head.input_files_[index].offset_ + head.input_files_[index].size_);
-  huff.getFile(tmp_data, out);
+  out = huff.getFile(tmp_data);
 
   return out;
 }
