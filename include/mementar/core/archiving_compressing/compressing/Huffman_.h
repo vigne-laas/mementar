@@ -39,6 +39,7 @@ static constexpr HuffNode_t::Index node_count = leaf_count * 2;
 
 using FrequencyMap = std::array<HuffNode_t::Frequency, leaf_count>;
 using NodeList = std::array<HuffNode_t, node_count>;
+using TreeList = std::array<size_t, values_in_byte>;
 
 class Huffman_ : public BinaryManager
 {
@@ -53,7 +54,8 @@ public:
 
 private:
   NodeList nodes_{};
-  HuffNode_t::Index root_node_{HuffNode_t::invalid_index};
+  TreeList subtrees_{};
+  size_t h_min_;
 
   void sum(const FrequencyMap& other, FrequencyMap& into);
   FrequencyMap count_char(const std::string& text, std::size_t jobs = 1);

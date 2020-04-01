@@ -143,6 +143,7 @@ namespace mementar {
                     NodeValueCompare>;
 
     minheap heap{NodeValueCompare{nodes_}};
+    h_min_ = leaf_count;
 
     for(size_t i = 0; i < nb_leaf; i++)
     {
@@ -150,6 +151,8 @@ namespace mementar {
       nodes_[data].code.size_ = bit.getType2();
       nodes_[data].code.value_ = bit.getType3();
       heap.push(data);
+      if(nodes_[data].code.size_ < h_min_)
+        h_min_ = nodes_[data].code.size_;
     }
 
     HuffNode_t::Index bind_node_index = leaf_count;  // bind nodes are stored after all leaves
@@ -165,12 +168,18 @@ namespace mementar {
       nodes_[bind_node_index].left = left;
       nodes_[bind_node_index].code.size_ = nodes_[right].code.size_ - 1;
       nodes_[bind_node_index].code.value_ = (nodes_[right].code.value_ >> 1) & 0xefffffff;
+      if(nodes_[bind_node_index].code.size_ == h_min_)
+        subtrees_[nodes_[bind_node_index].code.value_] = bind_node_index;
 
       heap.push(bind_node_index);
       ++bind_node_index;
     }
 
-    root_node_ = bind_node_index - 1;
+    for(size_t i = 0; i < leaf_count; i++)
+    {
+      if(nodes_[i].code.size_ == h_min_)
+        subtrees_[nodes_[i].code.value_] = i;
+    }
 
     size_t tree_bit_size = (2*8 + nb_leaf*(TREE_CHAR_SIZE + TREE_VALUE_SIZE + TREE_VALUE_SIZE_SIZE));
 
@@ -185,26 +194,38 @@ namespace mementar {
     out.reserve(out_file_size);
 
     auto nodes = nodes_.data();
-    auto node = &nodes_[root_node_];
-    auto root_node =  nodes + root_node_;
+    auto node = &nodes_[0];
 
-    uint8_t mask = 0x00;
+    uint8_t mask_index = 8;
     uint8_t bit_data = 0x00;
+    uint8_t h_min_data = 0x00;
 
     uint32_t index = 3;
 
     for(;;)
     {
-      node = root_node;
-      while(node->right - HuffNode_t::invalid_index)
+      h_min_data = 0x00;
+      for(size_t i = 0; i < h_min_; i++)
       {
-        if((mask<<=1) == 0x00)
+        bit_data>>=1;
+        if((++mask_index) >= 8)
         {
           bit_data = data[++index];
-          mask = 0x01;
+          mask_index = 0;
         }
+        h_min_data = (h_min_data << 1) | (bit_data & 0x01);
+      }
+      node = nodes + subtrees_[h_min_data];
 
-        if(bit_data & mask)
+      while(node->right - HuffNode_t::invalid_index)
+      {
+        bit_data>>=1;
+        if((++mask_index) >= 8)
+        {
+          bit_data = data[++index];
+          mask_index = 0;
+        }
+        if(bit_data & 0x01)
           node = nodes + node->left;
         else
           node = nodes + node->right;
