@@ -22,18 +22,27 @@ CompressedLeafNodeSession::~CompressedLeafNodeSession()
 
   Archive arch(description, header_);
 
-  std::vector<std::vector<char> > raw_datas;
+  std::vector<std::string> raw_datas;
   for(size_t i = 0; i < childs_.size(); i++)
   {
     if(sessions_tree_[i] != nullptr)
     {
       if(modified_[i])
-        raw_datas.push_back(treeToRaw(i));
+      {
+        auto tmp_raw = treeToRaw(i);
+        raw_datas.emplace_back(tmp_raw.begin(), tmp_raw.end());
+      }
       else
-        raw_datas.push_back(childs_[i].getRawData(header_, arch_));
+      {
+        auto tmp_raw = childs_[i].getRawData(header_, arch_);
+        raw_datas.emplace_back(tmp_raw.begin(), tmp_raw.end());
+      }
     }
     else
-      raw_datas.push_back(childs_[i].getRawData(header_, arch_));
+    {
+      auto tmp_raw = childs_[i].getRawData(header_, arch_);
+      raw_datas.emplace_back(tmp_raw.begin(), tmp_raw.end());
+    }
   }
 
   std::vector<char> data;
