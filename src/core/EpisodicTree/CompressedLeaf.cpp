@@ -19,9 +19,8 @@ CompressedLeaf::CompressedLeaf(Btree<time_t, LinkedFact<time_t>>* tree, const st
   directory_ = directory + '/' + std::to_string(key_);
 
   LzCompress lz_comp;
-  std::vector<char> out_vect;
   std::string in = treeToString(tree);
-  lz_comp.compress(in, out_vect);
+  std::vector<char> out_vect = lz_comp.compress(in);
 
   lz_comp.displayCompressionRate(in.size(), out_vect.size());
   lz_comp.saveToFile(out_vect, directory_);

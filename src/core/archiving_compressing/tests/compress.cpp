@@ -91,8 +91,7 @@ int main (int argc, char* argv[])
   if(code_type == lz77)
   {
     mementar::LzCompress lz_comp;
-    std::vector<char> out_vect;
-  	lz_comp.compress(in, out_vect);
+  	std::vector<char> out_vect = lz_comp.compress(in);
 
     lz_comp.displayCompressionRate(in.size(), out_vect.size());
     lz_comp.saveToFile(out_vect, output_file);

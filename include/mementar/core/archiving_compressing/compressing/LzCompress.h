@@ -15,7 +15,7 @@ class LzCompress : public BinaryManager
 public:
   LzCompress(size_t search_size = 2048, size_t la_size = 64);
 
-  void compress(std::string& in, std::vector<char>& out);
+  std::vector<char> compress(const std::string& in);
 
 private:
   size_t search_size_;

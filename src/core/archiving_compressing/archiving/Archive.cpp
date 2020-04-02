@@ -39,11 +39,10 @@ Archive::Archive() : BinaryManager("mar")
 
 void Archive::load(std::vector<char>& out)
 {
-  std::vector<char> out_vect;
   size_t offset = 0;
 
   LzCompress lz_comp;
-  lz_comp.compress(description_, out_vect);
+  std::vector<char> out_vect = lz_comp.compress(description_);
   out.insert(out.end(), out_vect.begin(), out_vect.end());
   offset += out_vect.size();
   header_.description_file_.size_ = out_vect.size();
@@ -86,11 +85,10 @@ void Archive::load(std::vector<char>& out, std::vector<std::string>& raw_datas)
     return;
   }
 
-  std::vector<char> out_vect;
   size_t offset = 0;
 
   LzCompress lz_comp;
-  lz_comp.compress(description_, out_vect);
+  std::vector<char> out_vect = lz_comp.compress(description_);
   out.insert(out.end(), out_vect.begin(), out_vect.end());
   offset += out_vect.size();
   header_.description_file_.size_ = out_vect.size();

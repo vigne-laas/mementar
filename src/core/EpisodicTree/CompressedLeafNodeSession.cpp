@@ -220,10 +220,7 @@ std::vector<char> CompressedLeafNodeSession::treeToRaw(size_t index)
   }
 
   mementar::LzCompress lz_comp;
-  std::vector<char> res_vect;
-  lz_comp.compress(res, res_vect);
-
-  return res_vect;
+  return lz_comp.compress(res);
 }
 
 } // namespace mementar

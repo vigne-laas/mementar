@@ -24,7 +24,7 @@ public:
   void writeBitTrue();
   void writeBitFalse();
 
-  std::vector<char> get() { return std::vector<char>(data_.begin(), data_.begin() + major_index_); }
+  std::vector<char> get() { return std::vector<char>(data_.begin(), data_.begin() + major_index_ + 1); }
   void get(std::vector<char>& out) { out = data_; }
 
 private:

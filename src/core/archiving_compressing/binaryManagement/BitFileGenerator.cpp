@@ -23,19 +23,21 @@ void BitFileGenerator::writeType1(uint32_t value)
   {
     data_[major_index_] |= ((value & ~(0xffffffff << to_add)) << minor_index_);
 
-    uint8_t added = 8 - minor_index_;
+    const uint8_t added = 8 - minor_index_;
 
     value >>= added;
     to_add -= added;
     if(to_add >= 0)
     {
-      major_index_++;
-      if(data_.size() <= major_index_)
+      if(data_.size() <= ++major_index_)
         data_.push_back(0x00);
       minor_index_ = 0;
     }
     else
+    {
       minor_index_ = 8 + to_add;
+      return;
+    }
   }
   while(to_add > 0);
 }
@@ -47,19 +49,21 @@ void BitFileGenerator::writeType2(uint32_t value)
   {
     data_[major_index_] |= ((value & ~(0xffffffff << to_add)) << minor_index_);
 
-    uint8_t added = 8 - minor_index_;
+    const uint8_t added = 8 - minor_index_;
 
     value >>= added;
     to_add -= added;
     if(to_add >= 0)
     {
-      major_index_++;
-      if(data_.size() <= major_index_)
+      if(data_.size() <= ++major_index_)
         data_.push_back(0x00);
       minor_index_ = 0;
     }
     else
+    {
       minor_index_ = 8 + to_add;
+      return;
+    }
   }
   while(to_add > 0);
 }
@@ -71,19 +75,21 @@ void BitFileGenerator::writeType3(uint32_t value)
   {
     data_[major_index_] |= ((value & ~(0xffffffff << to_add)) << minor_index_);
 
-    uint8_t added = 8 - minor_index_;
+    const uint8_t added = 8 - minor_index_;
 
     value >>= added;
     to_add -= added;
     if(to_add >= 0)
     {
-      major_index_++;
-      if(data_.size() <= major_index_)
+      if(data_.size() <= ++major_index_)
         data_.push_back(0x00);
       minor_index_ = 0;
     }
     else
+    {
       minor_index_ = 8 + to_add;
+      return;
+    }
   }
   while(to_add > 0);
 }
@@ -95,19 +101,21 @@ void BitFileGenerator::writeType4(uint32_t value)
   {
     data_[major_index_] |= ((value & ~(0xffffffff << to_add)) << minor_index_);
 
-    uint8_t added = 8 - minor_index_;
+    const uint8_t added = 8 - minor_index_;
 
     value >>= added;
     to_add -= added;
     if(to_add >= 0)
     {
-      major_index_++;
-      if(data_.size() <= major_index_)
+      if(data_.size() <= ++major_index_)
         data_.push_back(0x00);
       minor_index_ = 0;
     }
     else
+    {
       minor_index_ = 8 + to_add;
+      return;
+    }
   }
   while(to_add > 0);
 }
@@ -119,19 +127,21 @@ void BitFileGenerator::writeN(size_t size, uint32_t value)
   {
     data_[major_index_] |= ((value & ~(0xffffffff << to_add)) << minor_index_);
 
-    uint8_t added = 8 - minor_index_;
+    const uint8_t added = 8 - minor_index_;
 
     value >>= added;
     to_add -= added;
     if(to_add >= 0)
     {
-      major_index_++;
-      if(data_.size() <= major_index_)
+      if(data_.size() <= ++major_index_)
         data_.push_back(0x00);
       minor_index_ = 0;
     }
     else
+    {
       minor_index_ = 8 + to_add;
+      return;
+    }
   }
   while(to_add > 0);
 }
@@ -146,8 +156,7 @@ void BitFileGenerator::writeNReverse(size_t size, uint32_t value)
     minor_index_++;
     if(minor_index_ > 7)
     {
-      major_index_++;
-      if(data_.size() <= major_index_)
+      if(data_.size() <= ++major_index_)
         data_.push_back(0x00);
       minor_index_ = 0;
     }
@@ -161,19 +170,21 @@ void BitFileGenerator::writeChar(char value)
   {
     data_[major_index_] |= ((value & ~(0xffffffff << to_add)) << minor_index_);
 
-    uint8_t added = 8 - minor_index_;
+    const uint8_t added = 8 - minor_index_;
 
     value >>= added;
     to_add -= added;
     if(to_add >= 0)
     {
-      major_index_++;
-      if(data_.size() <= major_index_)
+      if(data_.size() <= ++major_index_)
         data_.push_back(0x00);
       minor_index_ = 0;
     }
     else
+    {
       minor_index_ = 8 + to_add;
+      return;
+    }
   }
   while(to_add > 0);
 }
@@ -181,28 +192,34 @@ void BitFileGenerator::writeChar(char value)
 void BitFileGenerator::writeBitTrue()
 {
   data_[major_index_] |= (1 << minor_index_);
-  if(minor_index_ >= 7)
+  if(7 - minor_index_)
   {
-    major_index_++;
-    if(data_.size() <= major_index_)
-      data_.push_back(0x00);
-    minor_index_ = 0;
+    ++minor_index_;
+    return;
   }
   else
-    minor_index_++;
+  {
+    if(data_.size() <= ++major_index_)
+      data_.push_back(0x00);
+    minor_index_ = 0;
+    return;
+  }
 }
 
 void BitFileGenerator::writeBitFalse()
 {
-  if(minor_index_ >= 7)
+  if(7 - minor_index_)
   {
-    major_index_++;
-    if(data_.size() <= major_index_)
-      data_.push_back(0x00);
-    minor_index_ = 0;
+    ++minor_index_;
+    return;
   }
   else
-    minor_index_++;
+  {
+    if(data_.size() <= ++major_index_)
+      data_.push_back(0x00);
+    minor_index_ = 0;
+    return;
+  }
 }
 
 } // namespace mementar
