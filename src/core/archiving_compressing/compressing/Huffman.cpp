@@ -86,12 +86,13 @@ namespace mementar {
   void Huffman::generateCode()
   {
     auto root_node = generateTree();
+    std::cout << "generateTree" << std::endl;
     nodes_[root_node].code.size_ = 0;
     nodes_[root_node].code.value_ = 0;
     generateCode(root_node);
   }
 
-  void Huffman::getTreeCode(std::vector<char>& out)
+  std::vector<char> Huffman::getTreeCode()
   {
     BitFileGenerator bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
     size_t valid_leaf = 0;
@@ -112,12 +113,11 @@ namespace mementar {
         bit.writeType3(nodes_[i].code.value_);
       }
     }
-    std::vector<char> tmp;
-    bit.get(tmp);
-    out.insert(out.end(), tmp.begin(), tmp.end());
+
+    return bit.get();
   }
 
-  void Huffman::getDataCode(const std::string& in_data, std::vector<char>& out)
+  std::vector<char> Huffman::getDataCode(const std::string& in_data)
   {
     BitFileGenerator bit(8);
     bit.resize(in_data.size());
@@ -130,8 +130,7 @@ namespace mementar {
     for(const std::uint8_t& c : in_data)
       bit.writeNReverse(nodes_[c].code.size_, nodes_[c].code.value_);
 
-    std::vector<char> tmp = bit.get();
-    out.insert(out.end(), tmp.begin(), tmp.end());
+    return bit.get();
   }
 
   size_t Huffman::setTree(const std::vector<char>& in)

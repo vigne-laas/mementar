@@ -54,14 +54,14 @@ float testHuffman(size_t nb, const std::string& input_file)
     mementar::Huffman huff;
     huff.analyse(in);
     huff.generateCode();
-    std::vector<char> out_vect;
-    huff.getTreeCode(out_vect);
-    huff.getDataCode(in, out_vect);
+    std::vector<char> out_vect = huff.getTreeCode();
+    std::vector<char> tmp = huff.getDataCode(in);
+    out_vect.insert(out_vect.end(), tmp.begin(), tmp.end());
 
     if(i == 0)
     {
       huff.displayCompressionRate(in.size(), out_vect.size());
-      huff.saveToFile(out_vect,  std::to_string(in.size()));
+      huff.saveToFile(out_vect, "../tests_files/out/" + std::to_string(in.size()));
     }
   }
 

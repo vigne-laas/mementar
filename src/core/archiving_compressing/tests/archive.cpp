@@ -68,6 +68,7 @@ int main (int argc, char* argv[])
       std::cout << "Available options are :" << std::endl;
       std::cout << "\t-i : input file" << std::endl;
       std::cout << "\t-o : output file (or output path for extraction mode)" << std::endl;
+      std::cout << "\t-d : description file for archiving mode" << std::endl;
       std::cout << "\t-l : list the contents of the input archive" << std::endl;
       std::cout << "\t-x : extract the contents of the input archive" << std::endl;
       return 0;
@@ -86,7 +87,7 @@ int main (int argc, char* argv[])
   }
   if((description_file == "") && (action == act_archive))
   {
-    std::cout << "specify a description_file file with -o" << std::endl;
+    std::cout << "specify a description_file file with -d" << std::endl;
     return -1;
   }
 
@@ -100,9 +101,7 @@ int main (int argc, char* argv[])
                      std::istreambuf_iterator<char>());
     mementar::Archive arch(in, input_files);
 
-    std::vector<char> data;
-    arch.load(data);
-
+    std::vector<char> data = arch.load();
     arch.saveToFile(data, output_file);
   }
   else if(action == act_extract)

@@ -28,8 +28,6 @@ public:
   	outfile.open(file_name + "." + extension_, std::ios::binary | std::ios::out);
     outfile.write(reinterpret_cast<char*>(data.data()), data.size());
   	outfile.close();
-
-    std::cout << "Saved into " << file_name << "." << extension_ << std::endl;
   }
 
   bool readBinaryFile(std::vector<char>& data, const std::string& file_name)
@@ -47,7 +45,7 @@ public:
 
   std::string readBinaryFile(const std::string& file_name)
   {
-    std::ifstream infile(file_name, std::ios::binary | std::ios::ate);
+    std::ifstream infile(file_name, std::ios::binary);
     std::string res((std::istreambuf_iterator<char>(infile)),
                      std::istreambuf_iterator<char>());
     return res;

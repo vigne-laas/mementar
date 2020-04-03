@@ -45,8 +45,7 @@ CompressedLeafNodeSession::~CompressedLeafNodeSession()
     }
   }
 
-  std::vector<char> data;
-  arch.load(data, raw_datas);
+  std::vector<char> data = arch.load(raw_datas);
 
   arch.saveToFile(data, file_name_);
 

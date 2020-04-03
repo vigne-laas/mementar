@@ -47,8 +47,8 @@ public:
   Huffman();
   void analyse(const std::string& data, std::size_t jobs = 1);
   void generateCode();
-  void getTreeCode(std::vector<char>& out);
-  void getDataCode(const std::string& in_data, std::vector<char>& out);
+  std::vector<char> getTreeCode();
+  std::vector<char> getDataCode(const std::string& in_data);
 
   size_t setTree(const std::vector<char>& in);
   std::string getFile(const std::vector<char>& data);

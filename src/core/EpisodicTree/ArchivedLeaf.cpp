@@ -37,8 +37,7 @@ ArchivedLeaf::ArchivedLeaf(CompressedLeafNode* tree, size_t nb, const std::strin
 
   Archive arch(context, input_files);
 
-  std::vector<char> data;
-  arch.load(data);
+  std::vector<char> data = arch.load();
 
   arch.saveToFile(data, directory_);
 

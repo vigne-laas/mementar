@@ -101,9 +101,9 @@ int main (int argc, char* argv[])
     mementar::Huffman huff;
     huff.analyse(in);
     huff.generateCode();
-    std::vector<char> out_vect;
-    huff.getTreeCode(out_vect);
-    huff.getDataCode(in, out_vect);
+    std::vector<char> out_vect = huff.getTreeCode();
+    std::vector<char> tmp = huff.getDataCode(in);
+    out_vect.insert(out_vect.end(), tmp.begin(), tmp.end());
 
     huff.displayCompressionRate(in.size(), out_vect.size());
     huff.saveToFile(out_vect, output_file);
