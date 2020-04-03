@@ -87,7 +87,7 @@ int main (int argc, char* argv[])
     mementar::LzUncompress lz;
     std::vector<char> data;
     if(lz.readBinaryFile(data, input_file))
-      lz.uncompress(data, out);
+      out = lz.uncompress(data);
   }
   else if(code_type == huffman)
   {

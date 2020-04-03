@@ -126,11 +126,9 @@ Header Archive::getHeader(std::vector<char>& data)
 
 std::string Archive::extractDescription(Header& head, std::vector<char>& data)
 {
-  std::string out;
   LzUncompress lz;
   std::vector<char> tmp_data(data.begin() + head.description_file_.offset_, data.begin() + head.description_file_.offset_ + head.description_file_.size_);
-  lz.uncompress(tmp_data, out);
-  return out;
+  return lz.uncompress(tmp_data);
 }
 
 std::string Archive::extractFile(size_t index, Header& head, std::vector<char>& data)

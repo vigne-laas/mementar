@@ -20,10 +20,6 @@ using namespace std::chrono;
 
 float testHuffman(size_t nb, const std::string& input_file)
 {
-  std::ifstream t(input_file);
-  std::string in((std::istreambuf_iterator<char>(t)),
-                  std::istreambuf_iterator<char>());
-
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
   for(size_t i = 0; i < nb; i++)

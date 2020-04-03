@@ -39,3 +39,6 @@ target_link_libraries(huffman_out mementar_compression_lib)
 
 add_executable(lz_in tests/perfs/lz_in.cpp)
 target_link_libraries(lz_in mementar_compression_lib)
+
+add_executable(lz_out tests/perfs/lz_out.cpp)
+target_link_libraries(lz_out mementar_compression_lib)

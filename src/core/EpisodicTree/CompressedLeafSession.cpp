@@ -18,10 +18,9 @@ LinkedBtree<time_t>* CompressedLeafSession::getTree(Header& header, Archive& arc
 {
   std::string comp = arch.extractFile(index_, header);
 
-  std::string out;
   LzUncompress lz;
   std::vector<char> comp_data(comp.begin(), comp.end());
-  lz.uncompress(comp_data, out);
+  std::string out = lz.uncompress(comp_data);
   LinkedBtree<time_t>* tree = new LinkedBtree<time_t>();
 
   std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
