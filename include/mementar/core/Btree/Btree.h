@@ -103,7 +103,11 @@ bool Btree<Tkey,Tdata>::remove(const Tdata& data)
 {
   nb_data_--;
   if(root_ != nullptr)
-    return root_->remove(data);
+    if(root_->remove(data))
+    {
+      nb_data_--;
+      return true;
+    }
   return false;
 }
 

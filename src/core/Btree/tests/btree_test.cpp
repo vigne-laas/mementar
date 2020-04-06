@@ -41,7 +41,7 @@ int main()
   else
     std::cout << "sup" << std::endl;
 
-  std::vector<size_t> sizes = {1234};
+  std::vector<size_t> sizes = {50};
   std::vector<double> times;
   for(auto nb : sizes)
   {
@@ -54,20 +54,20 @@ int main()
     //tree.display();
 
     auto res = tree.find(10);
-    if(res) std::cout << res->getKey() << std::endl;
+    if(res) std::cout << res->getKey() << std::endl; else std::cout << "-" << std::endl;
     res = tree.find(28);
-    if(res) std::cout << res->getKey() << std::endl;
+    if(res) std::cout << res->getKey() << std::endl; else std::cout << "-" << std::endl;
     res = tree.find(74);
-    if(res) std::cout << res->getKey() << std::endl;
+    if(res) std::cout << res->getKey() << std::endl; else std::cout << "-" << std::endl;
     res = tree.find(53);
-    if(res) std::cout << res->getKey() << std::endl;
-    res = tree.findNear(49);
-    if(res) std::cout << res->getKey() << std::endl;
+    if(res) std::cout << res->getKey() << std::endl; else std::cout << "-" << std::endl;
+    res = tree.findNear(59);
+    if(res) std::cout << res->getKey() << std::endl; else std::cout << "-" << std::endl;
     res = tree.getFirst();
-    if(res) std::cout << res->getKey() << std::endl;
+    if(res) std::cout << res->getKey() << std::endl; else std::cout << "-" << std::endl;
 
-    tree.remove(stampedInt(40,40));
-    tree.insert(new stampedInt(40,41));
+    tree.remove(stampedInt(49,49));
+    tree.insert(new stampedInt(50,0));
     tree.display();
 
     std::cout << "estimation = " << tree.estimateMinLeaves() << std::endl;
