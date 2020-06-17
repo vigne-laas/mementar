@@ -7,7 +7,7 @@
 namespace mementar
 {
 
-template<typename Tkey, typename Tdata>
+template<typename Tkey, typename Tdata, typename Tnode>
 class BtreeLeafNode : public BtreeNode<Tkey,Tdata>
 {
 public:
@@ -16,24 +16,24 @@ public:
 
   ~BtreeLeafNode() {}
 
-  BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
+  BtreeLeaf<Tkey,Tdata,Tnode>* insert(const Tkey& key, const Tdata& data);
   bool remove(const Tkey& key, const Tdata& data);
-  BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
-  BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
-  BtreeLeaf<Tkey, Tdata>* getFirst();
+  BtreeLeaf<Tkey,Tdata,Tnode>* find(const Tkey& key);
+  BtreeLeaf<Tkey,Tdata,Tnode>* findNear(const Tkey& key);
+  BtreeLeaf<Tkey,Tdata,Tnode>* getFirst();
 
   virtual void display(size_t depth = 0);
 private:
-  std::vector<BtreeLeaf<Tkey,Tdata>*> leafs_;
+  std::vector<BtreeLeaf<Tkey,Tdata,Tnode>*> leafs_;
 
   virtual bool needBalancing();
   void split();
 };
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey& key, const Tdata& data)
 {
-  BtreeLeaf<Tkey,Tdata>* res = nullptr;
+  BtreeLeaf<Tkey,Tdata,Tnode>* res = nullptr;
 
   if(leafs_.size() == 0)
   {
@@ -51,11 +51,11 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
     if(key > this->keys_[this->keys_.size() - 1])
     {
       this->keys_.push_back(key);
-      res = new BtreeLeaf<Tkey,Tdata>(key, data);
+      res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
       leafs_.push_back(res);
-      res->next_ = last->next_;
-      last->next_ = res;
-      res->prev_ = last;
+      res->setNextNode(last->getNextNode());
+      last->setNextNode(res);
+      res->setPreviousNode(last);
       res->setMother(this);
     }
     else if(this->keys_[this->keys_.size() - 1] == key)
@@ -74,15 +74,15 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
           }
           else
           {
-            res = new BtreeLeaf<Tkey,Tdata>(key, data);
+            res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
             // here last is the next node of res
             last = leafs_[i];
-            res->next_ = last;
-            res->prev_ = last->prev_;
-            if(res->prev_)
-              res->prev_->next_ = res;
-            if(res->next_)
-              res->next_->prev_ = res;
+            res->setNextNode(last);
+            res->setPreviousNode(last->getPreviousNode());
+            if(res->getPreviousNode())
+              res->getPreviousNode()->setNextNode(res);
+            if(res->getNextNode())
+              res->getNextNode()->setPreviousNode(res);
             this->keys_.insert(this->keys_.begin() + i, key);
             this->leafs_.insert(this->leafs_.begin() + i, res);
             res->setMother(this);
@@ -99,8 +99,8 @@ BtreeLeaf<Tkey,Tdata>* BtreeLeafNode<Tkey,Tdata>::insert(const Tkey& key, const 
   return res;
 }
 
-template<typename Tkey, typename Tdata>
-bool BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+template<typename Tkey, typename Tdata, typename Tnode>
+bool BtreeLeafNode<Tkey,Tdata,Tnode>::remove(const Tkey& key, const Tdata& data)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
@@ -109,10 +109,10 @@ bool BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
       leafs_[i]->remove(data);
       if(leafs_[i]->getData().size() == 0)
       {
-        if(leafs_[i]->prev_ != nullptr)
-          leafs_[i]->prev_->next_ = leafs_[i]->next_;
-        if(leafs_[i]->next_ != nullptr)
-          leafs_[i]->next_->prev_ = leafs_[i]->prev_;
+        if(leafs_[i]->getPreviousNode() != nullptr)
+          leafs_[i]->getPreviousNode()->setNextNode(leafs_[i]->getNextNode());
+        if(leafs_[i]->getNextNode() != nullptr)
+          leafs_[i]->getNextNode()->setPreviousNode(leafs_[i]->getPreviousNode());
         delete leafs_[i];
         leafs_.erase(leafs_.begin() + i);
         this->keys_.erase(this->keys_.begin() + i);
@@ -126,8 +126,8 @@ bool BtreeLeafNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
   return false;
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::find(const Tkey& key)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::find(const Tkey& key)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
@@ -137,33 +137,33 @@ BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::find(const Tkey& key)
   return nullptr;
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::findNear(const Tkey& key)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::findNear(const Tkey& key)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
     if(this->keys_[i] >= key)
       return leafs_[i];
   }
-  return leafs_[leafs_.size() - 1]->next_;
+  return static_cast<BtreeLeaf<Tkey,Tdata,Tnode>*>(leafs_[leafs_.size() - 1]->getNextNode());
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* BtreeLeafNode<Tkey,Tdata>::getFirst()
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::getFirst()
 {
   return leafs_[0];
 }
 
-template<typename Tkey, typename Tdata>
-bool BtreeLeafNode<Tkey,Tdata>::needBalancing()
+template<typename Tkey, typename Tdata, typename Tnode>
+bool BtreeLeafNode<Tkey,Tdata,Tnode>::needBalancing()
 {
   return (leafs_.size() > this->order_);
 }
 
-template<typename Tkey, typename Tdata>
-void BtreeLeafNode<Tkey,Tdata>::split()
+template<typename Tkey, typename Tdata, typename Tnode>
+void BtreeLeafNode<Tkey,Tdata,Tnode>::split()
 {
-  BtreeLeafNode<Tkey,Tdata>* new_node = new BtreeLeafNode<Tkey,Tdata>(this->order_);
+  BtreeLeafNode<Tkey,Tdata,Tnode>* new_node = new BtreeLeafNode<Tkey,Tdata,Tnode>(this->order_);
 
   size_t half_order = this->order_/2;
   for(size_t i = 0; i < half_order; i++)
@@ -189,8 +189,8 @@ void BtreeLeafNode<Tkey,Tdata>::split()
   }
 }
 
-template<typename Tkey, typename Tdata>
-void BtreeLeafNode<Tkey,Tdata>::display(size_t depth)
+template<typename Tkey, typename Tdata, typename Tnode>
+void BtreeLeafNode<Tkey,Tdata,Tnode>::display(size_t depth)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {

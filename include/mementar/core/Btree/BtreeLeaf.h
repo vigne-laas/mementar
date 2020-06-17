@@ -3,33 +3,27 @@
 
 #include <vector>
 
+#include "mementar/core/DoublyLinkedList/DllNode.h"
+
 namespace mementar
 {
 
-template<typename Tkey, typename Tdata>
+template<typename Tkey, typename Tdata, typename Tnode>
 class BtreeLeafNode;
 
-template<typename Tkey, typename Tdata>
-class BtreeLeaf
+template<typename Tkey, typename Tdata, typename Tnode = DllNode<Tdata>>
+class BtreeLeaf : public Tnode
 {
+  static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
 public:
-  BtreeLeaf(const Tkey& key, const Tdata& data)
+  BtreeLeaf(const Tkey& key, const Tdata& data) : Tnode(data)
   {
-    next_ = nullptr;
-    prev_ = nullptr;
     mother_ = nullptr;
 
     key_ = key;
-    data_.push_back(data);
   }
 
   ~BtreeLeaf() {}
-
-  void push_back(const Tdata& data) { data_.push_back(data); }
-  void remove(const Tdata& data);
-
-  BtreeLeaf* next_;
-  BtreeLeaf* prev_;
 
   bool operator==(const Tkey& other) { return key_ == other; }
   bool operator>(const Tkey& other) { return key_ > other; }
@@ -44,29 +38,14 @@ public:
   bool operator<=(const BtreeLeaf* other) { return ((key_ < other->key_) || (key_ == other->key_)); }
 
   Tkey getKey() const { return key_; }
-  std::vector<Tdata> getData() const { return data_; }
-  void getData(std::vector<Tdata>& data) { data = data_; }
 
-  void setMother(BtreeLeafNode<Tkey,Tdata>* mother) { mother_ = mother; }
-  BtreeLeafNode<Tkey,Tdata>* getMother() { return mother_; }
+  void setMother(BtreeLeafNode<Tkey,Tdata,Tnode>* mother) { mother_ = mother; }
+  BtreeLeafNode<Tkey,Tdata,Tnode>* getMother() { return mother_; }
 
 private:
   Tkey key_;
-  std::vector<Tdata> data_;
-  BtreeLeafNode<Tkey,Tdata>* mother_;
+  BtreeLeafNode<Tkey,Tdata,Tnode>* mother_;
 };
-
-template<typename Tkey, typename Tdata>
-void BtreeLeaf<Tkey,Tdata>::remove(const Tdata& data)
-{
-  for(size_t i = 0; i < data_.size();)
-  {
-    if(data_[i] == data)
-      data_.erase(data_.begin() + i);
-    else
-      i++;
-  }
-}
 
 } // mementar
 

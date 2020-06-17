@@ -8,10 +8,12 @@
 #include "mementar/core/Btree/BtreeLeafNode.h"
 #include "mementar/core/Btree/BtreeLeaf.h"
 
+#include "mementar/core/DoublyLinkedList/DllNode.h"
+
 namespace mementar
 {
 
-template<typename Tkey, typename Tdata>
+template<typename Tkey, typename Tdata, typename Tnode = DllNode<Tdata>>
 class Btree
 {
 public:
@@ -29,21 +31,21 @@ public:
     if(root_ != nullptr)
       delete root_;
 
-    BtreeLeaf<Tkey, Tdata>* tmp;
+    BtreeLeaf<Tkey, Tdata, Tnode>* tmp;
     while(last_ != nullptr)
     {
       tmp = last_;
-      last_ = last_->prev_;
+      last_ = static_cast<BtreeLeaf<Tkey, Tdata, Tnode>*>(last_->getPreviousNode());
       delete tmp;
     }
   }
 
   size_t insert(const Tkey& key, const Tdata& data);
   bool remove(const Tkey& key, const Tdata& data);
-  BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
-  BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
-  BtreeLeaf<Tkey, Tdata>* getFirst();
-  BtreeLeaf<Tkey, Tdata>* getLast() { return last_; }
+  BtreeLeaf<Tkey, Tdata, Tnode>* find(const Tkey& key);
+  BtreeLeaf<Tkey, Tdata, Tnode>* findNear(const Tkey& key);
+  BtreeLeaf<Tkey, Tdata, Tnode>* getFirst();
+  BtreeLeaf<Tkey, Tdata, Tnode>* getLast() { return last_; }
 
   size_t estimateMinLeaves()
   {
@@ -61,25 +63,25 @@ public:
 
 private:
   BtreeNode<Tkey, Tdata>* root_;
-  BtreeLeaf<Tkey, Tdata>* last_;
+  BtreeLeaf<Tkey, Tdata, Tnode>* last_;
   size_t order_;
   size_t level_;
   size_t nb_data_;
 };
 
-template<typename Tkey, typename Tdata>
-size_t Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
+template<typename Tkey, typename Tdata, typename Tnode>
+size_t Btree<Tkey,Tdata,Tnode>::insert(const Tkey& key, const Tdata& data)
 {
   nb_data_++;
   if(last_ == nullptr)
   {
-    root_ = new BtreeLeafNode<Tkey, Tdata>(order_);
+    root_ = new BtreeLeafNode<Tkey,Tdata,Tnode>(order_);
     level_ = root_->getLevel();
     last_ = root_->insert(key, data);
   }
   else
   {
-    BtreeLeaf<Tkey, Tdata>* tmp = root_->insert(key, data);
+    BtreeLeaf<Tkey,Tdata,Tnode>* tmp = root_->insert(key, data);
     if(tmp != nullptr)
     {
       if(tmp->operator>(last_))
@@ -95,8 +97,8 @@ size_t Btree<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
   return nb_data_;
 }
 
-template<typename Tkey, typename Tdata>
-bool Btree<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+template<typename Tkey, typename Tdata, typename Tnode>
+bool Btree<Tkey,Tdata,Tnode>::remove(const Tkey& key, const Tdata& data)
 {
   nb_data_--;
   if(root_ != nullptr)
@@ -104,8 +106,8 @@ bool Btree<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
   return false;
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::find(const Tkey& key)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* Btree<Tkey,Tdata,Tnode>::find(const Tkey& key)
 {
   if(root_ != nullptr)
     return root_->find(key);
@@ -113,8 +115,8 @@ BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::find(const Tkey& key)
     return nullptr;
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::findNear(const Tkey& key)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* Btree<Tkey,Tdata,Tnode>::findNear(const Tkey& key)
 {
   if(root_ != nullptr)
     return root_->findNear(key);
@@ -122,8 +124,8 @@ BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::findNear(const Tkey& key)
     return nullptr;
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::getFirst()
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* Btree<Tkey,Tdata,Tnode>::getFirst()
 {
   if(root_ != nullptr)
     return root_->getFirst();
@@ -131,10 +133,10 @@ BtreeLeaf<Tkey, Tdata>* Btree<Tkey,Tdata>::getFirst()
     return nullptr;
 }
 
-template<typename Tkey, typename Tdata>
-void Btree<Tkey,Tdata>::display(int count)
+template<typename Tkey, typename Tdata, typename Tnode>
+void Btree<Tkey,Tdata,Tnode>::display(int count)
 {
-  BtreeLeaf<Tkey, Tdata>* tmp = last_;
+  BtreeLeaf<Tkey,Tdata,Tnode>* tmp = last_;
   int cpt = 0;
   std::cout << "******" << std::endl;
   while((tmp != nullptr) && ((cpt < count) || (count == -1)))
@@ -144,7 +146,7 @@ void Btree<Tkey,Tdata>::display(int count)
     for(const auto& data : datas)
       std::cout << data << " : ";
     std::cout << std::endl;
-    tmp = tmp->prev_;
+    tmp = static_cast<BtreeLeaf<Tkey,Tdata,Tnode>*>(tmp->getPreviousNode());
     cpt++;
   }
   std::cout << "******" << std::endl;

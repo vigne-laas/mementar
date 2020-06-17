@@ -207,7 +207,7 @@ std::vector<char> CompressedLeafNodeSession::treeToRaw(size_t index)
     tmp_data = it->getData();
     for(auto& data : tmp_data)
       res += "[" + std::to_string(it->getKey()) + "]" + data.toString() + "\n";
-    it = it->next_;
+    it = static_cast<BtreeLeaf<time_t, Fact>*>(it->getNextNode());
   }
 
   mementar::LzCompress lz_comp;
