@@ -8,9 +8,10 @@
 namespace mementar
 {
 
-template<typename Tkey, typename Tdata>
+template<typename Tkey, typename Tdata, typename Tnode>
 class BtreeNode
 {
+  static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
 public:
   BtreeNode(size_t order = 10)
   {
@@ -25,15 +26,15 @@ public:
       delete child;
   }
 
-  virtual BtreeLeaf<Tkey,Tdata>* insert(const Tkey& key, const Tdata& data);
-  void insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& key);
+  virtual BtreeLeaf<Tkey,Tdata,Tnode>* insert(const Tkey& key, const Tdata& data);
+  void insert(BtreeNode<Tkey,Tdata,Tnode>* new_node, const Tkey& key);
   virtual bool remove(const Tkey& key, const Tdata& data);
-  virtual BtreeLeaf<Tkey, Tdata>* find(const Tkey& key);
-  virtual BtreeLeaf<Tkey, Tdata>* findNear(const Tkey& key);
-  virtual BtreeLeaf<Tkey, Tdata>* getFirst();
+  virtual BtreeLeaf<Tkey,Tdata,Tnode>* find(const Tkey& key);
+  virtual BtreeLeaf<Tkey,Tdata,Tnode>* findNear(const Tkey& key);
+  virtual BtreeLeaf<Tkey,Tdata,Tnode>* getFirst();
 
-  void setMother(BtreeNode<Tkey,Tdata>* mother) { mother_ = mother; }
-  BtreeNode<Tkey,Tdata>* getMother() { return mother_; }
+  void setMother(BtreeNode<Tkey,Tdata,Tnode>* mother) { mother_ = mother; }
+  BtreeNode<Tkey,Tdata,Tnode>* getMother() { return mother_; }
 
   void setLevel(size_t level) { level_ = level; }
   size_t getLevel() { return level_; }
@@ -43,8 +44,8 @@ public:
   virtual void display(size_t depth = 0);
 protected:
   std::vector<Tkey> keys_;
-  std::vector<BtreeNode<Tkey,Tdata>*> childs_;
-  BtreeNode<Tkey,Tdata>* mother_;
+  std::vector<BtreeNode<Tkey,Tdata,Tnode>*> childs_;
+  BtreeNode<Tkey,Tdata,Tnode>* mother_;
   size_t order_;
   size_t level_;
 
@@ -52,8 +53,8 @@ protected:
   virtual void split();
 };
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey,Tdata>* BtreeNode<Tkey,Tdata>::insert(const Tkey& key, const Tdata& data)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeNode<Tkey,Tdata,Tnode>::insert(const Tkey& key, const Tdata& data)
 {
   size_t index = childs_.size() - 1;
   for(size_t i = 0; i < this->keys_.size(); i++)
@@ -67,8 +68,8 @@ BtreeLeaf<Tkey,Tdata>* BtreeNode<Tkey,Tdata>::insert(const Tkey& key, const Tdat
   return childs_[index]->insert(key, data);
 }
 
-template<typename Tkey, typename Tdata>
-void BtreeNode<Tkey,Tdata>::insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& key)
+template<typename Tkey, typename Tdata, typename Tnode>
+void BtreeNode<Tkey,Tdata,Tnode>::insert(BtreeNode<Tkey,Tdata,Tnode>* new_node, const Tkey& key)
 {
   if(childs_.size() == 0)
   {
@@ -108,8 +109,8 @@ void BtreeNode<Tkey,Tdata>::insert(BtreeNode<Tkey,Tdata>* new_node, const Tkey& 
     split();
 }
 
-template<typename Tkey, typename Tdata>
-bool BtreeNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
+template<typename Tkey, typename Tdata, typename Tnode>
+bool BtreeNode<Tkey,Tdata,Tnode>::remove(const Tkey& key, const Tdata& data)
 {
   size_t index = this->keys_.size();
   for(size_t i = 0; i < this->keys_.size(); i++)
@@ -126,8 +127,8 @@ bool BtreeNode<Tkey,Tdata>::remove(const Tkey& key, const Tdata& data)
     std::cout << "a node is empty but will not be destroyed" << std::endl;
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::find(const Tkey& key)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeNode<Tkey,Tdata,Tnode>::find(const Tkey& key)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
@@ -137,8 +138,8 @@ BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::find(const Tkey& key)
   return this->childs_[this->keys_.size()]->find(key);
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::findNear(const Tkey& key)
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeNode<Tkey,Tdata,Tnode>::findNear(const Tkey& key)
 {
   for(size_t i = 0; i < this->keys_.size(); i++)
   {
@@ -149,22 +150,22 @@ BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::findNear(const Tkey& key)
   return this->childs_[this->keys_.size()]->findNear(key);
 }
 
-template<typename Tkey, typename Tdata>
-BtreeLeaf<Tkey, Tdata>* BtreeNode<Tkey,Tdata>::getFirst()
+template<typename Tkey, typename Tdata, typename Tnode>
+BtreeLeaf<Tkey,Tdata,Tnode>* BtreeNode<Tkey,Tdata,Tnode>::getFirst()
 {
   return this->childs_[0]->getFirst();
 }
 
-template<typename Tkey, typename Tdata>
-bool BtreeNode<Tkey,Tdata>::needBalancing()
+template<typename Tkey, typename Tdata, typename Tnode>
+bool BtreeNode<Tkey,Tdata,Tnode>::needBalancing()
 {
   return (childs_.size() > order_);
 }
 
-template<typename Tkey, typename Tdata>
-void BtreeNode<Tkey,Tdata>::split()
+template<typename Tkey, typename Tdata, typename Tnode>
+void BtreeNode<Tkey,Tdata,Tnode>::split()
 {
-  BtreeNode<Tkey,Tdata>* new_node = new BtreeNode<Tkey,Tdata>(order_);
+  BtreeNode<Tkey,Tdata,Tnode>* new_node = new BtreeNode<Tkey,Tdata,Tnode>(order_);
 
   size_t half_order = order_/2;
   for(size_t i = 0; i < half_order; i++)
@@ -188,7 +189,7 @@ void BtreeNode<Tkey,Tdata>::split()
   }
   else
   {
-    BtreeNode<Tkey,Tdata>* new_mother = new BtreeNode<Tkey,Tdata>(order_);
+    BtreeNode<Tkey,Tdata,Tnode>* new_mother = new BtreeNode<Tkey,Tdata,Tnode>(order_);
     new_mother->setLevel(this->level_ + 1);
     new_mother->insert(this, keys_[keys_.size() - 1]);
     new_mother->insert(new_node, keys_[keys_.size() - 1]);
@@ -196,8 +197,8 @@ void BtreeNode<Tkey,Tdata>::split()
   }
 }
 
-template<typename Tkey, typename Tdata>
-void BtreeNode<Tkey,Tdata>::display(size_t depth)
+template<typename Tkey, typename Tdata, typename Tnode>
+void BtreeNode<Tkey,Tdata,Tnode>::display(size_t depth)
 {
   size_t depth_1 = depth + 1;
 

@@ -1,13 +1,21 @@
 #ifndef MEMENTAR_DLLNODE_H
 #define MEMENTAR_DLLNODE_H
 
-namespace mementar {
-
 #include <vector>
+#include <string>
+#include <iostream>
+
+namespace mementar {
 
 template<typename Tdata>
 class DllNode
 {
+std::false_type is_dllnode_impl(...);
+template <typename T>
+std::true_type is_dllnode_impl(DllNode<T>*);
+template <typename U>
+using is_dllnode = decltype(is_dllnode_impl(std::declval<U*>()));
+
 public:
   DllNode(const Tdata& data)
   {

@@ -3,6 +3,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
+#include "mementar/core/DoublyLinkedList/DllNode.h"
 #include "mementar/core/Btree/BtreeLeaf.h"
 #include "mementar/core/Btree/Btree.h"
 
@@ -10,8 +11,8 @@ using namespace std::chrono;
 
 int main()
 {
-  mementar::BtreeLeaf<int, int> leaf1(0, 2);
-  mementar::BtreeLeaf<int, int> leaf2(1, 3);
+  mementar::BtreeLeaf<int, int, mementar::DllNode<int>> leaf1(0, 2);
+  mementar::BtreeLeaf<int, int, mementar::DllNode<int>> leaf2(1, 3);
 
   if(leaf1.operator<(&leaf2))
     std::cout << "inf" << std::endl;

@@ -102,6 +102,8 @@ add_library(mementar_core_lib
   src/core/EpisodicTree/CompressedLeafNodeSession.cpp
   src/core/EpisodicTree/ArchivedLeaf.cpp
   src/core/EpisodicTree/ArchivedLeafNode.cpp
+  src/core/DoublyLinkedList/DllCargoNode.cpp
+  src/core/DoublyLinkedList/DllLinkedElement.cpp
 )
 target_link_libraries(mementar_core_lib
   mementar_compression_lib

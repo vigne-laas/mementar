@@ -16,6 +16,7 @@ namespace mementar
 template<typename Tkey, typename Tdata, typename Tnode = DllNode<Tdata>>
 class Btree
 {
+  static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
 public:
   Btree(size_t order = 10)
   {
@@ -62,7 +63,7 @@ public:
   void display(int count = -1);
 
 private:
-  BtreeNode<Tkey, Tdata>* root_;
+  BtreeNode<Tkey,Tdata,Tnode>* root_;
   BtreeLeaf<Tkey, Tdata, Tnode>* last_;
   size_t order_;
   size_t level_;

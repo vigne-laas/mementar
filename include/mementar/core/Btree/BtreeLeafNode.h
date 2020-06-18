@@ -8,10 +8,11 @@ namespace mementar
 {
 
 template<typename Tkey, typename Tdata, typename Tnode>
-class BtreeLeafNode : public BtreeNode<Tkey,Tdata>
+class BtreeLeafNode : public BtreeNode<Tkey,Tdata,Tnode>
 {
+  static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
 public:
-  BtreeLeafNode(size_t order = 10) : BtreeNode<Tkey,Tdata>(order)
+  BtreeLeafNode(size_t order = 10) : BtreeNode<Tkey,Tdata,Tnode>(order)
   {}
 
   ~BtreeLeafNode() {}
@@ -38,13 +39,13 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey&
   if(leafs_.size() == 0)
   {
     this->keys_.push_back(key);
-    res = new BtreeLeaf<Tkey,Tdata>(key, data);
+    res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
     leafs_.push_back(res);
     res->setMother(this);
   }
   else
   {
-    BtreeLeaf<Tkey,Tdata>* last = nullptr;
+    BtreeLeaf<Tkey,Tdata,Tnode>* last = nullptr;
     if(leafs_.size())
       last = leafs_[leafs_.size() - 1];
 
@@ -182,7 +183,7 @@ void BtreeLeafNode<Tkey,Tdata,Tnode>::split()
   }
   else
   {
-    BtreeNode<Tkey,Tdata>* new_mother = new BtreeNode<Tkey,Tdata>(this->order_);
+    BtreeNode<Tkey,Tdata,Tnode>* new_mother = new BtreeNode<Tkey,Tdata,Tnode>(this->order_);
     new_mother->setLevel(this->level_ + 1);
     new_mother->insert(this, new_node->keys_[0]);
     new_mother->insert(new_node, new_node->keys_[0]);
