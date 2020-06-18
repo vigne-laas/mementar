@@ -11,7 +11,7 @@ namespace mementar
 template<typename Tkey, typename Tdata, typename Tnode>
 class BtreeLeafNode;
 
-template<typename Tkey, typename Tdata, typename Tnode>
+template<typename Tkey, typename Tdata, typename Tnode = DllNode<Tdata>>
 class BtreeLeaf : public Tnode
 {
   static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
