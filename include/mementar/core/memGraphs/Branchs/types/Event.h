@@ -5,7 +5,7 @@
 #include <ostream>
 
 #include "mementar/core/memGraphs/Branchs/types/SoftPoint.h"
-#include "mementar/core/memGraphs/Fact.h"
+#include "mementar/core/memGraphs/Branchs/types/Fact.h"
 
 namespace mementar {
 

@@ -5,7 +5,7 @@
 #include "mementar/core/archiving_compressing/archiving/Header.h"
 
 #include "mementar/core/memGraphs/Btree/Btree.h"
-#include "mementar/core/memGraphs/Fact.h"
+#include "mementar/core/memGraphs/Branchs/types/Fact.h"
 
 namespace mementar
 {

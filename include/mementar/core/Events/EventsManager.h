@@ -11,7 +11,7 @@
 #include "mementar/MementarEventUnsubscription.h"
 
 #include "mementar/core/Events/Subscription.h"
-#include "mementar/core/memGraphs/Fact.h"
+#include "mementar/core/memGraphs/Branchs/types/Fact.h"
 
 namespace mementar
 {
