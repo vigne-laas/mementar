@@ -39,9 +39,10 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey&
   if(leafs_.size() == 0)
   {
     this->keys_.push_back(key);
-    res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
+    res = new BtreeLeaf<Tkey,Tdata,Tnode>(key);
     leafs_.push_back(res);
     res->setMother(this);
+    res->push_back(data);
     return res;
   }
   else
@@ -53,12 +54,13 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey&
     if(key > this->keys_.back())
     {
       this->keys_.push_back(key);
-      res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
+      res = new BtreeLeaf<Tkey,Tdata,Tnode>(key);
       leafs_.push_back(res);
       res->setNextNode(last->getNextNode());
       last->setNextNode(res);
       res->setPreviousNode(last);
       res->setMother(this);
+      res->push_back(data);
     }
     else if(this->keys_.back() == key)
     {
@@ -76,7 +78,7 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey&
           }
           else
           {
-            res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
+            res = new BtreeLeaf<Tkey,Tdata,Tnode>(key);
             // here last is the next node of res
             last = leafs_[i];
             res->setNextNode(last);
@@ -88,6 +90,7 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey&
             this->keys_.insert(this->keys_.begin() + i, key);
             this->leafs_.insert(this->leafs_.begin() + i, res);
             res->setMother(this);
+            res->push_back(data);
           }
           break;
         }

@@ -6,10 +6,8 @@
 
 namespace mementar {
 
-DllCargoNode::DllCargoNode(DllLinkedElement* data) : DllNode(data)
+DllCargoNode::DllCargoNode() : DllNode()
 {
-  for(auto p : payload_)
-    p->dll_node_ = this;
 }
 
 void DllCargoNode::push_back(DllLinkedElement* data)

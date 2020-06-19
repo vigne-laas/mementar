@@ -12,7 +12,7 @@ class EllElement;
 class EllNode : public DllCargoNode
 {
 public:
-  EllNode(EllElement* data);
+  EllNode();
   ~EllNode() {}
 
   void push_back(EllElement* data);

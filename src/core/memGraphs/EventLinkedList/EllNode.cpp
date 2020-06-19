@@ -4,10 +4,8 @@
 
 namespace mementar {
 
-EllNode::EllNode(EllElement* data) : DllCargoNode(data)
+EllNode::EllNode() : DllCargoNode()
 {
-  std::cout << "--->EllNode " << data << std::endl;
-  link(data);
 }
 
 void EllNode::push_back(EllElement* data)
@@ -55,10 +53,8 @@ EllElement* EllNode::getPrev(EllElement* data)
   DllCargoNode* prev_node = dynamic_cast<DllCargoNode*>(data->getPreviousDllNode());
   while(prev_node != nullptr)
   {
-    std::cout << "prev has " << prev_node->getData().size() << " data" << std::endl;
     for(auto ld : prev_node->getData())
     {
-      std::cout << "test " << data << " with " << ld << std::endl;
       if(data->isEventPart(ld))
         return dynamic_cast<EllElement*>(ld);
     }

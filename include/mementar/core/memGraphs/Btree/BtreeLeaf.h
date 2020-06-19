@@ -16,7 +16,7 @@ class BtreeLeaf : public Tnode
 {
   //static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
 public:
-  BtreeLeaf(const Tkey& key, const Tdata& data) : Tnode(data)
+  BtreeLeaf(const Tkey& key) : Tnode()
   {
     mother_ = nullptr;
 

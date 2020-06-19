@@ -10,7 +10,7 @@ class DllLinkedElement;
 class DllCargoNode : public DllNode<DllLinkedElement*>
 {
 public:
-  DllCargoNode(DllLinkedElement* data);
+  DllCargoNode();
   virtual ~DllCargoNode() {}
 
   virtual void push_back(DllLinkedElement* data);

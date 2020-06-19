@@ -52,8 +52,8 @@ int main()
   event_graph.add(new mementar::ContextualizedEvent("ce3", e1));
   event_graph.add(new mementar::ContextualizedEvent("ce4", e2));
 
-  //for(size_t i = 10; i < 20; i++)
-    //event_graph.add(new mementar::ContextualizedEvent("ce" + std::to_string(i), mementar::Event("cube" + std::to_string(i) + "|isOn|Table_3", i)));
+  for(size_t i = 10; i < 20; i++)
+    event_graph.add(new mementar::ContextualizedEvent("ce" + std::to_string(i), mementar::Event("cube" + std::to_string(i) + "|isOn|Table_3", i)));
 
   auto actions = action_graph.getSafe();
   for(auto action : actions)

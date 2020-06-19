@@ -17,12 +17,10 @@ template <typename U>
 using is_dllnode = decltype(is_dllnode_impl(std::declval<U*>()));
 
 public:
-  DllNode(const Tdata& data)
+  DllNode()
   {
     prev_ = nullptr;
     next_ = nullptr;
-
-    push_back(data);
   }
 
   virtual ~DllNode() {}
