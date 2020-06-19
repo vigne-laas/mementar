@@ -94,6 +94,13 @@ add_library(mementar_compression_lib
   src/core/archiving_compressing/archiving/Archive.cpp
 )
 
+add_library(mementar_memGraphs_lib
+  src/core/memGraphs/Branchs/ValuedNode.cpp
+  src/core/memGraphs/Branchs/types/Action.cpp
+  src/core/memGraphs/DoublyLinkedList/DllCargoNode.cpp
+  src/core/memGraphs/DoublyLinkedList/DllLinkedElement.cpp
+)
+
 add_library(mementar_core_lib
   src/core/EpisodicTree/CompressedLeaf.cpp
   src/core/EpisodicTree/CompressedLeafNode.cpp
@@ -102,11 +109,10 @@ add_library(mementar_core_lib
   src/core/EpisodicTree/CompressedLeafNodeSession.cpp
   src/core/EpisodicTree/ArchivedLeaf.cpp
   src/core/EpisodicTree/ArchivedLeafNode.cpp
-  src/core/memGraphs/DoublyLinkedList/DllCargoNode.cpp
-  src/core/memGraphs/DoublyLinkedList/DllLinkedElement.cpp
 )
 target_link_libraries(mementar_core_lib
   mementar_compression_lib
+  mementar_memGraphs_lib
   pthread
 )
 
