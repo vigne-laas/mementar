@@ -1,8 +1,8 @@
 #ifndef MEMENTAR_BTREELEAFNODE_H
 #define MEMENTAR_BTREELEAFNODE_H
 
-#include "mementar/core/Btree/BtreeNode.h"
-#include "mementar/core/Btree/BtreeLeaf.h"
+#include "mementar/core/memGraphs/Btree/BtreeNode.h"
+#include "mementar/core/memGraphs/Btree/BtreeLeaf.h"
 
 namespace mementar
 {

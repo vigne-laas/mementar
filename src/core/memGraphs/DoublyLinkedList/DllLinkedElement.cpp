@@ -1,4 +1,4 @@
-#include "mementar/core/DoublyLinkedList/DllLinkedElement.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllLinkedElement.h"
 
 namespace mementar {
 

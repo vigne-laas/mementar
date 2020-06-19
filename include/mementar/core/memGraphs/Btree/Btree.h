@@ -4,11 +4,11 @@
 #include <iostream>
 #include <math.h>
 
-#include "mementar/core/Btree/BtreeNode.h"
-#include "mementar/core/Btree/BtreeLeafNode.h"
-#include "mementar/core/Btree/BtreeLeaf.h"
+#include "mementar/core/memGraphs/Btree/BtreeNode.h"
+#include "mementar/core/memGraphs/Btree/BtreeLeafNode.h"
+#include "mementar/core/memGraphs/Btree/BtreeLeaf.h"
 
-#include "mementar/core/DoublyLinkedList/DllNode.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllNode.h"
 
 namespace mementar
 {

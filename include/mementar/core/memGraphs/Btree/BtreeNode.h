@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "mementar/core/Btree/BtreeLeaf.h"
+#include "mementar/core/memGraphs/Btree/BtreeLeaf.h"
 
 namespace mementar
 {

@@ -28,6 +28,13 @@ public:
       object_ = splitted[2];
   }
 
+  Fact(const Fact& other)
+  {
+    subject_ = other.subject_;
+    predicat_ = other.predicat_;
+    object_ = other.object_;
+  }
+
   bool valid()
   {
     return((subject_ != "") && (predicat_ != "") && (object_ != ""));
@@ -35,7 +42,7 @@ public:
 
   std::string toString()
   {
-    return subject_ + "|" + predicat_ + "|" + object_;
+    return subject_ + " | " + predicat_ + " | " + object_;
   }
 
   bool operator==(const Fact& other) const
@@ -43,6 +50,13 @@ public:
     return ((subject_ == other.subject_)
             && (predicat_ == other.predicat_)
             && (object_ == other.object_));
+  }
+
+  bool operator==(const Fact* other) const
+  {
+    return ((subject_ == other->subject_)
+            && (predicat_ == other->predicat_)
+            && (object_ == other->object_));
   }
 
   bool fit(const Fact& other) const

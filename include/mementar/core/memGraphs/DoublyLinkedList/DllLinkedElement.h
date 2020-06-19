@@ -1,7 +1,7 @@
 #ifndef MEMENTAR_DLLLINKEDELEMENT_H
 #define MEMENTAR_DLLLINKEDELEMENT_H
 
-#include "mementar/core/DoublyLinkedList/DllCargoNode.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllCargoNode.h"
 
 #include <ostream>
 

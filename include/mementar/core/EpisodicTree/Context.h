@@ -5,7 +5,7 @@
 #include <string>
 #include <ctime>
 
-#include "mementar/core/Fact.h"
+#include "mementar/core/memGraphs/Fact.h"
 
 namespace mementar
 {

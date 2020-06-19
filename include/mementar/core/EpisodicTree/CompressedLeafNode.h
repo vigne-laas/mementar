@@ -6,8 +6,8 @@
 #include <atomic>
 #include <shared_mutex>
 
-#include "mementar/core/Fact.h"
-#include "mementar/core/Btree/Btree.h"
+#include "mementar/core/memGraphs/Fact.h"
+#include "mementar/core/memGraphs/Btree/Btree.h"
 #include "mementar/core/EpisodicTree/CompressedLeaf.h"
 #include "mementar/core/EpisodicTree/Context.h"
 

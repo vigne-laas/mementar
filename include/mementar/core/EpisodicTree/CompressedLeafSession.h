@@ -4,8 +4,8 @@
 #include "mementar/core/archiving_compressing/archiving/Archive.h"
 #include "mementar/core/archiving_compressing/archiving/Header.h"
 
-#include "mementar/core/Btree/Btree.h"
-#include "mementar/core/Fact.h"
+#include "mementar/core/memGraphs/Btree/Btree.h"
+#include "mementar/core/memGraphs/Fact.h"
 
 namespace mementar
 {

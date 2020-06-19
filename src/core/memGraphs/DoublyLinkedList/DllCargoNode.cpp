@@ -1,6 +1,6 @@
-#include "mementar/core/DoublyLinkedList/DllCargoNode.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllCargoNode.h"
 
-#include "mementar/core/DoublyLinkedList/DllLinkedElement.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllLinkedElement.h"
 
 #include <iostream>
 

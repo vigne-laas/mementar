@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "mementar/core/DoublyLinkedList/DllNode.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllNode.h"
 
 namespace mementar
 {

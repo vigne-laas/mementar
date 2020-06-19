@@ -1,7 +1,7 @@
 #ifndef MEMENTAR_DLLCARGONODE_H
 #define MEMENTAR_DLLCARGONODE_H
 
-#include "mementar/core/DoublyLinkedList/DllNode.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllNode.h"
 
 namespace mementar {
 

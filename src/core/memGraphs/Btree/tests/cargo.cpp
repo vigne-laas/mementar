@@ -3,9 +3,9 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "mementar/core/Btree/Btree.h"
-#include "mementar/core/DoublyLinkedList/DllLinkedElement.h"
-#include "mementar/core/DoublyLinkedList/DllCargoNode.h"
+#include "mementar/core/memGraphs/Btree/Btree.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllLinkedElement.h"
+#include "mementar/core/memGraphs/DoublyLinkedList/DllCargoNode.h"
 
 using namespace std::chrono;
 using namespace mementar;

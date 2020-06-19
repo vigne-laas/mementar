@@ -5,7 +5,7 @@
 #include <vector>
 #include <mutex>
 
-#include "mementar/core/Fact.h"
+#include "mementar/core/memGraphs/Fact.h"
 #include "mementar/core/Events/IdManager.h"
 
 namespace mementar
