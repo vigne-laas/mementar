@@ -1,5 +1,6 @@
 #include "mementar/core/archiving_compressing/compressing/LzCompress.h"
 
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 
@@ -15,9 +16,10 @@ LzCompress::LzCompress(size_t search_size, size_t la_size) : BinaryManager("mlz"
   la_size_1_ = la_size_ - 1;
 }
 
-void LzCompress::compress(std::string& in, std::vector<char>& out)
+std::vector<char> LzCompress::compress(const std::string& in)
 {
-  size_t in_size = in.size();
+  const size_t in_size = in.size();
+  bit.resize(in_size);
 
   bit.writeType3(in_size >> 0);
   bit.writeType3(in_size >> 8);
@@ -34,35 +36,42 @@ void LzCompress::compress(std::string& in, std::vector<char>& out)
   bit.writeChar(in[0]);
 
   size_t cursor = 1;
+  size_t cursor_1 = 0;
   size_t index = -1;
   size_t length = 1;
   size_t tmp_length = 1;
   size_t search_index = 1;
   size_t la_index = 1;
   size_t i = -1;
+  char c_tmp;
 
   while (cursor < in_size)
   {
     length = 1;
-    char c_tmp = in[cursor];
-    for(i = std::max(cursor - search_size_1_, size_t{0}); i < cursor; i++)
+    c_tmp = in[cursor];
+    cursor_1 = cursor - 1;
+    for(i = std::max(cursor - search_size_1_, size_t{0}); i < cursor_1; i++)
     {
       if(in[i] == c_tmp)
       {
-        tmp_length = 1;
-        search_index = i + 1;
-        la_index = cursor + 1;
-        while((in[search_index] == in[la_index]) && (tmp_length < la_size_1_) && (search_index < cursor))
+        if(in[i+1] == in[cursor+1]) // directly check the second character in order
+                                    // to avoid to do usless expensive tests
         {
-          tmp_length++;
-          search_index++;
-          la_index++;
-        }
+          tmp_length = 1;
+          search_index = i + 1;
+          la_index = cursor + 1;
+          while((in[search_index] == in[la_index]) && (tmp_length - la_size_1_) && (search_index < cursor))
+          {
+            ++tmp_length;
+            ++search_index;
+            ++la_index;
+          }
 
-        if(tmp_length > length)
-        {
-          length = tmp_length;
-          index = i;
+          if(tmp_length > length)
+          {
+            length = tmp_length;
+            index = i;
+          }
         }
       }
     }
@@ -72,17 +81,17 @@ void LzCompress::compress(std::string& in, std::vector<char>& out)
       bit.writeBitTrue();
       bit.writeType1(cursor - index);
       bit.writeType2(length);
+      cursor += length;
     }
     else
     {
       bit.writeBitFalse();
       bit.writeChar(c_tmp);
+      ++cursor;
     }
-
-    cursor += length;
   }
 
-  bit.get(out);
+  return bit.get();
 }
 
 int LzCompress::neededBitCount(size_t max_value)

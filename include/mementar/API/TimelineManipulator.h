@@ -5,13 +5,13 @@
 
 #include <ros/ros.h>
 
-#include "mementar/API/EventsPublisher.h"
+#include "mementar/API/OccasionsPublisher.h"
 #include "mementar/API/clients/ClientBase.h"
 
 namespace mementar
 {
 
-class TimelineManipulator : public EventsPublisher
+class TimelineManipulator : public OccasionsPublisher
 {
 public:
   TimelineManipulator(ros::NodeHandle* n, const std::string& name = "");

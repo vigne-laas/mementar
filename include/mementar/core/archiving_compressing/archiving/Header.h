@@ -9,7 +9,7 @@ namespace mementar
 
 struct File_t
 {
-  File_t(std::string name = "", size_t offset = 0, size_t size = 0)
+  File_t(const std::string& name = "", size_t offset = 0, size_t size = 0)
   {
     path_ = name;
     name_ = name;
@@ -35,9 +35,9 @@ public:
 
   std::string toString();
 
-  size_t endodedSize();
+  size_t encodedSize();
   void encode(std::vector<char>& out);
-  void decode(std::vector<char>& data);
+  void decode(const std::vector<char>& data);
 };
 
 } // namespace mementar

@@ -20,6 +20,11 @@ public:
   {
   }
 
+  Event(const Fact& fact, const SoftPoint& soft_point) : SoftPoint(soft_point), Fact(fact)
+  {
+  }
+
+
   Event(const Event& other) : SoftPoint(other), Fact(other)
   {
   }

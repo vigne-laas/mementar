@@ -10,7 +10,7 @@
 namespace mementar
 {
 
-RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order, std::string name) : events_(n, name),
+RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order, std::string name) : occasions_(n, name),
                                                                                                                run_(true)
 {
   n_ = n;
@@ -46,7 +46,7 @@ void RosInterface::run()
   service_name = (name_ == "") ? "actions" : "actions/" + name_;
   ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
 
-  std::thread event_thread(&EventsManager::run, &events_);
+  std::thread occasions_thread(&OccasionsManager::run, &occasions_);
 
   ROS_DEBUG("%s mementar ready", name_.c_str());
 
@@ -55,8 +55,8 @@ void RosInterface::run()
     ros::getGlobalCallbackQueue()->callAvailable(ros::WallDuration(0.1));
   }
 
-  events_.stop();
-  event_thread.join();
+  occasions_.stop();
+  occasions_thread.join();
 }
 
 void RosInterface::reset()
@@ -77,25 +77,25 @@ void RosInterface::reset()
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
-  Fact fact(msg->data);
-  if(fact.valid())
+  Event* event = new Event(msg->data, time(0));
+  if(event->valid())
   {
     mut_.lock_shared();
-    tree_->insert(time(0), fact);
+    tree_->insert(event);
     mut_.unlock_shared();
-    events_.add(fact);
+    occasions_.add(event);
   }
 }
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  Fact fact(msg->data);
-  if(fact.valid())
+  Event* event = new Event(msg->data, msg->stamp.sec);
+  if(event->valid())
   {
     mut_.lock_shared();
-    tree_->insert(msg->stamp.sec, fact);
+    tree_->insert(event);
     mut_.unlock_shared();
-    events_.add(fact);
+    occasions_.add(event);
   }
 }
 
@@ -109,11 +109,11 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
 
   if(req.action == "remove")
   {
-    Fact fact(req.param);
-    if(fact.valid())
+    Event event(req.param, req.stamp.sec);
+    if(event.valid())
     {
       mut_.lock_shared();
-      tree_->remove(req.stamp.sec, req.param);
+      tree_->remove(&event);
       mut_.unlock_shared();
     }
     else

@@ -23,13 +23,13 @@ public:
     t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
   }
 
-  bool isInstantaneous() { return t_end_ == std::experimental::nullopt; }
-  size_t getTime() { return t_; }
-  size_t getTimeStart() { return t_start_; }
-  size_t getTimeEnd() { return t_end_.value_or(t_start_); }
-  size_t getTransitionDuration() { return t_end_.value_or(t_start_) - t_start_; }
+  bool isInstantaneous() const { return t_end_ == std::experimental::nullopt; }
+  size_t getTime() const { return t_; }
+  size_t getTimeStart() const { return t_start_; }
+  size_t getTimeEnd() const { return t_end_.value_or(t_start_); }
+  size_t getTransitionDuration() const { return t_end_.value_or(t_start_) - t_start_; }
 
-  std::string toString() { return "[" + std::to_string(t_start_) + std::string(t_end_ ? "," + std::to_string(t_end_.value()) : "") + "]"; }
+  std::string toString() const { return "[" + std::to_string(t_start_) + std::string(t_end_ ? "," + std::to_string(t_end_.value()) : "") + "]"; }
 
   typedef size_t Ttime;
 

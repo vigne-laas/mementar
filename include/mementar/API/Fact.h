@@ -1,5 +1,5 @@
-#ifndef MEMENTAR_EVENT_H
-#define MEMENTAR_EVENT_H
+#ifndef MEMENTAR_API_FACT_H
+#define MEMENTAR_API_FACT_H
 
 #include <string>
 #include <vector>
@@ -7,12 +7,12 @@
 namespace mementar
 {
 
-class Event
+class Fact
 {
 public:
-  Event(const std::string& event)
+  Fact(const std::string& fact)
   {
-    std::vector<std::string> splitted = split(event, "|");
+    std::vector<std::string> splitted = split(fact, "|");
     if(splitted.size() >= 1)
       subject_ = splitted[0];
     if(splitted.size() >= 2)
@@ -20,8 +20,8 @@ public:
     if(splitted.size() >= 3)
       object_ = splitted[2];
   }
-  
-  Event(const std::string& subject, const std::string& predicat, const std::string& object)
+
+  Fact(const std::string& subject, const std::string& predicat, const std::string& object)
   {
     subject_ = subject;
     predicat_ = predicat;
@@ -36,9 +36,9 @@ public:
   void subject(const std::string& subject) { subject_ = subject; }
   void predicat(const std::string& predicat) { predicat_ = predicat; }
   void object(const std::string& object) { object_ = object; }
-  void operator()(const std::string& event)
+  void operator()(const std::string& fact)
   {
-    std::vector<std::string> splitted = split(event, "|");
+    std::vector<std::string> splitted = split(fact, "|");
     if(splitted.size() >= 1)
       subject_ = splitted[0];
     if(splitted.size() >= 2)
@@ -76,4 +76,4 @@ private:
 
 } // namespace mementar
 
-#endif
+#endif // MEMENTAR_API_FACT_H

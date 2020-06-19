@@ -37,8 +37,7 @@ ArchivedLeaf::ArchivedLeaf(CompressedLeafNode* tree, size_t nb, const std::strin
 
   Archive arch(context, input_files);
 
-  std::vector<char> data;
-  arch.load(data);
+  std::vector<char> data = arch.load();
 
   arch.saveToFile(data, directory_);
 
@@ -58,7 +57,7 @@ ArchivedLeaf::ArchivedLeaf(const time_t& key, const std::string& directory)
   directory_ = directory.substr(0, dot_pose);
 }
 
-Btree<time_t, Fact>* ArchivedLeaf::getTree(size_t i)
+Btree<time_t, Event*>* ArchivedLeaf::getTree(size_t i)
 {
   mementar::Archive arch;
   std::cout << "ArchivedLeaf::getTree READ BINARY FILE " << directory_ << ".mar" << std::endl;
@@ -67,13 +66,12 @@ Btree<time_t, Fact>* ArchivedLeaf::getTree(size_t i)
 
   std::string comp = arch.extractFile(i, header);
 
-  std::string out;
   LzUncompress lz;
   std::vector<char> comp_data(comp.begin(), comp.end());
-  lz.uncompress(comp_data, out);
-  Btree<time_t, Fact>* tree = new Btree<time_t, Fact>();
+  std::string out = lz.uncompress(comp_data);
+  Btree<time_t, Event*>* tree = new Btree<time_t, Event*>();
 
-  std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
+  std::regex regex("\\[(\\d+)\\](\\w+)\\s*\\|\\s*(\\w+)\\s*\\|\\s*(\\w+)");
   std::smatch match;
 
   std::istringstream iss(out);
@@ -82,12 +80,12 @@ Btree<time_t, Fact>* ArchivedLeaf::getTree(size_t i)
   {
     if(std::regex_match(line, match, regex))
     {
-      Fact fact(match[2].str(), match[3].str(), match[4].str());
       time_t key;
       std::istringstream iss(match[1].str());
       iss >> key;
+      Event* event = new Event(Fact(match[2].str(), match[3].str(), match[4].str()), key);
 
-      tree->insert(key, fact);
+      tree->insert(event->getTime(), event);
     }
   }
 

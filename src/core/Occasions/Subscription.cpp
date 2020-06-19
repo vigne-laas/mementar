@@ -1,4 +1,4 @@
-#include "mementar/core/Events/Subscription.h"
+#include "mementar/core/Occasions/Subscription.h"
 
 namespace mementar
 {
@@ -42,14 +42,14 @@ bool Subscription::isFinished(size_t id)
   return res;
 }
 
-std::vector<size_t> Subscription::evaluate(const Fact& fact)
+std::vector<size_t> Subscription::evaluate(const Fact* fact)
 {
   std::vector<size_t> res;
 
   map_mut_.lock();
   for(auto it : fact_paterns_)
   {
-    if(fact.fit(it.second))
+    if(fact->fit(it.second))
     {
       if(counts_[it.first])
       {

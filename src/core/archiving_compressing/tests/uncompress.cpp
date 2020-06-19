@@ -87,7 +87,7 @@ int main (int argc, char* argv[])
     mementar::LzUncompress lz;
     std::vector<char> data;
     if(lz.readBinaryFile(data, input_file))
-      lz.uncompress(data, out);
+      out = lz.uncompress(data);
   }
   else if(code_type == huffman)
   {
@@ -97,7 +97,7 @@ int main (int argc, char* argv[])
     {
       size_t tree_size = huff.setTree(data);
       data = std::vector<char>(data.begin() + tree_size, data.end());
-      huff.getFile(data, out);
+      out = huff.getFile(data);
     }
   }
 

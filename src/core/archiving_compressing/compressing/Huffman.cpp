@@ -1,203 +1,333 @@
 #include "mementar/core/archiving_compressing/compressing/Huffman.h"
 
-#include <iostream>
 #include <algorithm>
+#include <future>
+#include <queue>
+#include <thread>
+#include <vector>
 
 #include "mementar/core/archiving_compressing/binaryManagement/BitFileGenerator.h"
 #include "mementar/core/archiving_compressing/binaryManagement/BitFileGetter.h"
-
-namespace mementar
-{
 
 #define TREE_CHAR_SIZE 8
 #define TREE_VALUE_SIZE 6
 #define TREE_VALUE_SIZE_SIZE 31 //do not go over 31
 
-void print_tree(HuffNode_t* node)
-{
-  for(size_t i = 0; i < node->code_.size_; i++)
-    std::cout << " ";
-  std::cout << std::hex << node->code_.value_ << std::endl;
-
-  if(node->left_ != nullptr)
-    print_tree(node->left_);
-  if(node->right_ != nullptr)
-    print_tree(node->right_);
-}
-
-bool comparePtrNode(HuffNode_t* a, HuffNode_t* b)
-{
-  return (a->freq_ < b->freq_);
-}
-
-bool comparePtrNodeByCode(HuffNode_t* a, HuffNode_t* b)
-{
-  if(a->code_.size_ < b->code_.size_)
-    return false;
-  else if(a->code_.size_ > b->code_.size_)
+template <typename T, std::size_t N>
+struct static_alloc {
+    using value_type = T;
+    static_alloc() = default;
+    template <typename U>
+    constexpr static_alloc(const static_alloc<U, N>&) noexcept {};
+    [[nodiscard]] constexpr value_type* allocate(std::size_t n) {
+        return buffer.data();
+    }
+    constexpr void deallocate(value_type* p, std::size_t n) {}
+    template <typename U>
+    struct rebind {
+        using other = static_alloc<U, N>;
+    };
+    std::array<value_type, N> buffer{};
+};
+template <typename T, typename U, std::size_t N>
+bool operator==(const static_alloc<T, N>&, const static_alloc<U, N>&) {
     return true;
-  else if(a->code_.value_ < b->code_.value_)
-    return true;
-  else
+}
+template <typename T, typename U, std::size_t N>
+bool operator!=(const static_alloc<T, N>&, const static_alloc<U, N>&) {
     return false;
 }
 
-Huffman::Huffman() : BinaryManager("mhu")
-{
+namespace mementar {
 
-}
-
-Huffman::~Huffman()
-{
-  for(auto it : heap_)
-    delete it;
-}
-
-void Huffman::analyse(std::vector<char>& data)
-{
-  for(const auto& c : data)
+  struct NodeCompare
   {
-    auto it = leaf_map_.find(c);
-    if(it == leaf_map_.end())
+  public:
+    explicit NodeCompare(const NodeList& nodes) : nodes_{nodes} {}
+    bool operator()(HuffNode_t::Index l, HuffNode_t::Index r)
     {
-      HuffNode_t* leaf = new HuffNode_t(c);
-      heap_.push_back(leaf);
-      leaf_map_[c] = leaf;
+      return nodes_[l].freq > nodes_[r].freq;
     }
-    else
-      it->second->freq_++;
-  }
-}
 
-void Huffman::generateTree()
-{
-  while(heap_.size() > 1)
+  private:
+    const NodeList& nodes_;
+  };
+
+  struct NodeValueCompare
   {
-    std::sort(heap_.begin(), heap_.end(), comparePtrNode);
-
-    HuffNode_t* tmp = new HuffNode_t();
-    tmp->right_ = heap_[0];
-    tmp->left_ = heap_[1];
-    tmp->freq_ = tmp->right_->freq_ + tmp->left_->freq_;
-    heap_.erase(heap_.begin());
-    heap_.erase(heap_.begin());
-    heap_.push_back(tmp);
-  }
-
-  heap_[0]->code_.value_ = 0;
-  heap_[0]->code_.size_ = 0;
-  generateCode(heap_[0]);
-}
-
-void Huffman::generateCode(HuffNode_t* node)
-{
-  if(node->right_ != nullptr)
-  {
-    node->right_->code_.value_ = (node->code_.value_ << 1);
-    node->right_->code_.size_ = node->code_.size_ + 1;
-    generateCode(node->right_);
-  }
-  if(node->left_ != nullptr)
-  {
-    node->left_->code_.value_ = (node->code_.value_ << 1) | 0x01;
-    node->left_->code_.size_ = node->code_.size_ + 1;
-    generateCode(node->left_);
-  }
-}
-
-void Huffman::getTreeCode(std::vector<char>& out)
-{
-  BitFileGenerator bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
-  //coding tree
-  bit.writeType1((leaf_map_.size() >> 0) & 0x000000ff);
-  bit.writeType1((leaf_map_.size() >> 8) & 0x000000ff);
-
-  for(const auto& it : leaf_map_)
-  {
-    bit.writeType1(it.second->data_);
-    bit.writeType2(it.second->code_.size_);
-    bit.writeType3(it.second->code_.value_);
-  }
-  std::vector<char> tmp;
-  bit.get(tmp);
-  out.insert(out.end(), tmp.begin(), tmp.end());
-}
-
-void Huffman::getDataCode(std::vector<char>& data, std::vector<char>& out)
-{
-  BitFileGenerator bit(8);
-
-  bit.writeType1((data.size() >> 0) & 0x000000ff);
-  bit.writeType1((data.size() >> 8) & 0x000000ff);
-  bit.writeType1((data.size() >> 16) & 0x000000ff);
-  bit.writeType1((data.size() >> 24) & 0x000000ff);
-
-  for(auto c : data)
-  {
-    auto& code = leaf_map_.find(c)->second->code_;
-    for(uint32_t i = 1 << (code.size_ - 1); i > 0; i >>= 1)
-      if(code.value_ & i)
-        bit.writeBitTrue();
-      else
-        bit.writeBitFalse();
-  }
-  std::vector<char> tmp = bit.get();
-  out.insert(out.end(), tmp.begin(), tmp.end());
-}
-
-size_t Huffman::setTree(std::vector<char>& in)
-{
-  BitFileGetter bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
-  bit.set(in);
-
-  auto nb_leaf = toInteger<uint16_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
-
-  for(size_t i = 0; i < nb_leaf; i++)
-  {
-    HuffNode_t* tmp_node = new HuffNode_t(bit.getType1());
-    tmp_node->code_.size_ = bit.getType2();
-    tmp_node->code_.value_ = bit.getType3();
-    heap_.push_back(tmp_node);
-  }
-
-  std::sort(heap_.begin(), heap_.end(), comparePtrNodeByCode);
-  while(heap_.size() > 1)
-  {
-    HuffNode_t* tmp_node = new HuffNode_t;
-    tmp_node->left_ = heap_[1];
-    tmp_node->right_ = heap_[0];
-    tmp_node->code_.size_ = heap_[0]->code_.size_ - 1;
-    tmp_node->code_.value_ = (heap_[0]->code_.value_ >> 1) & 0xefffffff;
-    heap_.erase(heap_.begin());
-    heap_.erase(heap_.begin());
-    heap_.push_back(tmp_node);
-    std::sort(heap_.begin(), heap_.end(), comparePtrNodeByCode);
-  }
-
-  size_t tree_bit_size = (2*8 + nb_leaf*(TREE_CHAR_SIZE + TREE_VALUE_SIZE + TREE_VALUE_SIZE_SIZE));
-
-  return tree_bit_size / 8 + 1;
-}
-
-void Huffman::getFile(std::vector<char>& data, std::string& out)
-{
-  out = "";
-  BitFileGetter bit(8);
-  bit.set(data);
-
-  auto out_file_size = toInteger<size_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
-  while(out.size() < out_file_size)
-  {
-    HuffNode_t* node = heap_[0];
-    while(node->right_ != nullptr)
+  public:
+    explicit NodeValueCompare(const NodeList& nodes) : nodes_{nodes} {}
+    bool operator()(HuffNode_t::Index l, HuffNode_t::Index r)
     {
-      if(bit.getBit())
-        node = node->left_;
+      if(nodes_[l].code.size_ < nodes_[r].code.size_)
+        return true;
+      else if(nodes_[l].code.size_ > nodes_[r].code.size_)
+        return false;
+      else if(nodes_[l].code.value_ < nodes_[r].code.value_)
+        return false;
       else
-        node = node->right_;
+        return true;
     }
-    out.push_back(node->data_);
+
+  private:
+    const NodeList& nodes_;
+  };
+
+  Huffman::Huffman() : BinaryManager("mhu")
+  {
+
+  }
+
+  void Huffman::analyse(const std::string& data, std::size_t jobs)
+  {
+    count_char(data, jobs);
+  }
+
+  void Huffman::generateCode()
+  {
+    auto root_node = generateTree();
+    std::cout << "generateTree" << std::endl;
+    nodes_[root_node].code.size_ = 0;
+    nodes_[root_node].code.value_ = 0;
+    generateCode(root_node);
+  }
+
+  std::vector<char> Huffman::getTreeCode()
+  {
+    BitFileGenerator bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
+    size_t valid_leaf = 0;
+    for(size_t i = 0; i < leaf_count; i++)
+      if(nodes_[i].freq != 0)
+        valid_leaf++;
+
+    //coding tree
+    bit.writeType1((valid_leaf >> 0) & 0x000000ff);
+    bit.writeType1((valid_leaf >> 8) & 0x000000ff);
+
+    for(size_t i = 0; i < leaf_count; i++)
+    {
+      if(nodes_[i].freq != 0)
+      {
+        bit.writeType1((char)i);
+        bit.writeType2(nodes_[i].code.size_);
+        bit.writeType3(nodes_[i].code.value_);
+      }
+    }
+
+    return bit.get();
+  }
+
+  std::vector<char> Huffman::getDataCode(const std::string& in_data)
+  {
+    BitFileGenerator bit(8);
+    bit.resize(in_data.size());
+
+    bit.writeType1((in_data.size() >> 0) & 0x000000ff);
+    bit.writeType1((in_data.size() >> 8) & 0x000000ff);
+    bit.writeType1((in_data.size() >> 16) & 0x000000ff);
+    bit.writeType1((in_data.size() >> 24) & 0x000000ff);
+
+    for(const std::uint8_t& c : in_data)
+      bit.writeNReverse(nodes_[c].code.size_, nodes_[c].code.value_);
+
+    return bit.get();
+  }
+
+  size_t Huffman::setTree(const std::vector<char>& in)
+  {
+    BitFileGetter bit(TREE_CHAR_SIZE, TREE_VALUE_SIZE, TREE_VALUE_SIZE_SIZE);
+    bit.set(in);
+
+    auto nb_leaf = toInteger<uint16_t>({(uint8_t)bit.getType1(), (uint8_t)bit.getType1()});
+
+    using minheap = std::priority_queue<
+                    HuffNode_t::Index,
+                    std::vector<HuffNode_t::Index, static_alloc<HuffNode_t::Index, leaf_count>>,
+                    NodeValueCompare>;
+
+    minheap heap{NodeValueCompare{nodes_}};
+    h_min_ = leaf_count;
+
+    for(size_t i = 0; i < nb_leaf; i++)
+    {
+      HuffNode_t::Index data = bit.getType1();
+      nodes_[data].code.size_ = bit.getType2();
+      nodes_[data].code.value_ = bit.getType3();
+      heap.push(data);
+      if(nodes_[data].code.size_ < h_min_)
+        h_min_ = nodes_[data].code.size_;
+    }
+
+    HuffNode_t::Index bind_node_index = leaf_count;  // bind nodes are stored after all leaves
+
+    while(heap.size() != 1)
+    {
+      auto right = heap.top();
+      heap.pop();
+      auto left = heap.top();
+      heap.pop();
+
+      nodes_[bind_node_index].right = right;
+      nodes_[bind_node_index].left = left;
+      nodes_[bind_node_index].code.size_ = nodes_[right].code.size_ - 1;
+      nodes_[bind_node_index].code.value_ = (nodes_[right].code.value_ >> 1) & 0xefffffff;
+      if(nodes_[bind_node_index].code.size_ == h_min_)
+        subtrees_[nodes_[bind_node_index].code.value_] = bind_node_index;
+
+      heap.push(bind_node_index);
+      ++bind_node_index;
+    }
+
+    for(size_t i = 0; i < leaf_count; i++)
+    {
+      if(nodes_[i].code.size_ == h_min_)
+        subtrees_[nodes_[i].code.value_] = i;
+    }
+
+    size_t tree_bit_size = (2*8 + nb_leaf*(TREE_CHAR_SIZE + TREE_VALUE_SIZE + TREE_VALUE_SIZE_SIZE));
+
+    return tree_bit_size / 8 + 1;
+  }
+
+  std::string Huffman::getFile(const std::vector<char>& data)
+  {
+    std::string out = "";
+
+    const auto out_file_size = toInteger<size_t>({(uint8_t)data[0], (uint8_t)data[1], (uint8_t)data[2], (uint8_t)data[3]});
+    out.reserve(out_file_size);
+
+    const auto nodes = nodes_.data();
+    auto node = &nodes_[0];
+
+    uint8_t mask_index = 8;
+    uint8_t bit_data = 0x00;
+    uint8_t h_min_data = 0x00;
+
+    uint32_t index = 3;
+
+    for(;;)
+    {
+      h_min_data = 0x00;
+      for(size_t i = 0; i < h_min_; i++)
+      {
+        bit_data>>=1;
+        if((++mask_index) >= 8)
+        {
+          bit_data = data[++index];
+          mask_index = 0;
+        }
+        h_min_data = (h_min_data << 1) | (bit_data & 0x01);
+      }
+      node = nodes + subtrees_[h_min_data];
+
+      while(node->right - HuffNode_t::invalid_index)
+      {
+        bit_data>>=1;
+        if((++mask_index) >= 8)
+        {
+          bit_data = data[++index];
+          mask_index = 0;
+        }
+        node = ((bit_data & 0x01) ? nodes + node->left : nodes + node->right);
+      }
+      out += (char)(node - nodes);
+      if(out.size() == out_file_size)
+        break;
+    }
+
+    return out;
+  }
+
+  void Huffman::sum(const FrequencyMap& other, FrequencyMap& into)
+  {
+    std::transform(std::begin(other), std::end(other), std::begin(into),
+                   std::begin(into), std::plus<>{});
+  }
+
+  FrequencyMap count_char_impl(const std::string& text)
+  {
+    FrequencyMap freq{};  // Zero-initialized array
+    for (const std::uint8_t& c : text)
+      freq[c]++;
+    return freq;
+  }
+
+  void Huffman::count_char(const std::string& text, std::size_t jobs)
+  {
+    if (jobs <= 1)
+    {
+      sum(count_char_impl(text), frequencies_);
+      return;
+    }
+
+    const auto thread_count = jobs - 1;
+    const auto bound = text.size() / thread_count;
+
+    std::vector<std::future<FrequencyMap>> counting_units(thread_count);
+
+    size_t lower_bound = 0;
+    for (auto& unit : counting_units)
+    {
+      unit = std::async(std::launch::async, count_char_impl,
+                        text.substr(lower_bound, bound));
+      lower_bound += bound;
+    }
+    sum(count_char_impl(text.substr(lower_bound)), frequencies_);
+
+    for (auto& unit : counting_units)
+      sum(unit.get(), frequencies_);
+  }
+
+  HuffNode_t::Index Huffman::generateTree()
+  {
+    using minheap = std::priority_queue<
+                    HuffNode_t::Index,
+                    std::vector<HuffNode_t::Index, static_alloc<HuffNode_t::Index, leaf_count>>,
+                    NodeCompare>;
+
+    minheap heap{NodeCompare{nodes_}};
+
+    for (HuffNode_t::Index i = 0; i < frequencies_.size(); ++i)
+    {
+      if (frequencies_[i] == 0)
+        continue;  // Do not set unused characters
+      nodes_[i].freq = frequencies_[i];
+      heap.push(i);
+    }
+
+    HuffNode_t::Index bind_node_index = leaf_count;  // bind nodes are stored after all leaves
+
+    while (heap.size() != 1)
+    {
+      auto right = heap.top();
+      heap.pop();
+      auto left = heap.top();
+      heap.pop();
+
+      nodes_[bind_node_index].freq =
+      nodes_[left].freq + nodes_[right].freq;
+      nodes_[bind_node_index].left = left;
+      nodes_[bind_node_index].right = right;
+      heap.push(bind_node_index);
+
+      ++bind_node_index;
+    }
+    return heap.top();
+  }
+
+  void Huffman::generateCode(HuffNode_t::Index index)
+  {
+    if(nodes_[index].right != HuffNode_t::invalid_index)
+    {
+      nodes_[nodes_[index].right].code.value_ = (nodes_[index].code.value_ << 1);
+      nodes_[nodes_[index].right].code.size_ = nodes_[index].code.size_ + 1;
+      generateCode(nodes_[index].right);
+    }
+    if(nodes_[index].left != HuffNode_t::invalid_index)
+    {
+      nodes_[nodes_[index].left].code.value_ = (nodes_[index].code.value_ << 1) | 0x01;
+      nodes_[nodes_[index].left].code.size_ = nodes_[index].code.size_ + 1;
+      generateCode(nodes_[index].left);
+    }
   }
 }
-
-} // namespace mementar

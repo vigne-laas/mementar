@@ -10,7 +10,7 @@ namespace mementar
 class Archive : public BinaryManager
 {
 public:
-  Archive(std::string& description, std::vector<std::string>& files);
+  Archive(const std::string& description, const std::vector<std::string>& files);
   Archive(const std::string& description, const Header& header);
   Archive();
 
@@ -19,19 +19,19 @@ public:
     return BinaryManager::readBinaryFile(data_, file_name);
   }
 
-  void load(std::vector<char>& out);
-  void load(std::vector<char>& out, std::vector<std::vector<char> >& raw_datas);
+  std::vector<char> load();
+  std::vector<char> load(const std::vector<std::string>& raw_datas);
 
-  Header getHeader(std::vector<char>& data);
+  Header getHeader(const std::vector<char>& data);
   Header getHeader() { return getHeader(data_); }
 
-  std::string extractDescription(Header& head, std::vector<char>& data);
-  std::string extractDescription(Header& head)
+  std::string extractDescription(const Header& head, const std::vector<char>& data);
+  std::string extractDescription(const Header& head)
   {
     return extractDescription(head, data_);
   }
-  std::string extractFile(size_t index, Header& head, std::vector<char>& data);
-  std::string extractFile(size_t index, Header& head)
+  std::string extractFile(size_t index, const Header& head, const std::vector<char>& data);
+  std::string extractFile(size_t index, const Header& head)
   {
     return extractFile(index, head, data_);
   }

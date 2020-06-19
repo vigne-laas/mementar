@@ -23,7 +23,7 @@ public:
     key_ = key;
   }
 
-  ~BtreeLeaf() {}
+  ~BtreeLeaf() { }
 
   bool operator==(const Tkey& other) { return key_ == other; }
   bool operator>(const Tkey& other) { return key_ > other; }

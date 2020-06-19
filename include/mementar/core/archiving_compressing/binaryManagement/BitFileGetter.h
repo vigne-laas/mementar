@@ -37,10 +37,11 @@ public:
 
   bool end(size_t offset = 0);
 
-  void set(std::vector<char>& data) { data_ = data; }
+  void set(const std::vector<char>& data) { data_ = data; current_data_ = data_[0]; }
 
 private:
   std::vector<char> data_;
+  char current_data_;
   size_t major_index_;
   uint8_t minor_index_;
 

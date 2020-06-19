@@ -88,35 +88,35 @@ CompressedLeafNode* CompressedLeafNode::split()
   return new_one;
 }
 
-void CompressedLeafNode::insert(const time_t& key, const Fact& data)
+void CompressedLeafNode::insert(Event* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
   {
     mut_.unlock_shared();
-    createNewTreeChild(key);
+    createNewTreeChild(data->getTime());
     mut_.lock_shared();
-    last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
+    last_tree_nb_leafs_ = btree_childs_[0]->insert(data->getTime(), data);
     contexts_[0].insert(data);
   }
   else
   {
-    if(key < keys_[0])
+    if((time_t)data->getTime() < keys_[0])
     {
       Display::Error("try to insert fact in past that do not exist");
       return;
     }
 
-    size_t index = getKeyIndex(key);
+    size_t index = getKeyIndex(data->getTime());
 
     if(index < compressed_childs_.size())
     {
-      if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()) && (key > earlier_key_))
+      if((index == compressed_childs_.size() - 1) && (keys_.size() == compressed_childs_.size()) && ((time_t)data->getTime() > earlier_key_))
       {
         mut_.unlock_shared();
-        createNewTreeChild(key);
+        createNewTreeChild(data->getTime());
         mut_.lock_shared();
-        last_tree_nb_leafs_ = btree_childs_[0]->insert(key, data);
+        last_tree_nb_leafs_ = btree_childs_[0]->insert(data->getTime(), data);
         contexts_[keys_.size() - 1].insert(data);
       }
       else
@@ -124,7 +124,7 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
         mut_.unlock_shared();
         createSession(index);
         mut_.lock_shared();
-        compressed_sessions_tree_[index]->insert(key, data);
+        compressed_sessions_tree_[index]->insert(data->getTime(), data);
         contexts_[index].insert(data);
         modified_[index] = true;
       }
@@ -132,9 +132,9 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
     else if(useNewTree())
     {
       mut_.unlock_shared();
-      createNewTreeChild(key);
+      createNewTreeChild(data->getTime());
       mut_.lock_shared();
-      last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(key, data);
+      last_tree_nb_leafs_ = btree_childs_[btree_childs_.size() - 1]->insert(data->getTime(), data);
       contexts_[keys_.size() - 1].insert(data);
 
       //verify if a chld need to be compressed
@@ -147,25 +147,25 @@ void CompressedLeafNode::insert(const time_t& key, const Fact& data)
     }
     else if(index - keys_.size() + 1 == 0) // if insert in more recent tree
     {
-      last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(key,data);
+      last_tree_nb_leafs_ = btree_childs_[index - compressed_childs_.size()]->insert(data->getTime(), data);
       contexts_[index].insert(data);
     }
     else
     {
-      btree_childs_[index - compressed_childs_.size()]->insert(key,data);
+      btree_childs_[index - compressed_childs_.size()]->insert(data->getTime(), data);
       contexts_[index].insert(data);
     }
   }
   mut_.unlock_shared();
 
-  if(earlier_key_ < key)
-    earlier_key_ = key;
+  if(earlier_key_ < (time_t)data->getTime())
+    earlier_key_ = data->getTime();
 }
 
-void CompressedLeafNode::remove(const time_t& key, const Fact& data)
+void CompressedLeafNode::remove(Event* data)
 {
   mut_.lock_shared();
-  int index = getKeyIndex(key);
+  int index = getKeyIndex(data->getTime());
   if(index >= 0)
   {
     if((size_t)index < compressed_childs_.size())
@@ -173,7 +173,7 @@ void CompressedLeafNode::remove(const time_t& key, const Fact& data)
       mut_.unlock_shared();
       createSession(index);
       mut_.lock_shared();
-      if(compressed_sessions_tree_[index]->remove(key, data))
+      if(compressed_sessions_tree_[index]->remove(data->getTime(), data))
       {
         modified_[index] = true;
         contexts_[index].remove(data);
@@ -181,16 +181,16 @@ void CompressedLeafNode::remove(const time_t& key, const Fact& data)
     }
     else
     {
-      if(btree_childs_[index - compressed_childs_.size()]->remove(key, data))
+      if(btree_childs_[index - compressed_childs_.size()]->remove(data->getTime(), data))
         contexts_[index].remove(data);
     }
   }
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t, Fact>* CompressedLeafNode::find(const time_t& key)
+BtreeLeaf<time_t,Event*>* CompressedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -210,9 +210,9 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* CompressedLeafNode::findNear(const time_t& key)
+BtreeLeaf<time_t, Event*>* CompressedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -233,9 +233,9 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* CompressedLeafNode::getFirst()
+BtreeLeaf<time_t, Event*>* CompressedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
@@ -252,9 +252,9 @@ BtreeLeaf<time_t, Fact>* CompressedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* CompressedLeafNode::getLast()
+BtreeLeaf<time_t, Event*>* CompressedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   if(btree_childs_.size())
@@ -295,7 +295,7 @@ void CompressedLeafNode::init()
 void CompressedLeafNode::createNewTreeChild(const time_t& key)
 {
   mut_.lock();
-  btree_childs_.push_back(new Btree<time_t,Fact>(order_));
+  btree_childs_.push_back(new Btree<time_t, Event*>(order_));
   keys_.push_back(key);
   contexts_.push_back(Context(key));
   mut_.unlock();
@@ -341,7 +341,12 @@ bool CompressedLeafNode::loadStoredData()
 
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
-    std::string complete_dir = entry.path();
+    // std::filesystem::path to std::string conversion is platform-dependent:
+    //   it needs std::string on POSIX and std::wstring on Windows. Futhermore,
+    //   the directory separator change between operating systems.
+    // To solve this, we force the conversion to std::string ('/' is used as
+    //   directory separator).
+    std::string complete_dir = entry.path().generic_string();
     std::string dir = complete_dir.substr(directory_.size());
     if(dir[0] == '/')
       dir.erase(dir.begin());

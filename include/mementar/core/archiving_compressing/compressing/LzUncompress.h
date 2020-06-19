@@ -12,14 +12,9 @@ class LzUncompress : public BinaryManager
 public:
   LzUncompress();
 
-  void uncompress(std::vector<char>& data, std::string& out);
+  std::string uncompress(const std::vector<char>& data);
 
 private:
-  size_t search_size_;
-  size_t la_size_;
-
-  BitFileGetter bit;
-
   int neededBitCount(size_t max_value);
 };
 

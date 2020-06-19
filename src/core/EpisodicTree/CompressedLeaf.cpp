@@ -1,5 +1,6 @@
 #include <vector>
 #include <regex>
+#include <sstream>
 
 #include "mementar/core/EpisodicTree/CompressedLeaf.h"
 
@@ -9,7 +10,7 @@
 namespace mementar
 {
 
-CompressedLeaf::CompressedLeaf(Btree<time_t, Fact>* tree, const std::string& directory)
+CompressedLeaf::CompressedLeaf(Btree<time_t, Event*>* tree, const std::string& directory)
 {
   if(tree == nullptr)
     return;
@@ -18,9 +19,8 @@ CompressedLeaf::CompressedLeaf(Btree<time_t, Fact>* tree, const std::string& dir
   directory_ = directory + '/' + std::to_string(key_);
 
   LzCompress lz_comp;
-  std::vector<char> out_vect;
   std::string in = treeToString(tree);
-  lz_comp.compress(in, out_vect);
+  std::vector<char> out_vect = lz_comp.compress(in);
 
   lz_comp.displayCompressionRate(in.size(), out_vect.size());
   lz_comp.saveToFile(out_vect, directory_);
@@ -33,18 +33,16 @@ CompressedLeaf::CompressedLeaf(const time_t& key, const std::string& directory)
   directory_ = directory.substr(0, dot_pose);
 }
 
-Btree<time_t, Fact>* CompressedLeaf::getTree()
+Btree<time_t, Event*>* CompressedLeaf::getTree()
 {
-  std::string out;
-
   LzUncompress lz;
   std::vector<char> data;
   if(lz.readBinaryFile(data, directory_ + ".mlz"))
   {
-    lz.uncompress(data, out);
-    Btree<time_t, Fact>* tree = new Btree<time_t, Fact>();
+    std::string out = lz.uncompress(data);
+    Btree<time_t, Event*>* tree = new Btree<time_t, Event*>();
 
-    std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
+    std::regex regex("\\[(\\d+)\\](\\w+)\\s*\\|\\s*(\\w+)\\s*\\|\\s*(\\w+)");
     std::smatch match;
 
     std::istringstream iss(out);
@@ -53,12 +51,12 @@ Btree<time_t, Fact>* CompressedLeaf::getTree()
     {
       if(std::regex_match(line, match, regex))
       {
-        Fact fact(match[2].str(), match[3].str(), match[4].str());
         time_t key;
         std::istringstream iss(match[1].str());
         iss >> key;
+        Event* event = new Event(Fact(match[2].str(), match[3].str(), match[4].str()), key);
 
-        tree->insert(key, fact);
+        tree->insert(event->getTime(), event);
       }
     }
 
@@ -68,17 +66,17 @@ Btree<time_t, Fact>* CompressedLeaf::getTree()
   return nullptr;
 }
 
-std::string CompressedLeaf::treeToString(Btree<time_t, Fact>* tree)
+std::string CompressedLeaf::treeToString(Btree<time_t, Event*>* tree)
 {
   std::string res;
-  std::vector<Fact> tmp_data;
-  BtreeLeaf<time_t, Fact>* it = tree->getFirst();
+  std::vector<Event*> tmp_data;
+  BtreeLeaf<time_t, Event*>* it = tree->getFirst();
   while(it != nullptr)
   {
     tmp_data = it->getData();
     for(auto& data : tmp_data)
-      res += "[" + std::to_string(it->getKey()) + "]" + data.toString() + "\n";
-    it = static_cast<BtreeLeaf<time_t, Fact>*>(it->getNextNode());
+      res += "[" + std::to_string(it->getKey()) + "]" + data->Fact::toString() + "\n";
+    it = static_cast<BtreeLeaf<time_t, Event*>*>(it->getNextNode());
   }
 
   return std::move(res);

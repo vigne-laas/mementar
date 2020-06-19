@@ -50,41 +50,41 @@ ArchivedLeafNode::~ArchivedLeafNode()
   mut_.unlock();
 }
 
-void ArchivedLeafNode::insert(const time_t& key, const Fact& data)
+void ArchivedLeafNode::insert(Event* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
   {
     mut_.unlock_shared();
-    createNewCompressedChild(key);
+    createNewCompressedChild(data->getTime());
     mut_.lock_shared();
-    compressed_childs_[0]->insert(key, data);
+    compressed_childs_[0]->insert(data);
   }
   else
   {
-    if(key < keys_[0])
+    if((time_t)data->getTime() < keys_[0])
     {
-      std::cout << "[ERROR] try to insert fact in past that do not exist" << std::endl;
+      Display::Error("try to insert fact in past that do not exist");
       return;
     }
 
-    size_t index = getKeyIndex(key);
+    size_t index = getKeyIndex(data->getTime());
 
     if(index < archived_childs_.size())
     {
-      if((index == archived_childs_.size() - 1) && (keys_.size() == archived_childs_.size()) && (key > earlier_key_))
+      if((index == archived_childs_.size() - 1) && (keys_.size() == archived_childs_.size()) && ((time_t)data->getTime() > earlier_key_))
       {
         mut_.unlock_shared();
-        createNewCompressedChild(key);
+        createNewCompressedChild(data->getTime());
         mut_.lock_shared();
-        compressed_childs_[0]->insert(key, data);
+        compressed_childs_[0]->insert(data);
       }
       else
       {
         mut_.unlock_shared();
         createSession(index);
         mut_.lock_shared();
-        archived_sessions_tree_[index]->insert(key, data);
+        archived_sessions_tree_[index]->insert(data);
         modified_[index] = true;
       }
     }
@@ -96,7 +96,7 @@ void ArchivedLeafNode::insert(const time_t& key, const Fact& data)
       keys_.push_back(compressed_childs_[compressed_childs_.size() - 1]->getKey());
       mut_.unlock();
       mut_.lock_shared();
-      compressed_childs_[compressed_childs_.size() - 1]->insert(key, data);
+      compressed_childs_[compressed_childs_.size() - 1]->insert(data);
 
       //verify if a chld need to be compressed
       if(compressed_childs_.size() > 1)
@@ -108,19 +108,19 @@ void ArchivedLeafNode::insert(const time_t& key, const Fact& data)
     }
     else
     {
-      compressed_childs_[index - archived_childs_.size()]->insert(key,data);
+      compressed_childs_[index - archived_childs_.size()]->insert(data);
     }
   }
   mut_.unlock_shared();
 
-  if(earlier_key_ < key)
-    earlier_key_ = key;
+  if(earlier_key_ < (time_t)data->getTime())
+    earlier_key_ = data->getTime();
 }
 
-void ArchivedLeafNode::remove(const time_t& key, const Fact& data)
+void ArchivedLeafNode::remove(Event* data)
 {
   mut_.lock_shared();
-  int index = getKeyIndex(key);
+  int index = getKeyIndex(data->getTime());
   if(index >= 0)
   {
     if((size_t)index < archived_childs_.size())
@@ -128,18 +128,18 @@ void ArchivedLeafNode::remove(const time_t& key, const Fact& data)
       mut_.unlock_shared();
       createSession(index);
       mut_.lock_shared();
-      if(archived_sessions_tree_[index]->remove(key, data))
+      if(archived_sessions_tree_[index]->remove(data))
         modified_[index] = true;
     }
     else
-      compressed_childs_[index - archived_childs_.size()]->remove(key, data);
+      compressed_childs_[index - archived_childs_.size()]->remove(data);
   }
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::find(const time_t& key)
+BtreeLeaf<time_t, Event*>* ArchivedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -159,9 +159,9 @@ BtreeLeaf<time_t, Fact>* ArchivedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::findNear(const time_t& key)
+BtreeLeaf<time_t, Event*>* ArchivedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -182,9 +182,9 @@ BtreeLeaf<time_t, Fact>* ArchivedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getFirst()
+BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   if(archived_childs_.size())
@@ -201,9 +201,9 @@ BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, Fact>* ArchivedLeafNode::getLast()
+BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, Fact>* res = nullptr;
+  BtreeLeaf<time_t, Event*>* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
@@ -283,7 +283,7 @@ void ArchivedLeafNode::loadStoredData()
 
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
-    std::string complete_dir = entry.path();
+    std::string complete_dir = entry.path().generic_string();
     std::string dir = complete_dir.substr(directory_.size());
     if(dir[0] == '/')
       dir.erase(dir.begin());

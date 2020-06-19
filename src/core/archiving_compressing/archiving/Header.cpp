@@ -31,7 +31,7 @@ std::string Header::toString()
   return res;
 }
 
-size_t Header::endodedSize()
+size_t Header::encodedSize()
 {
   size_t nb_bit = 0;
   nb_bit += 8 + description_file_.name_.size()*7 + 31 + 31;
@@ -48,7 +48,7 @@ void Header::encode(std::vector<char>& out)
 {
   BitFileGenerator bit(31, 16, 8);
   bit.writeType3(description_file_.name_.size());
-  for(auto c : description_file_.name_)
+  for(const auto& c : description_file_.name_)
     bit.writeChar(c);
   bit.writeType1(description_file_.offset_);
   bit.writeType1(description_file_.size_);
@@ -57,18 +57,17 @@ void Header::encode(std::vector<char>& out)
   for(const auto& file : input_files_)
   {
     bit.writeType3(file.name_.size());
-    for(auto c : file.name_)
+    for(const auto& c : file.name_)
       bit.writeChar(c);
     bit.writeType1(file.offset_);
     bit.writeType1(file.size_);
   }
 
-  std::vector<char> tmp;
-  bit.get(tmp);
+  std::vector<char> tmp = bit.get();
   out.insert(out.end(), tmp.begin(), tmp.end());
 }
 
-void Header::decode(std::vector<char>& data)
+void Header::decode(const std::vector<char>& data)
 {
   BitFileGetter bit(31, 16, 8);
   bit.set(data);

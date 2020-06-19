@@ -1,10 +1,9 @@
 #ifndef MEMENTAR_HUFFMAN_H
 #define MEMENTAR_HUFFMAN_H
 
-#include <set>
+#include <array>
+#include <limits>
 #include <string>
-#include <vector>
-#include <map>
 
 #include "mementar/core/archiving_compressing/binaryManagement/BinaryManager.h"
 
@@ -17,55 +16,53 @@ struct HuffCode_t
   uint8_t size_;
 };
 
-struct HuffNode_t
-{
-  size_t freq_;
-  char data_;
-  HuffCode_t code_;
-  HuffNode_t* left_;
-  HuffNode_t* right_;
+struct HuffNode_t {
+  using Index = std::uint16_t;
+  using Frequency = std::uint32_t;
 
-  HuffNode_t()
-  {
-    freq_ = 1;
-    data_ = ' ';
-    left_ = right_ = nullptr;
-  }
-  HuffNode_t(char data)
-  {
-    freq_ = 1;
-    data_ = data;
-    left_ = right_ = nullptr;
-  }
+  static constexpr Index invalid_index = std::numeric_limits<Index>::max();
 
-  ~HuffNode_t()
-  {
-    if(left_ != nullptr)
-      delete left_;
-    if(right_ != nullptr)
-      delete right_;
-  }
+  Frequency freq{};
+  Index left{invalid_index};
+  Index right{invalid_index};
+  HuffCode_t code;
 };
+
+// Number of values representable with a byte
+static constexpr HuffNode_t::Index values_in_byte = 1 << (sizeof(std::uint8_t) * 8);
+
+// Maximum number of leaf nodes (character) in an Huffman tree
+static constexpr HuffNode_t::Index leaf_count = values_in_byte;
+
+// Maximum number of nodes (leaf + bind) in an Huffman tree
+static constexpr HuffNode_t::Index node_count = leaf_count * 2;
+
+using FrequencyMap = std::array<HuffNode_t::Frequency, leaf_count>;
+using NodeList = std::array<HuffNode_t, node_count>;
+using TreeList = std::array<size_t, values_in_byte>;
 
 class Huffman : public BinaryManager
 {
 public:
-  void analyse(std::vector<char>& data);
-  void generateTree();
-  void getTreeCode(std::vector<char>& out);
-  void getDataCode(std::vector<char>& data, std::vector<char>& out);
-
-  size_t setTree(std::vector<char>& in);
-  void getFile(std::vector<char>& data, std::string& out);
-
   Huffman();
-  ~Huffman();
+  void analyse(const std::string& data, std::size_t jobs = 1);
+  void generateCode();
+  std::vector<char> getTreeCode();
+  std::vector<char> getDataCode(const std::string& in_data);
+
+  size_t setTree(const std::vector<char>& in);
+  std::string getFile(const std::vector<char>& data);
 
 private:
-  std::vector<HuffNode_t*> heap_;
-  std::map<char, HuffNode_t*> leaf_map_;
+  FrequencyMap frequencies_{};
+  NodeList nodes_{};
+  TreeList subtrees_{};
+  size_t h_min_;
 
-  void generateCode(HuffNode_t* node);
+  void sum(const FrequencyMap& other, FrequencyMap& into);
+  void count_char(const std::string& text, std::size_t jobs = 1);
+  HuffNode_t::Index generateTree();
+  void generateCode(HuffNode_t::Index index);
 };
 
 } // namespace mementar

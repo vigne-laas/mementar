@@ -6,7 +6,7 @@
 #include <mutex>
 
 #include "mementar/core/memGraphs/Branchs/types/Fact.h"
-#include "mementar/core/Events/IdManager.h"
+#include "mementar/core/Occasions/IdManager.h"
 
 namespace mementar
 {
@@ -20,7 +20,7 @@ public:
   bool isFinished(size_t id);
   bool empty() { return fact_paterns_.size() == 0; }
 
-  std::vector<size_t> evaluate(const Fact& fact);
+  std::vector<size_t> evaluate(const Fact* fact);
 
 private:
   std::map<size_t, Fact> fact_paterns_;

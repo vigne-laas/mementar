@@ -27,7 +27,7 @@ public:
     nb_data_ = 0;
   }
 
-  ~Btree()
+  virtual ~Btree()
   {
     if(root_ != nullptr)
       delete root_;
@@ -103,7 +103,11 @@ bool Btree<Tkey,Tdata,Tnode>::remove(const Tkey& key, const Tdata& data)
 {
   nb_data_--;
   if(root_ != nullptr)
-    return root_->remove(key, data);
+    if(root_->remove(key, data))
+    {
+      nb_data_--;
+      return true;
+    }
   return false;
 }
 
@@ -144,14 +148,15 @@ void Btree<Tkey,Tdata,Tnode>::display(int count)
   {
     std::vector<Tdata> datas = tmp->getData();
     std::cout << tmp->getKey() << " => ";
-    for(const auto& data : datas)
+    for(auto data : datas)
       std::cout << data << " : ";
     std::cout << std::endl;
     tmp = static_cast<BtreeLeaf<Tkey,Tdata,Tnode>*>(tmp->getPreviousNode());
     cpt++;
   }
   std::cout << "******" << std::endl;
-  root_->display();
+  if(root_)
+    root_->display();
 }
 
 } // namespace mementar

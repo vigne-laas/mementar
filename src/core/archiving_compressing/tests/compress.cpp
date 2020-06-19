@@ -91,22 +91,19 @@ int main (int argc, char* argv[])
   if(code_type == lz77)
   {
     mementar::LzCompress lz_comp;
-    std::vector<char> out_vect;
-  	lz_comp.compress(in, out_vect);
+  	std::vector<char> out_vect = lz_comp.compress(in);
 
     lz_comp.displayCompressionRate(in.size(), out_vect.size());
     lz_comp.saveToFile(out_vect, output_file);
   }
   else if(code_type == huffman)
   {
-    std::vector<char> in_vect(in.begin(), in.end());
-
     mementar::Huffman huff;
-    huff.analyse(in_vect);
-    huff.generateTree();
-    std::vector<char> out_vect;
-    huff.getTreeCode(out_vect);
-    huff.getDataCode(in_vect, out_vect);
+    huff.analyse(in);
+    huff.generateCode();
+    std::vector<char> out_vect = huff.getTreeCode();
+    std::vector<char> tmp = huff.getDataCode(in);
+    out_vect.insert(out_vect.end(), tmp.begin(), tmp.end());
 
     huff.displayCompressionRate(in.size(), out_vect.size());
     huff.saveToFile(out_vect, output_file);

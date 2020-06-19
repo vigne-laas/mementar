@@ -28,7 +28,7 @@ private:
   std::vector<BtreeLeaf<Tkey,Tdata,Tnode>*> leafs_;
 
   virtual bool needBalancing();
-  void split();
+  virtual void split();
 };
 
 template<typename Tkey, typename Tdata, typename Tnode>
@@ -42,14 +42,15 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey&
     res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
     leafs_.push_back(res);
     res->setMother(this);
+    return res;
   }
   else
   {
     BtreeLeaf<Tkey,Tdata,Tnode>* last = nullptr;
     if(leafs_.size())
-      last = leafs_[leafs_.size() - 1];
+      last = leafs_.back();
 
-    if(key > this->keys_[this->keys_.size() - 1])
+    if(key > this->keys_.back())
     {
       this->keys_.push_back(key);
       res = new BtreeLeaf<Tkey,Tdata,Tnode>(key, data);
@@ -59,7 +60,7 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeLeafNode<Tkey,Tdata,Tnode>::insert(const Tkey&
       res->setPreviousNode(last);
       res->setMother(this);
     }
-    else if(this->keys_[this->keys_.size() - 1] == key)
+    else if(this->keys_.back() == key)
     {
       last->push_back(data);
     }
@@ -169,12 +170,12 @@ void BtreeLeafNode<Tkey,Tdata,Tnode>::split()
   size_t half_order = this->order_/2;
   for(size_t i = 0; i < half_order; i++)
   {
-    new_node->leafs_.insert(new_node->leafs_.begin(), leafs_[leafs_.size() - 1]);
-    leafs_.erase(leafs_.begin() + leafs_.size() - 1);
+    new_node->leafs_.insert(new_node->leafs_.begin(), leafs_.back());
+    leafs_.pop_back();
     new_node->leafs_[i]->setMother(new_node);
 
-    new_node->keys_.insert(new_node->keys_.begin(), this->keys_[this->keys_.size() - 1]);
-    this->keys_.erase(this->keys_.begin() + this->keys_.size() - 1);
+    new_node->keys_.insert(new_node->keys_.begin(), this->keys_.back());
+    this->keys_.pop_back();
   }
 
   if(this->mother_ != nullptr)
@@ -185,7 +186,7 @@ void BtreeLeafNode<Tkey,Tdata,Tnode>::split()
   {
     BtreeNode<Tkey,Tdata,Tnode>* new_mother = new BtreeNode<Tkey,Tdata,Tnode>(this->order_);
     new_mother->setLevel(this->level_ + 1);
-    new_mother->insert(this, new_node->keys_[0]);
+    new_mother->insert(this, this->keys_[0]);
     new_mother->insert(new_node, new_node->keys_[0]);
   }
 }

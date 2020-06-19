@@ -56,14 +56,11 @@ protected:
 template<typename Tkey, typename Tdata, typename Tnode>
 BtreeLeaf<Tkey,Tdata,Tnode>* BtreeNode<Tkey,Tdata,Tnode>::insert(const Tkey& key, const Tdata& data)
 {
-  size_t index = childs_.size() - 1;
-  for(size_t i = 0; i < this->keys_.size(); i++)
+  size_t index;
+  for(index = 0; index < this->keys_.size(); index++)
   {
-    if(key < this->keys_[i])
-    {
-      index = i;
+    if(key < this->keys_[index])
       break;
-    }
   }
   return childs_[index]->insert(key, data);
 }
@@ -75,6 +72,7 @@ void BtreeNode<Tkey,Tdata,Tnode>::insert(BtreeNode<Tkey,Tdata,Tnode>* new_node, 
   {
     childs_.push_back(new_node);
     new_node->setMother(this);
+    return;
   }
   else
   {
@@ -97,7 +95,7 @@ void BtreeNode<Tkey,Tdata,Tnode>::insert(BtreeNode<Tkey,Tdata,Tnode>* new_node, 
         if(key < this->keys_[i])
         {
           this->keys_.insert(this->keys_.begin() + i, key);
-          this->childs_.insert(this->childs_.begin() + i, new_node);
+          this->childs_.insert(this->childs_.begin() + i + 1, new_node);
           new_node->setMother(this);
           break;
         }
@@ -146,7 +144,6 @@ BtreeLeaf<Tkey,Tdata,Tnode>* BtreeNode<Tkey,Tdata,Tnode>::findNear(const Tkey& k
     if(this->keys_[i] > key)
       return this->childs_[i]->findNear(key);
   }
-
   return this->childs_[this->keys_.size()]->findNear(key);
 }
 
@@ -167,33 +164,33 @@ void BtreeNode<Tkey,Tdata,Tnode>::split()
 {
   BtreeNode<Tkey,Tdata,Tnode>* new_node = new BtreeNode<Tkey,Tdata,Tnode>(order_);
 
-  size_t half_order = order_/2;
+  size_t half_order = order_/2 - 1;
   for(size_t i = 0; i < half_order; i++)
   {
-    new_node->childs_.insert(new_node->childs_.begin(), childs_[childs_.size() - 1]);
-    childs_.erase(childs_.begin() + childs_.size() - 1);
+    new_node->childs_.insert(new_node->childs_.begin(), childs_.back());
+    childs_.pop_back();
     new_node->childs_[i]->setMother(new_node);
+
+    new_node->keys_.insert(new_node->keys_.begin(), keys_.back());
+    keys_.pop_back();
   }
 
-  half_order = half_order - 1;
-  for(size_t i = 0; i < half_order; i++)
-  {
-    new_node->keys_.insert(new_node->keys_.begin(), keys_[keys_.size() - 1]);
-    keys_.erase(keys_.begin() + keys_.size() - 1);
-  }
+  new_node->childs_.insert(new_node->childs_.begin(), childs_.back());
+  childs_.pop_back();
+  new_node->childs_[half_order]->setMother(new_node);
 
   if(mother_ != nullptr)
   {
-    mother_->insert(new_node, keys_[keys_.size() - 1]);
-    keys_.erase(keys_.begin() + keys_.size() - 1);
+    mother_->insert(new_node, keys_.back());
+    keys_.pop_back();
   }
   else
   {
     BtreeNode<Tkey,Tdata,Tnode>* new_mother = new BtreeNode<Tkey,Tdata,Tnode>(order_);
     new_mother->setLevel(this->level_ + 1);
-    new_mother->insert(this, keys_[keys_.size() - 1]);
-    new_mother->insert(new_node, keys_[keys_.size() - 1]);
-    keys_.erase(keys_.begin() + keys_.size() - 1);
+    new_mother->insert(this, keys_.back());
+    new_mother->insert(new_node, keys_.back());
+    keys_.pop_back();
   }
 }
 

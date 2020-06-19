@@ -3,9 +3,8 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <ctime>
-#include <unistd.h>
 
-#include "mementar/core/Btree/Btree.h"
+#include "mementar/core/memGraphs/Btree/Btree.h"
 #include "mementar/core/EpisodicTree/ArchivedLeafNode.h"
 
 using namespace std::chrono;
@@ -14,12 +13,12 @@ int main()
 {
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-  mementar::ArchivedLeafNode archived_node("/home/gsarthou/Desktop/tests", 4);
+  mementar::ArchivedLeafNode archived_node("/home/gsarthou/Desktop/test", 4);
 
   std::cout << " *************" << std::endl;
   for(size_t i = 0; i < 400000; i++)
   {
-    archived_node.insert(i, mementar::Fact("bob", "hasValue", std::to_string(i)));
+    archived_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(i)), i));
     if(i == 250000)
       archived_node.newSession();
   }
@@ -30,9 +29,10 @@ int main()
   std::cout << "took " << time_span.count() << std::endl;
 
   std::cout << "will remove" << std::endl;
-  archived_node.remove(102,mementar::Fact("bob", "hasValue", std::to_string(102)));
+  //archived_node.remove(mementar::LinkedFact<time_t>(102, "bob", "hasValue", std::to_string(102)));
+  archived_node.remove(archived_node.find(102)->getData()[0]);
   std::cout << "removed" << std::endl;
-  archived_node.insert(0, mementar::Fact("bob", "hasValue", std::to_string(0)));
+  archived_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(0)), 0));
   std::cout << "inserted" << std::endl;
 
   std::cout << " *************" << std::endl;

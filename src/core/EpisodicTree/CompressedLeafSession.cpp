@@ -1,6 +1,7 @@
 #include "mementar/core/EpisodicTree/CompressedLeafSession.h"
 
 #include <regex>
+#include <sstream>
 
 #include "mementar/core/archiving_compressing/compressing/LzUncompress.h"
 
@@ -13,17 +14,16 @@ CompressedLeafSession::CompressedLeafSession(const time_t& key, size_t index)
   index_ = index;
 }
 
-Btree<time_t, Fact>* CompressedLeafSession::getTree(Header& header, Archive& arch)
+Btree<time_t, Event*>* CompressedLeafSession::getTree(Header& header, Archive& arch)
 {
   std::string comp = arch.extractFile(index_, header);
 
-  std::string out;
   LzUncompress lz;
   std::vector<char> comp_data(comp.begin(), comp.end());
-  lz.uncompress(comp_data, out);
-  Btree<time_t, Fact>* tree = new Btree<time_t, Fact>();
+  std::string out = lz.uncompress(comp_data);
+  Btree<time_t, Event*>* tree = new Btree<time_t, Event*>();
 
-  std::regex regex("\\[(\\d+)\\](\\w+)\\|(\\w+)\\|(\\w+)");
+  std::regex regex("\\[(\\d+)\\](\\w+)\\s*\\|\\s*(\\w+)\\s*\\|\\s*(\\w+)");
   std::smatch match;
 
   std::istringstream iss(out);
@@ -32,12 +32,12 @@ Btree<time_t, Fact>* CompressedLeafSession::getTree(Header& header, Archive& arc
   {
     if(std::regex_match(line, match, regex))
     {
-      Fact fact(match[2].str(), match[3].str(), match[4].str());
       time_t key;
       std::istringstream iss(match[1].str());
       iss >> key;
+      Event* event = new Event(Fact(match[2].str(), match[3].str(), match[4].str()), key);
 
-      tree->insert(key, fact);
+      tree->insert(event->getTime(), event);
     }
   }
 
