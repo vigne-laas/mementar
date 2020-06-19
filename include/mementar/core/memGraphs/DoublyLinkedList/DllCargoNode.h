@@ -11,11 +11,13 @@ class DllCargoNode : public DllNode<DllLinkedElement*>
 {
 public:
   DllCargoNode(DllLinkedElement* data);
-  ~DllCargoNode() {}
+  virtual ~DllCargoNode() {}
 
-  void push_back(DllLinkedElement* data);
-  void remove(DllLinkedElement* data);
-private:
+  virtual void push_back(DllLinkedElement* data);
+  virtual void remove(DllLinkedElement* data);
+
+protected:
+  void unlinkDll(size_t i);
 };
 
 } // namespace mementar

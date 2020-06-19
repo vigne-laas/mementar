@@ -99,6 +99,8 @@ add_library(mementar_memGraphs_lib
   src/core/memGraphs/Branchs/types/Action.cpp
   src/core/memGraphs/DoublyLinkedList/DllCargoNode.cpp
   src/core/memGraphs/DoublyLinkedList/DllLinkedElement.cpp
+  src/core/memGraphs/EventLinkedList/EllElement.cpp
+  src/core/memGraphs/EventLinkedList/EllNode.cpp
   src/core/memGraphs/Graphs/ActionGraph.cpp
   src/core/memGraphs/Graphs/EventGraph.cpp
 )

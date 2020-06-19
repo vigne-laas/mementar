@@ -6,12 +6,13 @@
 #include "mementar/core/memGraphs/Branchs/ValuedNode.h"
 
 #include "mementar/core/memGraphs/DoublyLinkedList/DllLinkedElement.h"
+#include "mementar/core/memGraphs/EventLinkedList/EllElement.h"
 
 #include <string>
 
 namespace mementar {
 
-class ContextualizedEvent : public Event, public ValuedNode, public DllLinkedElement
+class ContextualizedEvent : public Event, public ValuedNode, public EllElement
 {
 public:
   ContextualizedEvent(const std::string& id, const Event& other, Action* action = nullptr) : Event(other), ValuedNode(id)
@@ -43,7 +44,13 @@ private:
 
   bool operator==(const DllLinkedElement* other)
   {
-    return this->operator==(static_cast<const ContextualizedEvent*>(other));
+    return this->Event::operator==(static_cast<const ContextualizedEvent*>(other));
+  }
+
+  virtual bool isEventPart(const DllLinkedElement* other)
+  {
+    return ( (subject_ == static_cast<const ContextualizedEvent*>(other)->subject_) &&
+             (predicat_ == static_cast<const ContextualizedEvent*>(other)->predicat_));
   }
 };
 

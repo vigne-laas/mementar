@@ -28,11 +28,11 @@ public:
     return all_events_;
   }
 
-  Btree<SoftPoint::Ttime, DllLinkedElement*, DllCargoNode>* getTimeline() { return &timeline; }
+  Btree<SoftPoint::Ttime, EllElement*, EllNode>* getTimeline() { return &timeline; }
 
 private:
   std::vector<ContextualizedEvent*> all_events_;
-  Btree<SoftPoint::Ttime, DllLinkedElement*, DllCargoNode> timeline;
+  Btree<SoftPoint::Ttime, EllElement*, EllNode> timeline;
 };
 
 } // namespace mementar

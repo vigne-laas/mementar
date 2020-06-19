@@ -24,12 +24,17 @@ void DllCargoNode::remove(DllLinkedElement* data)
   {
     if(payload_[i]->operator==(data))
     {
-      payload_[i]->dll_node_ = nullptr;
+      unlinkDll(i);
       payload_.erase(payload_.begin() + i);
     }
     else
       i++;
   }
+}
+
+void DllCargoNode::unlinkDll(size_t i)
+{
+  payload_[i]->dll_node_ = nullptr;
 }
 
 } // namespace mementar

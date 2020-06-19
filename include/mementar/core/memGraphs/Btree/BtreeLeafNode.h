@@ -10,7 +10,7 @@ namespace mementar
 template<typename Tkey, typename Tdata, typename Tnode>
 class BtreeLeafNode : public BtreeNode<Tkey,Tdata,Tnode>
 {
-  static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
+  //static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
 public:
   BtreeLeafNode(size_t order = 10) : BtreeNode<Tkey,Tdata,Tnode>(order)
   {}
@@ -198,9 +198,9 @@ void BtreeLeafNode<Tkey,Tdata,Tnode>::display(size_t depth)
   {
     for(size_t j = 0; j < depth; j++)
       std::cout << "\t";
-    std::vector<Tdata> datas = leafs_[i]->getData();
+    //std::vector<Tdata> datas = ;
     std::cout << this->keys_[i] << " => ";
-    for(auto data : datas)
+    for(auto data : leafs_[i]->getData())
       std::cout << data << " : ";
     std::cout << std::endl;
   }

@@ -16,7 +16,7 @@ namespace mementar
 template<typename Tkey, typename Tdata, typename Tnode = DllNode<Tdata>>
 class Btree
 {
-  static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
+  //static_assert(std::is_base_of<DllNode<Tdata>,Tnode>::value, "Tnode must be derived from DllNode");
 public:
   Btree(size_t order = 10)
   {
@@ -146,9 +146,8 @@ void Btree<Tkey,Tdata,Tnode>::display(int count)
   std::cout << "******" << std::endl;
   while((tmp != nullptr) && ((cpt < count) || (count == -1)))
   {
-    std::vector<Tdata> datas = tmp->getData();
     std::cout << tmp->getKey() << " => ";
-    for(auto data : datas)
+    for(auto data : tmp->getData())
       std::cout << data << " : ";
     std::cout << std::endl;
     tmp = static_cast<BtreeLeaf<Tkey,Tdata,Tnode>*>(tmp->getPreviousNode());
