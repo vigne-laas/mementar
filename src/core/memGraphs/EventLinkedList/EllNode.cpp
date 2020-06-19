@@ -10,7 +10,6 @@ EllNode::EllNode() : DllCargoNode()
 
 void EllNode::push_back(EllElement* data)
 {
-  std::cout << "--->push_back " << data << std::endl;
   DllCargoNode::push_back(data);
   link(data);
 }
@@ -36,11 +35,6 @@ void EllNode::link(EllElement* data)
 {
   auto next = getNext(data);
   auto prev = getPrev(data);
-
-  if(prev != nullptr) std::cout << prev; else std::cout << "null";
-  std::cout << " : ";
-  if(next != nullptr) std::cout << next; else std::cout << "null";
-  std::cout << std::endl;
 
   linkPrev(data, prev, next);
   linkNext(data, next, prev);

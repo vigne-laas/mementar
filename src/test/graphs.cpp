@@ -30,6 +30,15 @@ void print(mementar::ContextualizedEvent* evt)
     printNext( static_cast<mementar::ContextualizedEvent*>(nexts[0]));
 }
 
+void printEventList(mementar::ContextualizedEvent* evt)
+{
+  if(evt)
+  {
+    std::cout << evt->toString() << std::endl;
+    printEventList(dynamic_cast<mementar::ContextualizedEvent*>(evt->getNextEllElement()));
+  }
+}
+
 int main()
 {
   mementar::EventGraph event_graph;
@@ -69,6 +78,10 @@ int main()
   std::cout << "********" << std::endl;
   auto first_evt = event_graph.findBranch("pick_1_start");
   print(first_evt);
+
+  std::cout << "********" << std::endl;
+  auto cube12_ison_evt = event_graph.findBranch("ce3");
+  printEventList(cube12_ison_evt);
 
   return 0;
 }
