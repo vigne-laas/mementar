@@ -10,7 +10,7 @@
 #include "mementar/MementarService.h"
 #include "mementar/StampedString.h"
 
-#include "mementar/core/EpisodicTree/ArchivedLeafNode.h"
+#include "mementar/core/LtManagement/EpisodicTree/ArchivedLeafNode.h"
 #include "mementar/core/Occasions/OccasionsManager.h"
 
 namespace mementar
