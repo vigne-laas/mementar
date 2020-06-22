@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <regex>
+#include <iostream>
 
 namespace mementar
 {
@@ -10,14 +12,15 @@ namespace mementar
 class Fact
 {
 public:
-  Fact(const std::string& subject, const std::string& predicat, const std::string& object)
+  Fact(const std::string& subject, const std::string& predicat, const std::string& object, bool add = true)
   {
     subject_ = subject;
     predicat_ = predicat;
     object_ = object;
+    add_ = add;
   }
 
-  Fact(const std::string& triplet = "")
+  Fact(const std::string& triplet = "", bool add = true)
   {
     std::vector<std::string> splitted = split(triplet, "|");
     if(splitted.size() >= 1)
@@ -26,6 +29,7 @@ public:
       predicat_ = splitted[1];
     if(splitted.size() >= 3)
       object_ = splitted[2];
+    add_ = add;
   }
 
   Fact(const Fact& other)
@@ -33,6 +37,33 @@ public:
     subject_ = other.subject_;
     predicat_ = other.predicat_;
     object_ = other.object_;
+    add_ = other.add_;
+  }
+
+  static std::string serialize(const Fact& fact)
+  {
+    return (fact.add_ ? "A|" : "D|") + fact.subject_ + "|" + fact.predicat_ + "|" + fact.object_;
+  }
+
+  static std::string serialize(const Fact* fact)
+  {
+    return (fact->add_ ? "A|" : "D|") + fact->subject_ + "|" + fact->predicat_ + "|" + fact->object_;
+  }
+
+  static Fact deserialize(const std::string& str)
+  {
+    if(std::regex_match(str, match, regex))
+      return Fact(match[2].str(), match[3].str(), match[4].str(), match[1].str() == "A");
+    else
+      return Fact();
+  }
+
+  static Fact* deserializePtr(const std::string& str)
+  {
+    if(std::regex_match(str, match, regex))
+      return new Fact(match[2].str(), match[3].str(), match[4].str(), match[1].str() == "A");
+    else
+      return nullptr;
   }
 
   bool valid() const
@@ -42,40 +73,47 @@ public:
 
   std::string toString() const
   {
-    return subject_ + " | " + predicat_ + " | " + object_;
+    return (add_ ? "[add]" : "[del]") + subject_ + " | " + predicat_ + " | " + object_;
   }
 
   bool operator==(const Fact& other) const
   {
-    return ((subject_ == other.subject_)
+    return ( (add_ == other.add_)
+            && (subject_ == other.subject_)
             && (predicat_ == other.predicat_)
             && (object_ == other.object_));
   }
 
   bool operator==(const Fact* other) const
   {
-    return ((subject_ == other->subject_)
+    return ( (add_ == other->add_)
+            && (subject_ == other->subject_)
             && (predicat_ == other->predicat_)
             && (object_ == other->object_));
   }
 
   bool fit(const Fact& other) const
   {
-    return (((subject_ == other.subject_) || (subject_ == "?") || (other.subject_ == "?"))
+    return ( (add_ == other.add_)
+            && ((subject_ == other.subject_) || (subject_ == "?") || (other.subject_ == "?"))
             && ((predicat_ == other.predicat_) || (predicat_ == "?") || (other.predicat_ == "?"))
             && ((object_ == other.object_) || (object_ == "?") || (other.object_ == "?")));
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Fact& fact)
   {
-    std::string space = " ";
-    os << fact.subject_ << space << fact.predicat_ << space << fact.object_;
+    os << fact.toString();
     return os;
   }
 
   std::string subject_;
   std::string predicat_;
   std::string object_;
+  bool add_;
+
+protected:
+  static std::regex regex;
+  static std::smatch match;
 
 private:
 

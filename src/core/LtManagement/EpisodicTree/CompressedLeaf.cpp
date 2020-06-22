@@ -42,22 +42,13 @@ Btree<time_t, Event*>* CompressedLeaf::getTree()
     std::string out = lz.uncompress(data);
     Btree<time_t, Event*>* tree = new Btree<time_t, Event*>();
 
-    std::regex regex("\\[(\\d+)\\](\\w+)\\s*\\|\\s*(\\w+)\\s*\\|\\s*(\\w+)");
-    std::smatch match;
-
     std::istringstream iss(out);
     std::string line;
     while(std::getline(iss, line))
     {
-      if(std::regex_match(line, match, regex))
-      {
-        time_t key;
-        std::istringstream iss(match[1].str());
-        iss >> key;
-        Event* event = new Event(Fact(match[2].str(), match[3].str(), match[4].str()), key);
-
+      Event* event = Event::deserializePtr(line);
+      if(event != nullptr)
         tree->insert(event->getTime(), event);
-      }
     }
 
     return tree;
@@ -75,7 +66,7 @@ std::string CompressedLeaf::treeToString(Btree<time_t, Event*>* tree)
   {
     tmp_data = it->getData();
     for(auto& data : tmp_data)
-      res += "[" + std::to_string(it->getKey()) + "]" + data->Fact::toString() + "\n";
+      res += Event::serialize(data) + "\n";
     it = static_cast<BtreeLeaf<time_t, Event*>*>(it->getNextNode());
   }
 

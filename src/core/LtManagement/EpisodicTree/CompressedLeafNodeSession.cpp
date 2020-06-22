@@ -214,7 +214,7 @@ std::vector<char> CompressedLeafNodeSession::treeToRaw(size_t index)
   {
     tmp_data = it->getData();
     for(auto& data : tmp_data)
-      res += "[" + std::to_string(it->getKey()) + "]" + data->Fact::toString() + "\n";
+      res += Event::serialize(data) + "\n";
     it = static_cast<BtreeLeaf<time_t, Event*>*>(it->getNextNode());
   }
 
