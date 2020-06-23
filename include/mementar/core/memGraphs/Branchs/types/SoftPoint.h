@@ -9,7 +9,10 @@ namespace mementar {
 class SoftPoint
 {
 public:
-  SoftPoint(size_t t_start, std::experimental::optional<size_t> t_end = std::experimental::nullopt)
+  //typedef size_t Ttime;
+  typedef float Ttime;
+
+  SoftPoint(Ttime t_start, std::experimental::optional<Ttime> t_end = std::experimental::nullopt)
   {
     t_start_ = t_start;
     t_end_ = t_end;
@@ -24,14 +27,13 @@ public:
   }
 
   bool isInstantaneous() const { return t_end_ == std::experimental::nullopt; }
-  size_t getTime() const { return t_; }
-  size_t getTimeStart() const { return t_start_; }
-  size_t getTimeEnd() const { return t_end_.value_or(t_start_); }
-  size_t getTransitionDuration() const { return t_end_.value_or(t_start_) - t_start_; }
+  Ttime getTime() const { return t_; }
+  Ttime getTimeStart() const { return t_start_; }
+  Ttime getTimeEnd() const { return t_end_.value_or(t_start_); }
+  Ttime getTransitionDuration() const { return t_end_.value_or(t_start_) - t_start_; }
 
   std::string toString() const { return "[" + std::to_string(t_start_) + std::string(t_end_ ? "," + std::to_string(t_end_.value()) : "") + "]"; }
 
-  typedef size_t Ttime;
 
 protected:
   Ttime t_start_;

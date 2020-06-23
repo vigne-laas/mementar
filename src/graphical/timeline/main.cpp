@@ -157,7 +157,7 @@ int main(int argc, char** argv)
   events.read(&timeline->events, &font);
 
   mementar::TimelineDrawer drawer;
-  drawer.draw("human_bleu.png", timeline, &actions, &events);
+  drawer.draw("out.png", timeline, &actions, &events);
 
   /*std::cout << "width = " << ontologenius::commit_t::global_width << std::endl;
   std::cout << "height = " << ontologenius::commit_t::global_height << std::endl;

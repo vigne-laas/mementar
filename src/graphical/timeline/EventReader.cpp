@@ -28,7 +28,7 @@ void EventReader::read(EventGraph* graph, CvFont* font)
       getTextSize(group_evt.data, font);
     }
 
-    node = dynamic_cast<BtreeLeaf<size_t, EllElement*, EllNode>*>(node->getNextNode());
+    node = dynamic_cast<BtreeLeaf<SoftPoint::Ttime, EllElement*, EllNode>*>(node->getNextNode());
   }
 }
 

@@ -12,7 +12,7 @@ namespace mementar {
 class Event : public SoftPoint, public Fact
 {
 public:
-  Event(const std::string& data, size_t t_start, std::experimental::optional<size_t> t_end = std::experimental::nullopt) : SoftPoint(t_start, t_end), Fact(data)
+  Event(const std::string& data, SoftPoint::Ttime t_start, std::experimental::optional<SoftPoint::Ttime> t_end = std::experimental::nullopt) : SoftPoint(t_start, t_end), Fact(data)
   {
   }
 
