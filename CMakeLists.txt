@@ -21,6 +21,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 find_package(cmake_modules REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
+find_package(OpenCV REQUIRED)
 
 
 ################################################
@@ -61,6 +62,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES mementar_lib
   CATKIN_DEPENDS roscpp rospy std_msgs
+  DEPENDS OpenCV
 )
 
 ###########
@@ -134,6 +136,24 @@ target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
 add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 ##############################
+## DRAWER
+##############################
+
+add_library(mementar_drawer_lib
+  src/graphical/timeline/ActionReader.cpp
+  src/graphical/timeline/EventReader.cpp
+  src/graphical/timeline/TimelineDrawer.cpp
+)
+target_include_directories(mementar_drawer_lib
+PUBLIC
+ ${OpenCV_INCLUDE_DIRS}
+)
+target_link_libraries(mementar_drawer_lib
+  mementar_memGraphs_lib
+  ${OpenCV_LIBS}
+)
+
+##############################
 ## API
 ##############################
 
@@ -174,6 +194,11 @@ add_executable(mementar_multi src/nodes/mementar_multi.cpp)
 target_link_libraries(mementar_multi mementar_interface)
 target_link_libraries(mementar_multi ${catkin_LIBRARIES})
 add_dependencies(mementar_multi ${catkin_EXPORTED_TARGETS})
+
+add_executable(mementar_timeline src/graphical/timeline/main.cpp)
+target_link_libraries(mementar_timeline mementar_core_lib mementar_drawer_lib)
+target_link_libraries(mementar_timeline ${catkin_LIBRARIES})
+add_dependencies(mementar_timeline ${catkin_EXPORTED_TARGETS})
 
 ##############################
 ## Test executables

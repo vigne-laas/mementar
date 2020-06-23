@@ -66,11 +66,6 @@ public:
         return new Event(Fact::deserialize(match[4].str()), std::stoul(match[1].str()));
       else
         return new Event(Fact::deserialize(match[4].str()), SoftPoint(std::stoul(match[1].str()), std::stoul(match[3].str())));
-
-      /*if(match[3].str() == "")
-        return new Event(Fact(match[4].str(), match[5].str(), match[6].str(), match[7].str() == "A"), std::stoul(match[1].str()));
-      else
-        return new Event(Fact(match[4].str(), match[5].str(), match[6].str(), match[7].str() == "A"), SoftPoint(std::stoul(match[1].str()), std::stoul(match[3].str())));*/
     }
     else
       return nullptr;

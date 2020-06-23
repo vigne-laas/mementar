@@ -32,7 +32,7 @@ public:
   bool isPartOfAction() { return action_ != nullptr; }
   Action* getActionPart() { return action_; }
 
-  std::string toString() { return getValue() + " " + SoftPoint::toString() + " : " + getData() + std::string(action_ ? " is part of action " + action_->getName() : ""); }
+  std::string toString() { return getValue() + " " + SoftPoint::toString() + " : " + getData() + std::string(action_ ? " => part of action " + action_->getName() : ""); }
 
   virtual void print(std::ostream& os) const
   {
