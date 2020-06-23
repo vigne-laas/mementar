@@ -4,7 +4,7 @@
 #include "mementar/graphical/timeline/EventReader.h"
 #include "mementar/graphical/timeline/TimelineDrawer.h"
 
-/*mementar::Timeline* getTimeline()
+mementar::Timeline* getTimeline()
 {
   mementar::Timeline* timeline = new mementar::Timeline();
 
@@ -60,7 +60,7 @@
   timeline->events.add(new mementar::ContextualizedEvent("e27", mementar::Event("tape_1|isIn|pink_box", 173,175)));
 
   return timeline;
-}*/
+}
 
 
 /* HUMAN GREEN*/
