@@ -12,8 +12,10 @@ namespace mementar {
 
 struct event_t
 {
+  event_t(SoftPoint::Ttime time) : time_point(time) {}
+
   std::string data;
-  size_t time_point;
+  SoftPoint time_point;
 };
 
 class EventReader

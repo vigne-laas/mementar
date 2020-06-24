@@ -108,6 +108,26 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
                        cvScalar(32, 20, 122), 4);
   }
 
+  if(action.start.isInstantaneous() == false)
+  {
+    size_t y_soft_start_pose = MARGIN + (action.start.getTimeStart() - start_time) * UNIT_SPACE;
+    size_t y_soft_end_pose = MARGIN + (action.start.getTimeEnd() - start_time) * UNIT_SPACE;
+
+    cvLine(image_, cvPoint(line_pose - 4, y_soft_start_pose),
+                   cvPoint(line_pose - 4, y_soft_end_pose),
+                   cvScalar(114,102,204), 8);
+  }
+
+  if(action.end.value().isInstantaneous() == false)
+  {
+    size_t y_soft_start_pose = MARGIN + (action.end.value().getTimeStart() - start_time) * UNIT_SPACE;
+    size_t y_soft_end_pose = MARGIN + (action.end.value().getTimeEnd() - start_time) * UNIT_SPACE;
+
+    cvLine(image_, cvPoint(line_pose - 4, y_soft_start_pose),
+                   cvPoint(line_pose - 4, y_soft_end_pose),
+                   cvScalar(114,102,204), 8);
+  }
+
   CvFont font;
   cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 1, 1, 0, 2);
   cvPutText(image_, action.name.c_str(), cvPoint(x_start_pose - getTextSize(action.name, &font) - 2, y_mid_pose), &font,
@@ -119,11 +139,21 @@ void TimelineDrawer::drawEvent(const event_t& event, size_t line_pose, size_t st
   size_t x_start_pose = line_pose;
   size_t x_end_pose = x_start_pose + SIDE_SPACE;
 
-  size_t y_pose = MARGIN + (event.time_point - start_time) * UNIT_SPACE;
+  size_t y_pose = MARGIN + (event.time_point.getTime() - start_time) * UNIT_SPACE;
 
   cvLine(image_, cvPoint(x_start_pose, y_pose),
                  cvPoint(x_end_pose, y_pose),
                  cvScalar(89, 26, 16), 4);
+
+   if(event.time_point.isInstantaneous() == false)
+   {
+     size_t y_soft_start_pose = MARGIN + (event.time_point.getTimeStart() - start_time) * UNIT_SPACE;
+     size_t y_soft_end_pose = MARGIN + (event.time_point.getTimeEnd() - start_time) * UNIT_SPACE;
+
+     cvLine(image_, cvPoint(line_pose + 4, y_soft_start_pose),
+                    cvPoint(line_pose + 4, y_soft_end_pose),
+                    cvScalar(149,86,86), 8);
+   }
 
   CvFont font;
   cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 1, 1, 0, 2);

@@ -42,7 +42,7 @@ mementar::Timeline* getTimeline()
   timeline->events.add(new mementar::ContextualizedEvent("e8", mementar::Event(mementar::Fact("tape_1|isOn|Table_1", false), 37)));
   timeline->events.add(new mementar::ContextualizedEvent("e9", mementar::Event("tape_1|isOn|Table_1", 38, 42)));
   timeline->events.add(new mementar::ContextualizedEvent("e10", mementar::Event("tape_1|isBehind|grey_box", 38)));
-  timeline->events.add(new mementar::ContextualizedEvent("e11", mementar::Event(mementar::Fact("tape_1|isInHand|hum_blue", false), 42)));
+  timeline->events.add(new mementar::ContextualizedEvent("e11", mementar::Event(mementar::Fact("tape_1|isInHand|hum_blue", false), mementar::SoftPoint(41, 42))));
   timeline->events.add(new mementar::ContextualizedEvent("e12", mementar::Event(mementar::Fact("hum_blue|isInRoom|expe_room", false), mementar::SoftPoint(51,52))));
   timeline->events.add(new mementar::ContextualizedEvent("e13", mementar::Event("hum_green|isInRoom|expe_room", 53)));
   timeline->events.add(new mementar::ContextualizedEvent("e14", mementar::Event("tape_2|isInGripper|pr2", 86)));
@@ -137,7 +137,7 @@ mementar::Timeline* getTimeline()
   timeline->events.add(new mementar::ContextualizedEvent("e8", mementar::Event(mementar::Fact("tape_1|isOn|Table_1", false), 37)));
   timeline->events.add(new mementar::ContextualizedEvent("e9", mementar::Event("tape_1|isOn|Table_1", 38, 42)));
   timeline->events.add(new mementar::ContextualizedEvent("e10", mementar::Event("tape_1|isBehind|grey_box", 38)));
-  timeline->events.add(new mementar::ContextualizedEvent("e11", mementar::Event(mementar::Fact("tape_1|isInHand|hum_blue", false), 42)));
+  timeline->events.add(new mementar::ContextualizedEvent("e11", mementar::Event(mementar::Fact("tape_1|isInHand|hum_blue", false), mementar::SoftPoint(41, 42))));
   timeline->events.add(new mementar::ContextualizedEvent("e12", mementar::Event(mementar::Fact("hum_blue|isInRoom|expe_room", false), mementar::SoftPoint(51,52))));
 
   return timeline;

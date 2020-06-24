@@ -26,6 +26,13 @@ public:
     t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
   }
 
+  SoftPoint(const SoftPoint* other)
+  {
+    t_start_ = other->t_start_;
+    t_end_ = other->t_end_;
+    t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
+  }
+
   bool isInstantaneous() const { return t_end_ == std::experimental::nullopt; }
   Ttime getTime() const { return t_; }
   Ttime getTimeStart() const { return t_start_; }

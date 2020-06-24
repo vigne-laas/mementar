@@ -11,14 +11,15 @@ void EventReader::read(EventGraph* graph, CvFont* font)
 
   while(node != nullptr)
   {
-    event_t group_evt;
-    group_evt.time_point = node->getKey();
+    event_t group_evt(node->getKey());
     for(auto evt : node->getData())
     {
       if(dynamic_cast<ContextualizedEvent*>(evt)->isPartOfAction() == false)
       {
         auto event = dynamic_cast<ContextualizedEvent*>(evt);
         group_evt.data += (group_evt.data == "" ? "" : " -- ") + event->Fact::toString();
+        if(event->getTransitionDuration() > group_evt.time_point.getTransitionDuration())
+          group_evt.time_point = SoftPoint(event);
       }
     }
 
