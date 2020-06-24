@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <sstream>
 
-#include "mementar/core/utility/Display.h"
+#include "mementar/graphical/Display.h"
 
 namespace mementar
 {

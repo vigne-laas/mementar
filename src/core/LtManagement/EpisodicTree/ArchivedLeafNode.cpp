@@ -3,7 +3,7 @@
 #include <sstream>
 #include <experimental/filesystem>
 
-#include "mementar/core/utility/Display.h"
+#include "mementar/graphical/Display.h"
 
 namespace mementar
 {

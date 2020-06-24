@@ -1,7 +1,7 @@
 #include "mementar/core/LtManagement/EpisodicTree/CompressedLeafNodeSession.h"
 
-#include "mementar/core/utility/Display.h"
 #include "mementar/core/LtManagement/archiving_compressing/compressing/LzCompress.h"
+#include "mementar/graphical/Display.h"
 
 namespace mementar
 {

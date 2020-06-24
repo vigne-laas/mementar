@@ -2,7 +2,7 @@
 #include <experimental/filesystem>
 
 #include "mementar/core/LtManagement/EpisodicTree/CompressedLeafNode.h"
-#include "mementar/core/utility/Display.h"
+#include "mementar/graphical/Display.h"
 
 namespace mementar
 {
