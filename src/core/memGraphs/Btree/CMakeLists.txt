@@ -8,12 +8,6 @@ include_directories(
   ../../../../include
 )
 
-add_library(mementar_dll_lib
-  ../DoublyLinkedList/DllCargoNode.cpp
-  ../DoublyLinkedList/DllLinkedElement.cpp
-)
-
 add_executable(btree tests/btree_test.cpp)
 add_executable(max tests/max_insertion.cpp)
 add_executable(cargo tests/cargo.cpp)
-target_link_libraries(cargo mementar_dll_lib)
