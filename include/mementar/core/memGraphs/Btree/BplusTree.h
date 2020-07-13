@@ -8,8 +8,8 @@ namespace mementar {
 template<typename Tkey, typename Tdata>
 class BplusLeaf
 {
-  using LeafType = BtreeLeafBase<Tkey, BplusLeaf<Tkey, Tdata> >;
 public:
+  using LeafType = BtreeLeafBase<Tkey, BplusLeaf<Tkey, Tdata> >;
   using DataType = Tdata;
 
   BplusLeaf()
@@ -29,6 +29,57 @@ public:
     for(size_t i = 0; i < payload_.size();)
     {
       if(payload_[i] == data)
+        payload_.erase(payload_.begin() + i);
+      else
+        i++;
+    }
+  }
+  bool hasData()
+  {
+    return (payload_.size() != 0);
+  }
+
+  std::vector<DataType> getData()
+  {
+    return payload_;
+  }
+
+  BplusLeaf* getPreviousLeaf() { return prev_; }
+  BplusLeaf* getNextLeaf() { return next_; }
+
+  void setPreviousLeaf(BplusLeaf* prev) { prev_ = prev; }
+  void setNextLeaf(BplusLeaf* next) { next_ = next; }
+
+  std::vector<DataType> payload_;
+  BplusLeaf* prev_;
+  BplusLeaf* next_;
+private:
+};
+
+template<typename Tkey, typename Tdata>
+class BplusLeaf<Tkey, Tdata*>
+{
+public:
+  using LeafType = BtreeLeafBase<Tkey, BplusLeaf<Tkey, Tdata*> >;
+  using DataType = Tdata*;
+
+  BplusLeaf()
+  {
+    prev_ = nullptr;
+    next_ = nullptr;
+  }
+
+  void insert(LeafType* leaf, DataType data)
+  {
+    (void)leaf;
+    payload_.push_back(data);
+  }
+  void remove(LeafType* leaf, DataType data)
+  {
+    (void)leaf;
+    for(size_t i = 0; i < payload_.size();)
+    {
+      if(payload_[i]->operator==(*data))
         payload_.erase(payload_.begin() + i);
       else
         i++;

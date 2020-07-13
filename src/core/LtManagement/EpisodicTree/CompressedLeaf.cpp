@@ -10,7 +10,7 @@
 namespace mementar
 {
 
-CompressedLeaf::CompressedLeaf(Btree<time_t, Event*>* tree, const std::string& directory)
+CompressedLeaf::CompressedLeaf(BplusTree<time_t, Event*>* tree, const std::string& directory)
 {
   if(tree == nullptr)
     return;
@@ -33,14 +33,14 @@ CompressedLeaf::CompressedLeaf(const time_t& key, const std::string& directory)
   directory_ = directory.substr(0, dot_pose);
 }
 
-Btree<time_t, Event*>* CompressedLeaf::getTree()
+BplusTree<time_t, Event*>* CompressedLeaf::getTree()
 {
   LzUncompress lz;
   std::vector<char> data;
   if(lz.readBinaryFile(data, directory_ + ".mlz"))
   {
     std::string out = lz.uncompress(data);
-    Btree<time_t, Event*>* tree = new Btree<time_t, Event*>();
+    BplusTree<time_t, Event*>* tree = new BplusTree<time_t, Event*>();
 
     std::istringstream iss(out);
     std::string line;
@@ -57,17 +57,17 @@ Btree<time_t, Event*>* CompressedLeaf::getTree()
   return nullptr;
 }
 
-std::string CompressedLeaf::treeToString(Btree<time_t, Event*>* tree)
+std::string CompressedLeaf::treeToString(BplusTree<time_t, Event*>* tree)
 {
   std::string res;
   std::vector<Event*> tmp_data;
-  BtreeLeaf<time_t, Event*>* it = tree->getFirst();
+  BplusLeaf<time_t, Event*>* it = tree->getFirst();
   while(it != nullptr)
   {
     tmp_data = it->getData();
     for(auto& data : tmp_data)
       res += Event::serialize(data) + "\n";
-    it = static_cast<BtreeLeaf<time_t, Event*>*>(it->getNextNode());
+    it = static_cast<BplusLeaf<time_t, Event*>*>(it->getNextLeaf());
   }
 
   return std::move(res);

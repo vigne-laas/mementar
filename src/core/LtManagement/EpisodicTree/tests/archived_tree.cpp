@@ -32,7 +32,7 @@ int main()
   //archived_node.remove(mementar::LinkedFact<time_t>(102, "bob", "hasValue", std::to_string(102)));
   archived_node.remove(archived_node.find(102)->getData()[0]);
   std::cout << "removed" << std::endl;
-  archived_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(0)), 0));
+  archived_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(0)), 102));
   std::cout << "inserted" << std::endl;
 
   std::cout << " *************" << std::endl;

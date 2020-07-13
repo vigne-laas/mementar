@@ -137,9 +137,9 @@ void ArchivedLeafNode::remove(Event* data)
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::find(const time_t& key)
+ArchivedLeafNode::LeafType* ArchivedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -159,9 +159,9 @@ BtreeLeaf<time_t, Event*>* ArchivedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::findNear(const time_t& key)
+ArchivedLeafNode::LeafType* ArchivedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -182,9 +182,9 @@ BtreeLeaf<time_t, Event*>* ArchivedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getFirst()
+ArchivedLeafNode::LeafType* ArchivedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(archived_childs_.size())
@@ -201,9 +201,9 @@ BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getLast()
+ArchivedLeafNode::LeafType* ArchivedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
@@ -244,7 +244,7 @@ void ArchivedLeafNode::newSession()
 void ArchivedLeafNode::createNewCompressedChild(const time_t& key)
 {
   mut_.lock();
-  compressed_childs_.push_back(new CompressedLeafNode(directory_, order_));
+  compressed_childs_.push_back(new CompressedLeafNode(directory_));
   keys_.push_back(key);
   mut_.unlock();
 }
@@ -309,7 +309,7 @@ void ArchivedLeafNode::loadStoredData()
   Display::Percent(100);
   Display::Debug("");
 
-  CompressedLeafNode* comp = new CompressedLeafNode(directory_, order_);
+  CompressedLeafNode* comp = new CompressedLeafNode(directory_);
   if(comp->getKey() != time_t(-1))
   {
     compressed_childs_.push_back(comp);

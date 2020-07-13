@@ -14,14 +14,14 @@ CompressedLeafSession::CompressedLeafSession(const time_t& key, size_t index)
   index_ = index;
 }
 
-Btree<time_t, Event*>* CompressedLeafSession::getTree(Header& header, Archive& arch)
+BplusTree<time_t, Event*>* CompressedLeafSession::getTree(Header& header, Archive& arch)
 {
   std::string comp = arch.extractFile(index_, header);
 
   LzUncompress lz;
   std::vector<char> comp_data(comp.begin(), comp.end());
   std::string out = lz.uncompress(comp_data);
-  Btree<time_t, Event*>* tree = new Btree<time_t, Event*>();
+  BplusTree<time_t, Event*>* tree = new BplusTree<time_t, Event*>();
 
   std::istringstream iss(out);
   std::string line;

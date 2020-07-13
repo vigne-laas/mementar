@@ -35,7 +35,7 @@ int main()
     std::cout << "took " << time_span.count() << " to insert" << std::endl;
 
     compressed_node.remove(compressed_node.find(102)->getData()[0]);
-    compressed_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(0)), 0));
+    compressed_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(0)), 102));
 
     std::cout << " *************" << std::endl;
 

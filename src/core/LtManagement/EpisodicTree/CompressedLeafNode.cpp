@@ -7,10 +7,9 @@
 namespace mementar
 {
 
-CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
+CompressedLeafNode::CompressedLeafNode(const std::string& directory)
 {
   directory_ = directory;
-  order_ = order;
 
   last_tree_nb_leafs_ = 0;
   earlier_key_ = 0;
@@ -62,7 +61,6 @@ CompressedLeafNode* CompressedLeafNode::split()
   mut_.lock();
   CompressedLeafNode* new_one = new CompressedLeafNode();
   new_one->directory_ = directory_;
-  new_one->order_ = order_;
 
   size_t nb = keys_.size()/2;
   for(size_t i = 0; i < nb; i++)
@@ -188,9 +186,9 @@ void CompressedLeafNode::remove(Event* data)
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t,Event*>* CompressedLeafNode::find(const time_t& key)
+CompressedLeafNode::LeafType* CompressedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -210,9 +208,9 @@ BtreeLeaf<time_t,Event*>* CompressedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* CompressedLeafNode::findNear(const time_t& key)
+CompressedLeafNode::LeafType* CompressedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -233,9 +231,9 @@ BtreeLeaf<time_t, Event*>* CompressedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* CompressedLeafNode::getFirst()
+CompressedLeafNode::LeafType* CompressedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
@@ -252,9 +250,9 @@ BtreeLeaf<time_t, Event*>* CompressedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* CompressedLeafNode::getLast()
+CompressedLeafNode::LeafType* CompressedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(btree_childs_.size())
@@ -281,7 +279,7 @@ void CompressedLeafNode::display(time_t key)
     if((size_t)index < compressed_childs_.size())
       std::cout << compressed_childs_[index].getDirectory() << std::endl;
     else
-      btree_childs_[index - compressed_childs_.size()]->display();
+      btree_childs_[index - compressed_childs_.size()]->displayTree();
   }
   mut_.unlock_shared();
 }
@@ -295,7 +293,7 @@ void CompressedLeafNode::init()
 void CompressedLeafNode::createNewTreeChild(const time_t& key)
 {
   mut_.lock();
-  btree_childs_.push_back(new Btree<time_t, Event*>(order_));
+  btree_childs_.push_back(new BplusTree<time_t, Event*>());
   keys_.push_back(key);
   contexts_.push_back(Context(key));
   mut_.unlock();

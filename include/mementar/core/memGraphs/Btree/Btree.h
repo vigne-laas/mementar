@@ -4,6 +4,8 @@
 #include "mementar/core/memGraphs/Btree/BtreeLeafBase.h"
 #include "mementar/core/memGraphs/Btree/BtreeNode.h"
 
+#include <iostream>
+
 namespace mementar {
 
 template<typename Tkey, typename Tleaf, size_t N = 10>
@@ -34,6 +36,8 @@ public:
 
   void displayLinear(int count = -1);
   void displayTree();
+
+  size_t size() { return nb_data_; }
 
 private:
   BtreeNode<Tkey,Tleaf>* root_;
