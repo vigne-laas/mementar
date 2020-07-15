@@ -7,19 +7,18 @@ void EventReader::read(EventGraph* graph, CvFont* font)
   max_text_size_ = 0;
 
   auto tree = graph->getTimeline();
-  auto node = tree->getFirst();
+  auto node = static_cast<BplusLeaf<SoftPoint::Ttime, ContextualizedEvent*>*>(tree->getFirst());
 
   while(node != nullptr)
   {
-    event_t group_evt(node->getKey());
+    event_t group_evt(node->getData()[0]->getTime());
     for(auto evt : node->getData())
     {
-      if(dynamic_cast<ContextualizedEvent*>(evt)->isPartOfAction() == false)
+      if(evt->isPartOfAction() == false)
       {
-        auto event = dynamic_cast<ContextualizedEvent*>(evt);
-        group_evt.data += (group_evt.data == "" ? "" : " -- ") + event->Fact::toString();
-        if(event->getTransitionDuration() > group_evt.time_point.getTransitionDuration())
-          group_evt.time_point = SoftPoint(event);
+        group_evt.data += (group_evt.data == "" ? "" : " -- ") + evt->Fact::toString();
+        if(evt->getTransitionDuration() > group_evt.time_point.getTransitionDuration())
+          group_evt.time_point = SoftPoint(evt);
       }
     }
 
@@ -29,7 +28,7 @@ void EventReader::read(EventGraph* graph, CvFont* font)
       getTextSize(group_evt.data, font);
     }
 
-    node = dynamic_cast<BtreeLeaf<SoftPoint::Ttime, EllElement*, EllNode>*>(node->getNextNode());
+    node = node->getNextLeaf();
   }
 }
 

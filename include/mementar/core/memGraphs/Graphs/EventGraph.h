@@ -4,12 +4,13 @@
 #include "mementar/core/memGraphs/Graphs/Graph.h"
 #include "mementar/core/memGraphs/Branchs/ContextualizedEvent.h"
 
-#include "mementar/core/memGraphs/Btree/Btree.h"
+#include "mementar/core/memGraphs/ExtendedBtree/EventLinkedLeaf.h"
 
 namespace mementar {
 
 class EventGraph : public Graph<ContextualizedEvent>
 {
+  using ElBTree = Btree<SoftPoint::Ttime, EventLinkedLeaf<SoftPoint::Ttime, ContextualizedEvent*>, 10>;
 public:
 
   ~EventGraph();
@@ -28,11 +29,11 @@ public:
     return all_events_;
   }
 
-  Btree<SoftPoint::Ttime, EllElement*, EllNode>* getTimeline() { return &timeline; }
+  ElBTree* getTimeline() { return &timeline; }
 
 private:
   std::vector<ContextualizedEvent*> all_events_;
-  Btree<SoftPoint::Ttime, EllElement*, EllNode> timeline;
+  ElBTree timeline;
 };
 
 } // namespace mementar

@@ -5,16 +5,17 @@
 #include "mementar/core/memGraphs/Branchs/types/Action.h"
 #include "mementar/core/memGraphs/Branchs/ValuedNode.h"
 
-#include "mementar/core/memGraphs/DoublyLinkedList/DllLinkedElement.h"
-#include "mementar/core/memGraphs/EventLinkedList/EllElement.h"
+#include "mementar/core/memGraphs/ExtendedBtree/EventLinkedLeaf.h"
 
 #include <string>
 
 namespace mementar {
 
-class ContextualizedEvent : public Event, public ValuedNode, public EllElement
+class ContextualizedEvent : public Event, public ValuedNode, public LinkedEvent<EventLinkedLeaf<SoftPoint::Ttime, ContextualizedEvent*>, ContextualizedEvent>
 {
 public:
+  using LeafType = EventLinkedLeaf<SoftPoint::Ttime, ContextualizedEvent*>;
+
   ContextualizedEvent(const std::string& id, const Event& other, Action* action = nullptr) : Event(other), ValuedNode(id)
   {
     action_ = action;
@@ -27,31 +28,43 @@ public:
 
   virtual ~ContextualizedEvent() {}
 
-  std::string getId() { return getValue(); }
+  std::string getId() const { return getValue(); }
 
-  bool isPartOfAction() { return action_ != nullptr; }
+  bool isPartOfAction() const { return action_ != nullptr; }
   Action* getActionPart() { return action_; }
 
-  std::string toString() { return getValue() + " " + SoftPoint::toString() + " : " + getData() + std::string(action_ ? " => part of action " + action_->getName() : ""); }
+  std::string toString() const { return getValue() + " " + SoftPoint::toString() + " : " + getData() + std::string(action_ ? " => part of action " + action_->getName() : ""); }
 
-  virtual void print(std::ostream& os) const
+  bool operator==(const ContextualizedEvent& other)
   {
-    os << getValue();
+    return this->Event::operator==(other);
+  }
+
+  bool isPartOf(const ContextualizedEvent& other)
+  {
+    return ( (subject_ == other.subject_) &&
+             (predicat_ == other.predicat_) );
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const ContextualizedEvent& evt)
+  {
+    os << evt.toString();
+    return os;
+  }
+
+  std::vector<ContextualizedEvent*> getNextData()
+  {
+    std::vector<ContextualizedEvent*> res;
+    auto nextLeaf = getNextLeaf();
+    if(nextLeaf != nullptr)
+    {
+      res = nextLeaf->getData();
+    }
+    return res;
   }
 
 private:
   Action* action_;
-
-  bool operator==(const DllLinkedElement* other)
-  {
-    return this->Event::operator==(static_cast<const ContextualizedEvent*>(other));
-  }
-
-  virtual bool isEventPart(const DllLinkedElement* other)
-  {
-    return ( (subject_ == static_cast<const ContextualizedEvent*>(other)->subject_) &&
-             (predicat_ == static_cast<const ContextualizedEvent*>(other)->predicat_));
-  }
 };
 
 } // namespace mementar

@@ -10,24 +10,24 @@
 
 void printNext(mementar::ContextualizedEvent* evt)
 {
-  auto nexts = evt->getNextDllData();
+  auto nexts = evt->getNextData();
   for(auto n : nexts)
-    std::cout << static_cast<mementar::ContextualizedEvent*>(n)->toString() << std::endl;
+    std::cout << n->toString() << std::endl;
 
   if(nexts.size())
-    printNext( static_cast<mementar::ContextualizedEvent*>(nexts[0]));
+    printNext(nexts[0]);
 }
 
 void print(mementar::ContextualizedEvent* evt)
 {
   std::cout << evt->toString() << std::endl;
 
-  auto nexts = evt->getNextDllData();
+  auto nexts = evt->getNextData();
   for(auto n : nexts)
-    std::cout <<  static_cast<mementar::ContextualizedEvent*>(n)->toString() << std::endl;
+    std::cout << n->toString() << std::endl;
 
   if(nexts.size())
-    printNext( static_cast<mementar::ContextualizedEvent*>(nexts[0]));
+    printNext(nexts[0]);
 }
 
 void printEventList(mementar::ContextualizedEvent* evt)
@@ -35,7 +35,7 @@ void printEventList(mementar::ContextualizedEvent* evt)
   if(evt)
   {
     std::cout << evt->toString() << std::endl;
-    printEventList(dynamic_cast<mementar::ContextualizedEvent*>(evt->getNextEllElement()));
+    printEventList(evt->getNextEvent());
   }
 }
 
@@ -73,7 +73,7 @@ int main()
     std::cout << event->toString() << std::endl;
 
   auto timeline = event_graph.getTimeline();
-  timeline->display();
+  timeline->displayTree();
 
   std::cout << "********" << std::endl;
   auto first_evt = event_graph.findBranch("pick_1_start");

@@ -71,7 +71,7 @@ public:
       return nullptr;
   }
 
-  std::string getData() { return Fact::toString(); }
+  std::string getData() const { return Fact::toString(); }
 
   friend std::ostream& operator<<(std::ostream& os, Event* event)
   {
@@ -80,12 +80,12 @@ public:
     return os;
   }
 
-  bool operator==(const Event& other)
+  bool operator==(const Event& other) const
   {
     return Fact::operator==(other);
   }
 
-  bool operator==(const Event* other)
+  bool operator==(const Event* other) const
   {
     return Fact::operator==(other);
   }

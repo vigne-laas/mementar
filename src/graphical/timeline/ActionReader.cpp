@@ -13,15 +13,15 @@ ActionReader::ActionReader()
 void ActionReader::read(EventGraph* graph, CvFont* font)
 {
   auto tree = graph->getTimeline();
-  DllNode<DllLinkedElement*>* node = tree->getFirst();
+  auto node = static_cast<BplusLeaf<SoftPoint::Ttime, ContextualizedEvent*>*>(tree->getFirst());
 
   while(node != nullptr)
   {
     for(auto evt : node->getData())
     {
-      if(dynamic_cast<ContextualizedEvent*>(evt)->isPartOfAction())
+      if(evt->isPartOfAction())
       {
-        auto action = dynamic_cast<ContextualizedEvent*>(evt)->getActionPart();
+        auto action = evt->getActionPart();
         if(actions_.find(action->getValue()) == actions_.end())
         {
           action_t act = getAction(action);
@@ -33,7 +33,7 @@ void ActionReader::read(EventGraph* graph, CvFont* font)
       }
     }
 
-    node = node->getNextNode();
+    node = node->getNextLeaf();
   }
 
   std::cout << "max_level_ = " << max_level_ << std::endl;
