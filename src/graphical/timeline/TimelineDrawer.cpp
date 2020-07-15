@@ -24,9 +24,11 @@ void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline, Acti
 
   drawVector(start, end, line_pose);
 
+  std::cout << "---ACTIONS----" << std::endl;
   for(auto act : actions->actions_)
     drawAction(act.second, line_pose, actions->max_level_, start);
 
+  std::cout << "---EVENTS----" << std::endl;
   for(auto evt : events->events)
     drawEvent(evt, line_pose, start);
 
@@ -66,7 +68,6 @@ void TimelineDrawer::drawVector(size_t start, size_t end, size_t pose)
 
 void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time)
 {
-  std::cout << "draw action " << action.name << std::endl;
   size_t x_end_pose = line_pose;
   size_t x_mid_pose = x_end_pose - action.level * SIDE_SPACE;
   size_t x_start_pose = x_end_pose - (max_level + 1) * SIDE_SPACE;

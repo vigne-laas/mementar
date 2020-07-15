@@ -267,6 +267,7 @@ BtreeLeafBase<Tkey,Tleaf>* Btree<Tkey,Tleaf,N>::insertInLeaf(BtreeNode<Tkey,Tlea
         if(node->keys_[i] == key)
         {
           node->leafs_[i]->insert(node->leafs_[i], data);
+          break;
         }
         else if(node->keys_[i] > key)
         {
@@ -283,8 +284,8 @@ BtreeLeafBase<Tkey,Tleaf>* Btree<Tkey,Tleaf,N>::insertInLeaf(BtreeNode<Tkey,Tlea
           node->leafs_.insert(node->leafs_.begin() + i, res);
           res->setMother(node);
           res->insert(res, data);
+          break;
         }
-        break;
       }
     }
   }

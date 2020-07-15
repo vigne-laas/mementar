@@ -19,7 +19,6 @@ namespace mementar {
     all_actions_.push_back(action);
     container_.insert(action);
     event_graph_->add(action->getStartEvent());
-
     if(action->isPending())
       pending_actions_[action->getName()] = action;
     else

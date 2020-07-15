@@ -150,11 +150,13 @@ int main(int argc, char** argv)
   CvFont font;
   cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 1, 1, 0, 2);
 
+  std::cout << "-------- READ ACTIONS---------" << std::endl;
   mementar::ActionReader actions;
   actions.read(&timeline->events, &font);
-
+  std::cout << "-------- READ EVENTS---------" << std::endl;
   mementar::EventReader events;
   events.read(&timeline->events, &font);
+  std::cout << "-------- DRAW---------" << std::endl;
 
   mementar::TimelineDrawer drawer;
   drawer.draw("out.png", timeline, &actions, &events);

@@ -61,6 +61,7 @@ public:
     DLF::insert(leaf, data);
     link(this->payload_.back());
   }
+
   void remove(typename DLF::LeafType* leaf, Tdata data)
   {
     (void)leaf;
