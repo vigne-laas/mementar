@@ -31,33 +31,33 @@ mementar::Timeline* getTimeline()
   timeline->actions.add(new mementar::Action("rob_drop_2", 170, 174));
   timeline->actions.add(new mementar::Action("rob_ack_5", 176, 176));
 
-  timeline->events.add(new mementar::ContextualizedEvent("e0", mementar::Event("pr2|isInRoom|expe_room", 4)));
-  timeline->events.add(new mementar::ContextualizedEvent("e1", mementar::Event("grey_box|isOn|Table_1", 5)));
-  timeline->events.add(new mementar::ContextualizedEvent("e2", mementar::Event("tape_1|isOn|Table_1", 5)));
-  timeline->events.add(new mementar::ContextualizedEvent("e3", mementar::Event("tape_2|isIn|storage_area", 5)));
-  timeline->events.add(new mementar::ContextualizedEvent("e4", mementar::Event("hum_green|isInRoom|expe_room", 6,7)));
-  timeline->events.add(new mementar::ContextualizedEvent("e5", mementar::Event(mementar::Fact("hum_green|isInRoom|expe_room", false), mementar::SoftPoint(25,26))));
-  timeline->events.add(new mementar::ContextualizedEvent("e6", mementar::Event("hum_blue|isInRoom|expe_room", 30,31)));
-  timeline->events.add(new mementar::ContextualizedEvent("e7", mementar::Event("tape_1|isInHand|hum_blue", 37)));
-  timeline->events.add(new mementar::ContextualizedEvent("e8", mementar::Event(mementar::Fact("tape_1|isOn|Table_1", false), 37)));
-  timeline->events.add(new mementar::ContextualizedEvent("e9", mementar::Event("tape_1|isOn|Table_1", 38, 42)));
-  timeline->events.add(new mementar::ContextualizedEvent("e10", mementar::Event("tape_1|isBehind|grey_box", 38)));
-  timeline->events.add(new mementar::ContextualizedEvent("e11", mementar::Event(mementar::Fact("tape_1|isInHand|hum_blue", false), mementar::SoftPoint(41, 42))));
-  timeline->events.add(new mementar::ContextualizedEvent("e12", mementar::Event(mementar::Fact("hum_blue|isInRoom|expe_room", false), mementar::SoftPoint(51,52))));
-  timeline->events.add(new mementar::ContextualizedEvent("e13", mementar::Event("hum_green|isInRoom|expe_room", 53)));
-  timeline->events.add(new mementar::ContextualizedEvent("e14", mementar::Event("tape_2|isInGripper|pr2", 86)));
-  timeline->events.add(new mementar::ContextualizedEvent("e15", mementar::Event(mementar::Fact("tape_2|isIn|storage_area", false), 101)));
-  timeline->events.add(new mementar::ContextualizedEvent("e16", mementar::Event(mementar::Fact("tape_2|isInGripper|pr2", false), 107)));
-  timeline->events.add(new mementar::ContextualizedEvent("e17", mementar::Event("tape_2|isIn|pink_box", 107,110)));
-  timeline->events.add(new mementar::ContextualizedEvent("e18", mementar::Event("tape_1|isInHand|hum_green", 133, 134)));
-  timeline->events.add(new mementar::ContextualizedEvent("e19", mementar::Event(mementar::Fact("tape_1|isOn|Table_1", false), 134)));
-  timeline->events.add(new mementar::ContextualizedEvent("e20", mementar::Event(mementar::Fact("tape_1|isBehind|grey_box", false), 134)));
-  timeline->events.add(new mementar::ContextualizedEvent("e21", mementar::Event("tape_1|isIn|storage_area", 145)));
-  timeline->events.add(new mementar::ContextualizedEvent("e23", mementar::Event(mementar::Fact("tape_1|isInHand|hum_green", false), 145)));
-  timeline->events.add(new mementar::ContextualizedEvent("e24", mementar::Event("tape_1|isInGripper|pr2", 162)));
-  timeline->events.add(new mementar::ContextualizedEvent("e25", mementar::Event(mementar::Fact("tape_1|isIn|storage_area", false), 170)));
-  timeline->events.add(new mementar::ContextualizedEvent("e26", mementar::Event(mementar::Fact("tape_1|isInGripper|pr2", false), 173)));
-  timeline->events.add(new mementar::ContextualizedEvent("e27", mementar::Event("tape_1|isIn|pink_box", 173,175)));
+  timeline->facts.add(new mementar::ContextualizedFact("e0", mementar::Fact("pr2|isInRoom|expe_room", 4)));
+  timeline->facts.add(new mementar::ContextualizedFact("e1", mementar::Fact("grey_box|isOn|Table_1", 5)));
+  timeline->facts.add(new mementar::ContextualizedFact("e2", mementar::Fact("tape_1|isOn|Table_1", 5)));
+  timeline->facts.add(new mementar::ContextualizedFact("e3", mementar::Fact("tape_2|isIn|storage_area", 5)));
+  timeline->facts.add(new mementar::ContextualizedFact("e4", mementar::Fact("hum_green|isInRoom|expe_room", 6,7)));
+  timeline->facts.add(new mementar::ContextualizedFact("e5", mementar::Fact(mementar::Triplet("hum_green|isInRoom|expe_room", false), mementar::SoftPoint(25,26))));
+  timeline->facts.add(new mementar::ContextualizedFact("e6", mementar::Fact("hum_blue|isInRoom|expe_room", 30,31)));
+  timeline->facts.add(new mementar::ContextualizedFact("e7", mementar::Fact("tape_1|isInHand|hum_blue", 37)));
+  timeline->facts.add(new mementar::ContextualizedFact("e8", mementar::Fact(mementar::Triplet("tape_1|isOn|Table_1", false), 37)));
+  timeline->facts.add(new mementar::ContextualizedFact("e9", mementar::Fact("tape_1|isOn|Table_1", 38, 42)));
+  timeline->facts.add(new mementar::ContextualizedFact("e10", mementar::Fact("tape_1|isBehind|grey_box", 38)));
+  timeline->facts.add(new mementar::ContextualizedFact("e11", mementar::Fact(mementar::Triplet("tape_1|isInHand|hum_blue", false), mementar::SoftPoint(41, 42))));
+  timeline->facts.add(new mementar::ContextualizedFact("e12", mementar::Fact(mementar::Triplet("hum_blue|isInRoom|expe_room", false), mementar::SoftPoint(51,52))));
+  timeline->facts.add(new mementar::ContextualizedFact("e13", mementar::Fact("hum_green|isInRoom|expe_room", 53)));
+  timeline->facts.add(new mementar::ContextualizedFact("e14", mementar::Fact("tape_2|isInGripper|pr2", 86)));
+  timeline->facts.add(new mementar::ContextualizedFact("e15", mementar::Fact(mementar::Triplet("tape_2|isIn|storage_area", false), 101)));
+  timeline->facts.add(new mementar::ContextualizedFact("e16", mementar::Fact(mementar::Triplet("tape_2|isInGripper|pr2", false), 107)));
+  timeline->facts.add(new mementar::ContextualizedFact("e17", mementar::Fact("tape_2|isIn|pink_box", 107,110)));
+  timeline->facts.add(new mementar::ContextualizedFact("e18", mementar::Fact("tape_1|isInHand|hum_green", 133, 134)));
+  timeline->facts.add(new mementar::ContextualizedFact("e19", mementar::Fact(mementar::Triplet("tape_1|isOn|Table_1", false), 134)));
+  timeline->facts.add(new mementar::ContextualizedFact("e20", mementar::Fact(mementar::Triplet("tape_1|isBehind|grey_box", false), 134)));
+  timeline->facts.add(new mementar::ContextualizedFact("e21", mementar::Fact("tape_1|isIn|storage_area", 145)));
+  timeline->facts.add(new mementar::ContextualizedFact("e23", mementar::Fact(mementar::Triplet("tape_1|isInHand|hum_green", false), 145)));
+  timeline->facts.add(new mementar::ContextualizedFact("e24", mementar::Fact("tape_1|isInGripper|pr2", 162)));
+  timeline->facts.add(new mementar::ContextualizedFact("e25", mementar::Fact(mementar::Triplet("tape_1|isIn|storage_area", false), 170)));
+  timeline->facts.add(new mementar::ContextualizedFact("e26", mementar::Fact(mementar::Triplet("tape_1|isInGripper|pr2", false), 173)));
+  timeline->facts.add(new mementar::ContextualizedFact("e27", mementar::Fact("tape_1|isIn|pink_box", 173,175)));
 
   return timeline;
 }
@@ -88,32 +88,32 @@ mementar::Timeline* getTimeline()
   timeline->actions.add(new mementar::Action("rob_drop_2", 170, 174));
   timeline->actions.add(new mementar::Action("rob_ack_5", 176, 176));
 
-  timeline->events.add(new mementar::ContextualizedEvent("e0", mementar::Event("pr2|isInRoom|expe_room", 6,7)));
-  timeline->events.add(new mementar::ContextualizedEvent("e1", mementar::Event("grey_box|isOn|Table_1", 7, 8)));
-  timeline->events.add(new mementar::ContextualizedEvent("e2", mementar::Event("tape_1|isOn|Table_1", 7, 8)));
-  timeline->events.add(new mementar::ContextualizedEvent("e3", mementar::Event("tape_2|isIn|storage_area", 7.8)));
-  timeline->events.add(new mementar::ContextualizedEvent("e4", mementar::Event("hum_green|isInRoom|expe_room", 6,7)));
-  timeline->events.add(new mementar::ContextualizedEvent("e5", mementar::Event(mementar::Fact("hum_green|isInRoom|expe_room", false), mementar::SoftPoint(25,26))));
+  timeline->facts.add(new mementar::ContextualizedFact("e0", mementar::Fact("pr2|isInRoom|expe_room", 6,7)));
+  timeline->facts.add(new mementar::ContextualizedFact("e1", mementar::Fact("grey_box|isOn|Table_1", 7, 8)));
+  timeline->facts.add(new mementar::ContextualizedFact("e2", mementar::Fact("tape_1|isOn|Table_1", 7, 8)));
+  timeline->facts.add(new mementar::ContextualizedFact("e3", mementar::Fact("tape_2|isIn|storage_area", 7.8)));
+  timeline->facts.add(new mementar::ContextualizedFact("e4", mementar::Fact("hum_green|isInRoom|expe_room", 6,7)));
+  timeline->facts.add(new mementar::ContextualizedFact("e5", mementar::Fact(mementar::Triplet("hum_green|isInRoom|expe_room", false), mementar::SoftPoint(25,26))));
 
-  timeline->events.add(new mementar::ContextualizedEvent("e13", mementar::Event("hum_green|isInRoom|expe_room", 53)));
-  timeline->events.add(new mementar::ContextualizedEvent("e8", mementar::Event(mementar::Fact("tape_1|isOn|Table_1", false), 54)));
-  timeline->events.add(new mementar::ContextualizedEvent("e14", mementar::Event("tape_2|isInGripper|pr2", 86)));
-  timeline->events.add(new mementar::ContextualizedEvent("e15", mementar::Event(mementar::Fact("tape_2|isIn|storage_area", false), 101)));
-  timeline->events.add(new mementar::ContextualizedEvent("e16", mementar::Event(mementar::Fact("tape_2|isInGripper|pr2", false), 107)));
-  timeline->events.add(new mementar::ContextualizedEvent("e17", mementar::Event("tape_2|isIn|pink_box", 107,110)));
+  timeline->facts.add(new mementar::ContextualizedFact("e13", mementar::Fact("hum_green|isInRoom|expe_room", 53)));
+  timeline->facts.add(new mementar::ContextualizedFact("e8", mementar::Fact(mementar::Triplet("tape_1|isOn|Table_1", false), 54)));
+  timeline->facts.add(new mementar::ContextualizedFact("e14", mementar::Fact("tape_2|isInGripper|pr2", 86)));
+  timeline->facts.add(new mementar::ContextualizedFact("e15", mementar::Fact(mementar::Triplet("tape_2|isIn|storage_area", false), 101)));
+  timeline->facts.add(new mementar::ContextualizedFact("e16", mementar::Fact(mementar::Triplet("tape_2|isInGripper|pr2", false), 107)));
+  timeline->facts.add(new mementar::ContextualizedFact("e17", mementar::Fact("tape_2|isIn|pink_box", 107,110)));
 
-  timeline->events.add(new mementar::ContextualizedEvent("e9", mementar::Event("tape_1|isOn|Table_1", 117, 119)));
-  timeline->events.add(new mementar::ContextualizedEvent("e10", mementar::Event("tape_1|isBehind|grey_box", 117, 119)));
+  timeline->facts.add(new mementar::ContextualizedFact("e9", mementar::Fact("tape_1|isOn|Table_1", 117, 119)));
+  timeline->facts.add(new mementar::ContextualizedFact("e10", mementar::Fact("tape_1|isBehind|grey_box", 117, 119)));
 
-  timeline->events.add(new mementar::ContextualizedEvent("e18", mementar::Event("tape_1|isInHand|hum_green", 133, 134)));
-  timeline->events.add(new mementar::ContextualizedEvent("e19", mementar::Event(mementar::Fact("tape_1|isOn|Table_1", false), 134)));
-  timeline->events.add(new mementar::ContextualizedEvent("e20", mementar::Event(mementar::Fact("tape_1|isBehind|grey_box", false), 134)));
-  timeline->events.add(new mementar::ContextualizedEvent("e21", mementar::Event("tape_1|isIn|storage_area", 145)));
-  timeline->events.add(new mementar::ContextualizedEvent("e23", mementar::Event(mementar::Fact("tape_1|isInHand|hum_green", false), 145)));
-  timeline->events.add(new mementar::ContextualizedEvent("e24", mementar::Event("tape_1|isInGripper|pr2", 162)));
-  timeline->events.add(new mementar::ContextualizedEvent("e25", mementar::Event(mementar::Fact("tape_1|isIn|storage_area", false), 170)));
-  timeline->events.add(new mementar::ContextualizedEvent("e26", mementar::Event(mementar::Fact("tape_1|isInGripper|pr2", false), 173)));
-  timeline->events.add(new mementar::ContextualizedEvent("e27", mementar::Event("tape_1|isIn|pink_box", 173,175)));
+  timeline->facts.add(new mementar::ContextualizedFact("e18", mementar::Fact("tape_1|isInHand|hum_green", 133, 134)));
+  timeline->facts.add(new mementar::ContextualizedFact("e19", mementar::Fact(mementar::Triplet("tape_1|isOn|Table_1", false), 134)));
+  timeline->facts.add(new mementar::ContextualizedFact("e20", mementar::Fact(mementar::Triplet("tape_1|isBehind|grey_box", false), 134)));
+  timeline->facts.add(new mementar::ContextualizedFact("e21", mementar::Fact("tape_1|isIn|storage_area", 145)));
+  timeline->facts.add(new mementar::ContextualizedFact("e23", mementar::Fact(mementar::Triplet("tape_1|isInHand|hum_green", false), 145)));
+  timeline->facts.add(new mementar::ContextualizedFact("e24", mementar::Fact("tape_1|isInGripper|pr2", 162)));
+  timeline->facts.add(new mementar::ContextualizedFact("e25", mementar::Fact(mementar::Triplet("tape_1|isIn|storage_area", false), 170)));
+  timeline->facts.add(new mementar::ContextualizedFact("e26", mementar::Fact(mementar::Triplet("tape_1|isInGripper|pr2", false), 173)));
+  timeline->facts.add(new mementar::ContextualizedFact("e27", mementar::Fact("tape_1|isIn|pink_box", 173,175)));
 
   return timeline;
 }*/
@@ -128,17 +128,17 @@ mementar::Timeline* getTimeline()
   timeline->actions.add(new mementar::Action("blue_place_1", 37, mementar::SoftPoint(41, 42)));
   timeline->actions.add(new mementar::Action("monitor_1", 43, 51));
 
-  timeline->events.add(new mementar::ContextualizedEvent("e0", mementar::Event("pr2|isInRoom|expe_room", 30, 31)));
-  timeline->events.add(new mementar::ContextualizedEvent("e1", mementar::Event("grey_box|isOn|Table_1", 32,34)));
-  timeline->events.add(new mementar::ContextualizedEvent("e2", mementar::Event("tape_1|isOn|Table_1", 32,34)));
-  timeline->events.add(new mementar::ContextualizedEvent("e3", mementar::Event("tape_2|isIn|storage_area", 32,34)));
-  timeline->events.add(new mementar::ContextualizedEvent("e6", mementar::Event("hum_blue|isInRoom|expe_room", 30,31)));
-  timeline->events.add(new mementar::ContextualizedEvent("e7", mementar::Event("tape_1|isInHand|hum_blue", 37)));
-  timeline->events.add(new mementar::ContextualizedEvent("e8", mementar::Event(mementar::Fact("tape_1|isOn|Table_1", false), 37)));
-  timeline->events.add(new mementar::ContextualizedEvent("e9", mementar::Event("tape_1|isOn|Table_1", 38, 42)));
-  timeline->events.add(new mementar::ContextualizedEvent("e10", mementar::Event("tape_1|isBehind|grey_box", 38)));
-  timeline->events.add(new mementar::ContextualizedEvent("e11", mementar::Event(mementar::Fact("tape_1|isInHand|hum_blue", false), mementar::SoftPoint(41, 42))));
-  timeline->events.add(new mementar::ContextualizedEvent("e12", mementar::Event(mementar::Fact("hum_blue|isInRoom|expe_room", false), mementar::SoftPoint(51,52))));
+  timeline->facts.add(new mementar::ContextualizedFact("e0", mementar::Fact("pr2|isInRoom|expe_room", 30, 31)));
+  timeline->facts.add(new mementar::ContextualizedFact("e1", mementar::Fact("grey_box|isOn|Table_1", 32,34)));
+  timeline->facts.add(new mementar::ContextualizedFact("e2", mementar::Fact("tape_1|isOn|Table_1", 32,34)));
+  timeline->facts.add(new mementar::ContextualizedFact("e3", mementar::Fact("tape_2|isIn|storage_area", 32,34)));
+  timeline->facts.add(new mementar::ContextualizedFact("e6", mementar::Fact("hum_blue|isInRoom|expe_room", 30,31)));
+  timeline->facts.add(new mementar::ContextualizedFact("e7", mementar::Fact("tape_1|isInHand|hum_blue", 37)));
+  timeline->facts.add(new mementar::ContextualizedFact("e8", mementar::Fact(mementar::Triplet("tape_1|isOn|Table_1", false), 37)));
+  timeline->facts.add(new mementar::ContextualizedFact("e9", mementar::Fact("tape_1|isOn|Table_1", 38, 42)));
+  timeline->facts.add(new mementar::ContextualizedFact("e10", mementar::Fact("tape_1|isBehind|grey_box", 38)));
+  timeline->facts.add(new mementar::ContextualizedFact("e11", mementar::Fact(mementar::Triplet("tape_1|isInHand|hum_blue", false), mementar::SoftPoint(41, 42))));
+  timeline->facts.add(new mementar::ContextualizedFact("e12", mementar::Fact(mementar::Triplet("hum_blue|isInRoom|expe_room", false), mementar::SoftPoint(51,52))));
 
   return timeline;
 }*/
@@ -152,14 +152,14 @@ int main(int argc, char** argv)
 
   std::cout << "-------- READ ACTIONS---------" << std::endl;
   mementar::ActionReader actions;
-  actions.read(&timeline->events, &font);
+  actions.read(&timeline->facts, &font);
   std::cout << "-------- READ EVENTS---------" << std::endl;
-  mementar::EventReader events;
-  events.read(&timeline->events, &font);
+  mementar::EventReader facts;
+  facts.read(&timeline->facts, &font);
   std::cout << "-------- DRAW---------" << std::endl;
 
   mementar::TimelineDrawer drawer;
-  drawer.draw("out.png", timeline, &actions, &events);
+  drawer.draw("out.png", timeline, &actions, &facts);
 
   /*std::cout << "width = " << ontologenius::commit_t::global_width << std::endl;
   std::cout << "height = " << ontologenius::commit_t::global_height << std::endl;

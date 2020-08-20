@@ -10,13 +10,13 @@ namespace mementar
 
 class ArchivedLeafNode
 {
-  using LeafType = typename BplusLeaf<time_t, Event*>::LeafType;
+  using LeafType = typename BplusLeaf<time_t, Fact*>::LeafType;
 public:
   ArchivedLeafNode(const std::string& directory, size_t order = 10);
   ~ArchivedLeafNode();
 
-  void insert(Event* data);
-  void remove(Event* data);
+  void insert(Fact* data);
+  void remove(Fact* data);
   LeafType* find(const time_t& key);
   LeafType* findNear(const time_t& key);
   LeafType* getFirst();

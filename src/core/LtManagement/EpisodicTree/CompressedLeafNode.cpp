@@ -86,7 +86,7 @@ CompressedLeafNode* CompressedLeafNode::split()
   return new_one;
 }
 
-void CompressedLeafNode::insert(Event* data)
+void CompressedLeafNode::insert(Fact* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -160,7 +160,7 @@ void CompressedLeafNode::insert(Event* data)
     earlier_key_ = data->getTime();
 }
 
-void CompressedLeafNode::remove(Event* data)
+void CompressedLeafNode::remove(Fact* data)
 {
   mut_.lock_shared();
   int index = getKeyIndex(data->getTime());
@@ -293,7 +293,7 @@ void CompressedLeafNode::init()
 void CompressedLeafNode::createNewTreeChild(const time_t& key)
 {
   mut_.lock();
-  btree_childs_.push_back(new BplusTree<time_t, Event*>());
+  btree_childs_.push_back(new BplusTree<time_t, Fact*>());
   keys_.push_back(key);
   contexts_.push_back(Context(key));
   mut_.unlock();

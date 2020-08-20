@@ -2,9 +2,9 @@
 
 namespace mementar {
 
-  ActionGraph::ActionGraph(EventGraph* event_graph)
+  ActionGraph::ActionGraph(FactGraph* fact_graph)
   {
-    event_graph_ = event_graph;
+    fact_graph_ = fact_graph;
   }
 
   ActionGraph::~ActionGraph()
@@ -18,11 +18,11 @@ namespace mementar {
   {
     all_actions_.push_back(action);
     container_.insert(action);
-    event_graph_->add(action->getStartEvent());
+    fact_graph_->add(action->getStartFact());
     if(action->isPending())
       pending_actions_[action->getName()] = action;
     else
-      event_graph_->add(action->getEndEvent());
+      fact_graph_->add(action->getEndFact());
   }
 
   bool ActionGraph::setEnd(const std::string& action_name, const SoftPoint& end)
@@ -35,7 +35,7 @@ namespace mementar {
       if(action_it->second->setEnd(end))
       {
         pending_actions_.erase(action_it);
-        event_graph_->add(action_it->second->getEndEvent());
+        fact_graph_->add(action_it->second->getEndFact());
         return true;
       }
       else

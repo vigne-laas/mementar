@@ -77,25 +77,25 @@ void RosInterface::reset()
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
-  Event* event = new Event(msg->data, time(0));
-  if(event->valid())
+  Fact* fact = new Fact(msg->data, time(0));
+  if(fact->valid())
   {
     mut_.lock_shared();
-    tree_->insert(event);
+    tree_->insert(fact);
     mut_.unlock_shared();
-    occasions_.add(event);
+    occasions_.add(fact);
   }
 }
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  Event* event = new Event(msg->data, msg->stamp.sec);
-  if(event->valid())
+  Fact* fact = new Fact(msg->data, msg->stamp.sec);
+  if(fact->valid())
   {
     mut_.lock_shared();
-    tree_->insert(event);
+    tree_->insert(fact);
     mut_.unlock_shared();
-    occasions_.add(event);
+    occasions_.add(fact);
   }
 }
 
@@ -109,11 +109,11 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
 
   if(req.action == "remove")
   {
-    Event event(req.param, req.stamp.sec);
-    if(event.valid())
+    Fact fact(req.param, req.stamp.sec);
+    if(fact.valid())
     {
       mut_.lock_shared();
-      tree_->remove(&event);
+      tree_->remove(&fact);
       mut_.unlock_shared();
     }
     else

@@ -27,15 +27,15 @@ void OccasionsManager::run()
   {
     while(!empty())
     {
-      const Fact* fact = get();
-      if(fact->valid())
+      const Triplet* triplet = get();
+      if(triplet->valid())
       {
-        std::vector<size_t> ids = subscription_.evaluate(fact);
+        std::vector<size_t> ids = subscription_.evaluate(triplet);
         for(auto id : ids)
         {
           mementar::MementarOccasion msg;
           msg.id = id;
-          msg.data = fact->toString();
+          msg.data = triplet->toString();
           msg.last = subscription_.isFinished(id);
           pub_.publish(msg);
         }
@@ -45,24 +45,24 @@ void OccasionsManager::run()
   }
 }
 
-void OccasionsManager::add(const Fact* fact)
+void OccasionsManager::add(const Triplet* triplet)
 {
   mutex_.lock();
   if(queue_choice_ == true)
-    fifo_1.push(fact);
+    fifo_1.push(triplet);
   else
-    fifo_2.push(fact);
+    fifo_2.push(triplet);
   mutex_.unlock();
 }
 
 bool OccasionsManager::SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
                                         mementar::MementarOccasionSubscription::Response &res)
 {
-  Fact fact_patern(req.data);
-  if(!fact_patern.valid())
+  Triplet triplet_patern(req.data);
+  if(!triplet_patern.valid())
     return false;
 
-  res.id = subscription_.subscribe(fact_patern, req.count);
+  res.id = subscription_.subscribe(triplet_patern, req.count);
 
   return true;
 }
@@ -78,9 +78,9 @@ bool OccasionsManager::UnsubscribeCallback(mementar::MementarOcassionUnsubscript
   return true;
 }
 
-const Fact* OccasionsManager::get()
+const Triplet* OccasionsManager::get()
 {
-  const Fact* res = nullptr;
+  const Triplet* res = nullptr;
   mutex_.lock();
   if(queue_choice_ == true)
   {

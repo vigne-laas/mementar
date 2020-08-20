@@ -11,8 +11,8 @@ namespace mementar {
 
 void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline, ActionReader* actions, EventReader* events)
 {
-  size_t start = timeline->events.getTimeline()->getFirst()->getKey();
-  size_t end = timeline->events.getTimeline()->getLast()->getKey();
+  size_t start = timeline->facts.getTimeline()->getFirst()->getKey();
+  size_t end = timeline->facts.getTimeline()->getLast()->getKey();
   size_t width = (actions->max_level_ + 1) * SIDE_SPACE + actions->max_text_size_ + MARGIN * 3 + SIDE_SPACE + events->max_text_size_;
   size_t height = (end - start) * UNIT_SPACE + MARGIN * 2;
 

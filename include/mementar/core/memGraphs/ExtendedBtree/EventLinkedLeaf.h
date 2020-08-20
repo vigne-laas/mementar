@@ -22,8 +22,8 @@ public:
     leaf_ = nullptr;
   }
 
-  SelfType* getNextEvent() { return next_elem_; }
-  SelfType* getPreviousEvent() { return prev_elem_; }
+  SelfType* getNext() { return next_elem_; }
+  SelfType* getPrevious() { return prev_elem_; }
 
   Tleaf* getNextLeaf()
   {

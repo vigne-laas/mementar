@@ -2,7 +2,7 @@
 
 namespace mementar {
 
-std::regex Fact::regex("(\\w)\\|(\\w+)\\|(\\w+)\\|(\\w+)");
+std::regex Fact::regex("\\[(\\d*)(,(\\d*))?\\]\\{([^\\}]*)\\}");
 std::smatch Fact::match;
 
 } // namespace mementar

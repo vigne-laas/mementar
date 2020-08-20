@@ -50,7 +50,7 @@ ArchivedLeafNode::~ArchivedLeafNode()
   mut_.unlock();
 }
 
-void ArchivedLeafNode::insert(Event* data)
+void ArchivedLeafNode::insert(Fact* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -117,7 +117,7 @@ void ArchivedLeafNode::insert(Event* data)
     earlier_key_ = data->getTime();
 }
 
-void ArchivedLeafNode::remove(Event* data)
+void ArchivedLeafNode::remove(Fact* data)
 {
   mut_.lock_shared();
   int index = getKeyIndex(data->getTime());

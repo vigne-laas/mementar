@@ -2,8 +2,8 @@
 #define MEMENTAR_ACTIONGRAPH_H
 
 #include "mementar/core/memGraphs/Graphs/Graph.h"
-#include "mementar/core/memGraphs/Graphs/EventGraph.h"
-#include "mementar/core/memGraphs/Branchs/ContextualizedEvent.h"
+#include "mementar/core/memGraphs/Graphs/FactGraph.h"
+#include "mementar/core/memGraphs/Branchs/ContextualizedFact.h"
 #include "mementar/core/memGraphs/Branchs/types/Action.h"
 
 #include <vector>
@@ -15,7 +15,7 @@ namespace mementar {
 class ActionGraph : public Graph<Action>
 {
 public:
-  ActionGraph(EventGraph* event_graph);
+  ActionGraph(FactGraph* fact_graph);
   ~ActionGraph();
 
   void add(Action* action);
@@ -41,7 +41,7 @@ public:
 
 
 private:
-  EventGraph* event_graph_;
+  FactGraph* fact_graph_;
   std::vector<Action*> all_actions_;
   std::map<std::string, Action*> pending_actions_;
 };

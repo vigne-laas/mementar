@@ -2,30 +2,30 @@
 
 namespace mementar {
 
-void EventReader::read(EventGraph* graph, CvFont* font)
+void EventReader::read(FactGraph* graph, CvFont* font)
 {
   max_text_size_ = 0;
 
   auto tree = graph->getTimeline();
-  auto node = static_cast<BplusLeaf<SoftPoint::Ttime, ContextualizedEvent*>*>(tree->getFirst());
+  auto node = static_cast<BplusLeaf<SoftPoint::Ttime, ContextualizedFact*>*>(tree->getFirst());
 
   while(node != nullptr)
   {
-    event_t group_evt(node->getData()[0]->getTime());
-    for(auto evt : node->getData())
+    event_t group_fact(node->getData()[0]->getTime());
+    for(auto fact : node->getData())
     {
-      if(evt->isPartOfAction() == false)
+      if(fact->isPartOfAction() == false)
       {
-        group_evt.data += (group_evt.data == "" ? "" : " -- ") + evt->Fact::toString();
-        if(evt->getTransitionDuration() > group_evt.time_point.getTransitionDuration())
-          group_evt.time_point = SoftPoint(evt);
+        group_fact.data += (group_fact.data == "" ? "" : " -- ") + fact->Triplet::toString();
+        if(fact->getTransitionDuration() > group_fact.time_point.getTransitionDuration())
+          group_fact.time_point = SoftPoint(fact);
       }
     }
 
-    if(group_evt.data != "")
+    if(group_fact.data != "")
     {
-      events.push_back(group_evt);
-      getTextSize(group_evt.data, font);
+      events.push_back(group_fact);
+      getTextSize(group_fact.data, font);
     }
 
     node = node->getNextLeaf();

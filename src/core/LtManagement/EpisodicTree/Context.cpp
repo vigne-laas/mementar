@@ -11,45 +11,45 @@
 namespace mementar
 {
 
-void Context::insert(const Fact* fact)
+void Context::insert(const Triplet* triplet)
 {
   std::map<std::string, size_t>::iterator it;
 
-  it = subjects_.find(fact->subject_);
+  it = subjects_.find(triplet->subject_);
   if(it != subjects_.end())
     it->second++;
   else
-    subjects_[fact->subject_] = 1;
+    subjects_[triplet->subject_] = 1;
 
-  it = predicats_.find(fact->predicat_);
+  it = predicats_.find(triplet->predicat_);
   if(it != predicats_.end())
     it->second++;
   else
-    predicats_[fact->predicat_] = 1;
+    predicats_[triplet->predicat_] = 1;
 
-  if(fact->object_.find(":") == std::string::npos)
+  if(triplet->object_.find(":") == std::string::npos)
   {
-    it = objects_.find(fact->object_);
+    it = objects_.find(triplet->object_);
     if(it != objects_.end())
       it->second++;
     else
-      objects_[fact->object_] = 1;
+      objects_[triplet->object_] = 1;
   }
 }
 
-void Context::remove(const Fact* fact)
+void Context::remove(const Triplet* triplet)
 {
   std::map<std::string, size_t>::iterator it;
 
-  it = subjects_.find(fact->subject_);
+  it = subjects_.find(triplet->subject_);
   if(it != subjects_.end())
     it->second--;
 
-  it = predicats_.find(fact->predicat_);
+  it = predicats_.find(triplet->predicat_);
   if(it != predicats_.end())
     it->second--;
 
-  it = objects_.find(fact->object_);
+  it = objects_.find(triplet->object_);
   if(it != objects_.end())
     it->second--;
 }

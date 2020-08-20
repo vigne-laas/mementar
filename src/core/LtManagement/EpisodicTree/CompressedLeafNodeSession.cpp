@@ -66,7 +66,7 @@ int CompressedLeafNodeSession::getKeyIndex(const time_t& key)
   return index;
 }
 
-void CompressedLeafNodeSession::insert(Event* data)
+void CompressedLeafNodeSession::insert(Fact* data)
 {
   mut_.lock_shared();
   if(contexts_.size() == 0)
@@ -93,7 +93,7 @@ void CompressedLeafNodeSession::insert(Event* data)
   mut_.unlock_shared();
 }
 
-bool CompressedLeafNodeSession::remove(Event* data)
+bool CompressedLeafNodeSession::remove(Fact* data)
 {
   bool res = false;
   mut_.lock_shared();
@@ -208,14 +208,14 @@ std::vector<char> CompressedLeafNodeSession::treeToRaw(size_t index)
 {
   std::string res;
 
-  std::vector<Event*> tmp_data;
-  BplusLeaf<time_t, Event*>* it = sessions_tree_[index]->getFirst();
+  std::vector<Fact*> tmp_data;
+  BplusLeaf<time_t, Fact*>* it = sessions_tree_[index]->getFirst();
   while(it != nullptr)
   {
     tmp_data = it->getData();
     for(auto& data : tmp_data)
-      res += Event::serialize(data) + "\n";
-    it = static_cast<BplusLeaf<time_t, Event*>*>(it->getNextLeaf());
+      res += Fact::serialize(data) + "\n";
+    it = static_cast<BplusLeaf<time_t, Fact*>*>(it->getNextLeaf());
   }
 
   mementar::LzCompress lz_comp;

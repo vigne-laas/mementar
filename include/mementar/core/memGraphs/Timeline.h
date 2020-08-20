@@ -1,7 +1,7 @@
 #ifndef MEMENTAR_TIMELINE_H
 #define MEMENTAR_TIMELINE_H
 
-#include "mementar/core/memGraphs/Graphs/EventGraph.h"
+#include "mementar/core/memGraphs/Graphs/FactGraph.h"
 #include "mementar/core/memGraphs/Graphs/ActionGraph.h"
 
 namespace mementar {
@@ -9,9 +9,9 @@ namespace mementar {
 class Timeline
 {
 public:
-  Timeline() : actions(&events) {}
+  Timeline() : actions(&facts) {}
 
-  EventGraph events;
+  FactGraph facts;
   ActionGraph actions;
 private:
 };

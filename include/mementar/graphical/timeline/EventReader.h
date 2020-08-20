@@ -6,7 +6,7 @@
 
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "mementar/core/memGraphs/Graphs/EventGraph.h"
+#include "mementar/core/memGraphs/Graphs/FactGraph.h"
 
 namespace mementar {
 
@@ -22,7 +22,7 @@ class EventReader
 {
 public:
 
-  void read(EventGraph* graph, CvFont* font);
+  void read(FactGraph* graph, CvFont* font);
 
   std::vector<event_t> events;
   size_t max_text_size_;

@@ -8,7 +8,7 @@
 
 namespace mementar {
 
-class ContextualizedEvent;
+class ContextualizedFact;
 
 class Action : public ValuedNode
 {
@@ -27,12 +27,12 @@ public:
   bool isSoft();
   bool isPending() { return !end_; }
 
-  ContextualizedEvent* getStartEvent() { return start_; }
-  ContextualizedEvent* getEndEvent() { return end_.value(); }
+  ContextualizedFact* getStartFact() { return start_; }
+  ContextualizedFact* getEndFact() { return end_.value(); }
 
 private:
-  ContextualizedEvent* start_;
-  std::experimental::optional<ContextualizedEvent*> end_;
+  ContextualizedFact* start_;
+  std::experimental::optional<ContextualizedFact*> end_;
 };
 
 } // namespace mementar
