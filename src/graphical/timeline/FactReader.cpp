@@ -1,8 +1,8 @@
-#include "mementar/graphical/timeline/EventReader.h"
+#include "mementar/graphical/timeline/FactReader.h"
 
 namespace mementar {
 
-void EventReader::read(FactGraph* graph, CvFont* font)
+void FactReader::read(FactGraph* graph, CvFont* font)
 {
   max_text_size_ = 0;
 
@@ -11,7 +11,7 @@ void EventReader::read(FactGraph* graph, CvFont* font)
 
   while(node != nullptr)
   {
-    event_t group_fact(node->getData()[0]->getTime());
+    fact_t group_fact(node->getData()[0]->getTime());
     for(auto fact : node->getData())
     {
       if(fact->isPartOfAction() == false)
@@ -24,7 +24,7 @@ void EventReader::read(FactGraph* graph, CvFont* font)
 
     if(group_fact.data != "")
     {
-      events.push_back(group_fact);
+      facts.push_back(group_fact);
       getTextSize(group_fact.data, font);
     }
 
@@ -32,7 +32,7 @@ void EventReader::read(FactGraph* graph, CvFont* font)
   }
 }
 
-void EventReader::getTextSize(const std::string& txt, CvFont* font)
+void FactReader::getTextSize(const std::string& txt, CvFont* font)
 {
   CvSize size;
   int baseline;

@@ -10,21 +10,21 @@
 
 namespace mementar {
 
-struct event_t
+struct fact_t
 {
-  event_t(SoftPoint::Ttime time) : time_point(time) {}
+  fact_t(SoftPoint::Ttime time) : time_point(time) {}
 
   std::string data;
   SoftPoint time_point;
 };
 
-class EventReader
+class FactReader
 {
 public:
 
   void read(FactGraph* graph, CvFont* font);
 
-  std::vector<event_t> events;
+  std::vector<fact_t> facts;
   size_t max_text_size_;
 
 private:

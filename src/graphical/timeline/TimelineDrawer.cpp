@@ -9,11 +9,11 @@
 
 namespace mementar {
 
-void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline, ActionReader* actions, EventReader* events)
+void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline, ActionReader* actions, FactReader* facts)
 {
   size_t start = timeline->facts.getTimeline()->getFirst()->getKey();
   size_t end = timeline->facts.getTimeline()->getLast()->getKey();
-  size_t width = (actions->max_level_ + 1) * SIDE_SPACE + actions->max_text_size_ + MARGIN * 3 + SIDE_SPACE + events->max_text_size_;
+  size_t width = (actions->max_level_ + 1) * SIDE_SPACE + actions->max_text_size_ + MARGIN * 3 + SIDE_SPACE + facts->max_text_size_;
   size_t height = (end - start) * UNIT_SPACE + MARGIN * 2;
 
   std::cout << "image size = " << width << " : " << height << std::endl;
@@ -28,8 +28,8 @@ void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline, Acti
   for(auto act : actions->actions_)
     drawAction(act.second, line_pose, actions->max_level_, start);
 
-  std::cout << "---EVENTS----" << std::endl;
-  for(auto evt : events->events)
+  std::cout << "---FACTS----" << std::endl;
+  for(auto evt : facts->facts)
     drawEvent(evt, line_pose, start);
 
   if(file_name != "")
@@ -135,7 +135,7 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
          cvScalar(32, 20, 122));
 }
 
-void TimelineDrawer::drawEvent(const event_t& event, size_t line_pose, size_t start_time)
+void TimelineDrawer::drawEvent(const fact_t& event, size_t line_pose, size_t start_time)
 {
   size_t x_start_pose = line_pose;
   size_t x_end_pose = x_start_pose + SIDE_SPACE;

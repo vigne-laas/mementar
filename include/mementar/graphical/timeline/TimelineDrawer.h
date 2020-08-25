@@ -8,7 +8,7 @@
 
 #include "mementar/core/memGraphs/Timeline.h"
 #include "mementar/graphical/timeline/ActionReader.h"
-#include "mementar/graphical/timeline/EventReader.h"
+#include "mementar/graphical/timeline/FactReader.h"
 
 namespace mementar {
 
@@ -16,13 +16,13 @@ class TimelineDrawer
 {
 public:
 
-  void draw(const std::string& file_name, Timeline* timeline, ActionReader* actions, EventReader* events);
+  void draw(const std::string& file_name, Timeline* timeline, ActionReader* actions, FactReader* facts);
 private:
   IplImage* image_;
 
   void drawVector(size_t start, size_t end, size_t pose);
   void drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time);
-  void drawEvent(const event_t& event, size_t line_pose, size_t start_time);
+  void drawEvent(const fact_t& event, size_t line_pose, size_t start_time);
 
   size_t getTextSize(const std::string& txt, CvFont* font);
   void drawElipseStart(size_t x, size_t y);

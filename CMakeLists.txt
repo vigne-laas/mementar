@@ -137,7 +137,7 @@ add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 add_library(mementar_drawer_lib
   src/graphical/timeline/ActionReader.cpp
-  src/graphical/timeline/EventReader.cpp
+  src/graphical/timeline/FactReader.cpp
   src/graphical/timeline/TimelineDrawer.cpp
 )
 target_include_directories(mementar_drawer_lib

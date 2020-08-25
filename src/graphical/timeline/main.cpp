@@ -1,7 +1,7 @@
 #include "mementar/core/memGraphs/Timeline.h"
 
 #include "mementar/graphical/timeline/ActionReader.h"
-#include "mementar/graphical/timeline/EventReader.h"
+#include "mementar/graphical/timeline/FactReader.h"
 #include "mementar/graphical/timeline/TimelineDrawer.h"
 
 mementar::Timeline* getTimeline()
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
   mementar::ActionReader actions;
   actions.read(&timeline->facts, &font);
   std::cout << "-------- READ EVENTS---------" << std::endl;
-  mementar::EventReader facts;
+  mementar::FactReader facts;
   facts.read(&timeline->facts, &font);
   std::cout << "-------- DRAW---------" << std::endl;
 
