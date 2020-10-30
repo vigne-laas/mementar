@@ -21,32 +21,32 @@ RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, siz
   else
     directory_ += "/" + name;
 
-  std::experimental::filesystem::create_directories(directory_);
-  tree_ = new ArchivedLeafNode(directory_, order_);
+  //std::experimental::filesystem::create_directories(directory_);
+  timeline_ = new Timeline();
+  feeder_.link(timeline_);
 
   name_ = name;
 }
 
 RosInterface::~RosInterface()
 {
-  delete tree_;
+  delete timeline_;
 }
 
 void RosInterface::run()
 {
   std::string service_name;
 
-  service_name = (name_ == "") ? "insert" : "insert/" + name_;
-  ros::Subscriber knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::knowledgeCallback, this);
-
-  service_name = (name_ == "") ? "insert_stamped" : "insert_stamped/" + name_;
-  ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(service_name, 1000, &RosInterface::stampedKnowledgeCallback, this);
+  ros::Subscriber knowledge_subscriber = n_->subscribe(getTopicName("insert"), 1000, &RosInterface::knowledgeCallback, this);
+  ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(getTopicName("insert_stamped"), 1000, &RosInterface::stampedKnowledgeCallback, this);
+  ros::Subscriber explanation_knowledge_subscriber = n_->subscribe(getTopicName("insert_explanations"), 1000, &RosInterface::explanationKnowledgeCallback, this);
 
   // Start up ROS service with callbacks
   service_name = (name_ == "") ? "actions" : "actions/" + name_;
   ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
 
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
+  std::thread feed_thread(&RosInterface::feedThread, this);
 
   ROS_DEBUG("%s mementar ready", name_.c_str());
 
@@ -62,12 +62,24 @@ void RosInterface::run()
 void RosInterface::reset()
 {
   mut_.lock();
-  delete tree_;
+  delete timeline_;
   std::experimental::filesystem::remove_all(directory_);
   std::experimental::filesystem::create_directories(directory_);
-  tree_ = new ArchivedLeafNode(directory_, order_);
+  timeline_ = new Timeline();
+  feeder_.link(timeline_);
   mut_.unlock();
 }
+
+void RosInterface::lock()
+{
+  feeder_mutex_.lock();
+}
+
+void RosInterface::release()
+{
+  feeder_mutex_.unlock();
+}
+
 
 /***************
 *
@@ -77,26 +89,33 @@ void RosInterface::reset()
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
-  Fact* fact = new Fact(msg->data, time(0));
-  if(fact->valid())
-  {
-    mut_.lock_shared();
-    tree_->insert(fact);
-    mut_.unlock_shared();
-    occasions_.add(fact);
-  }
+  feeder_.store(msg->data, time(0));
 }
-
+/*
+data: "[ADD]blop|isOnTopOf|table_l_0"
+stamp:
+  secs: 1603977394
+  nsecs: 892413051
+---
+data: "[DEL]blop|isOnTopOf|table_l_0"
+stamp:
+  secs: 1603977408
+  nsecs: 428956909
+*/
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  Fact* fact = new Fact(msg->data, msg->stamp.sec);
-  if(fact->valid())
-  {
-    mut_.lock_shared();
-    tree_->insert(fact);
-    mut_.unlock_shared();
-    occasions_.add(fact);
-  }
+  feeder_.store(msg->data, msg->stamp.sec);
+}
+/*
+fact: "[ADD]table_l_0|isUnder|blop"
+cause: "[ADD]blop|isOnTopOf|table_l_0"
+---
+fact: "[DEL]table_l_0|isUnder|blop"
+cause: "[DEL]blop|isOnTopOf|table_l_0"
+*/
+void RosInterface::explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
+{
+  feeder_.store(msg->fact, msg->cause);
 }
 
 bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
@@ -107,30 +126,58 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
   removeUselessSpace(req.action);
   removeUselessSpace(req.param);
 
-  if(req.action == "remove")
-  {
-    Fact fact(req.param, req.stamp.sec);
-    if(fact.valid())
-    {
-      mut_.lock_shared();
-      tree_->remove(&fact);
-      mut_.unlock_shared();
-    }
-    else
-      res.code = REQUEST_ERROR;
-  }
-  else if(req.action == "newSession")
+  /*if(req.action == "newSession")
   {
     mut_.lock_shared();
     tree_->newSession();
     mut_.unlock_shared();
   }
-  else if(req.action == "reset")
+  else */if(req.action == "reset")
     reset();
   else
     res.code = UNKNOW_ACTION;
 
   return true;
+}
+
+/***************
+*
+* Threads
+*
+***************/
+
+void RosInterface::feedThread()
+{
+  ros::Publisher feeder_publisher = n_->advertise<std_msgs::String>(getTopicName("feeder_notifications"), 1000);
+
+  ros::Rate wait(100);
+  /*while((ros::ok()) && (onto_->isInit(false) == false) && (run_ == true))
+  {
+    wait.sleep();
+  }*/
+
+  std_msgs::String msg;
+  while(ros::ok() && (run_ == true))
+  {
+    feeder_mutex_.lock();
+    bool run = feeder_.run();
+    if(run == true)
+    {
+      std::vector<std::string> notifications = feeder_.getNotifications();
+      for(auto notif : notifications)
+      {
+        //Display::error(notif);
+        if(name_ != "")
+          notif = "[" + name_ + "]" + notif;
+        msg.data = notif;
+        feeder_publisher.publish(msg);
+      }
+    }
+    feeder_mutex_.unlock();
+
+    if(ros::ok() && (run_ == true))
+      wait.sleep();
+  }
 }
 
 /***************

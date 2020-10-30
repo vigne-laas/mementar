@@ -31,6 +31,7 @@ find_package(OpenCV REQUIRED)
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
+   MementarExplanation.msg
    MementarOccasion.msg
    StampedString.msg
  )
@@ -100,6 +101,7 @@ add_library(mementar_memGraphs_lib
   src/core/memGraphs/Branchs/ValuedNode.cpp
   src/core/memGraphs/Branchs/types/Action.cpp
   src/core/memGraphs/Branchs/types/Fact.cpp
+  src/core/memGraphs/Branchs/types/SoftPoint.cpp
   src/core/memGraphs/Branchs/types/Triplet.cpp
   src/core/memGraphs/Graphs/ActionGraph.cpp
   src/core/memGraphs/Graphs/FactGraph.cpp
@@ -169,6 +171,8 @@ add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 ##############################
 
 add_library(mementar_interface
+  src/core/feeder/FeedStorage.cpp
+  src/core/feeder/Feeder.cpp
   src/RosInterface.cpp
 )
 target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib)
