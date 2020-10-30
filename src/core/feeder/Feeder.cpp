@@ -54,9 +54,15 @@ bool Feeder::run()
     else
     {
       if(feed.expl_)
-        std::cout << "got explanation : " << feed.fact_.value().Triplet::toString() << " <= " << feed.expl_.value().Triplet::toString() << std::endl;
+      {
+        auto explanation = timeline_->facts.findRecent(feed.expl_.value());
+        if(explanation == nullptr)
+          notifications_.push_back("[FAIL][explanation does not exist]" + feed.expl_.value().Triplet::toString());
+        else
+          timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation}));
+      }
       else
-        std::cout << "got fact : " << feed.fact_.value().Triplet::toString() << std::endl;
+        timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), feed.fact_.value()));
     }
 
   }

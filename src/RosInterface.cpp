@@ -91,28 +91,12 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
   feeder_.store(msg->data, time(0));
 }
-/*
-data: "[ADD]blop|isOnTopOf|table_l_0"
-stamp:
-  secs: 1603977394
-  nsecs: 892413051
----
-data: "[DEL]blop|isOnTopOf|table_l_0"
-stamp:
-  secs: 1603977408
-  nsecs: 428956909
-*/
+
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
   feeder_.store(msg->data, msg->stamp.sec);
 }
-/*
-fact: "[ADD]table_l_0|isUnder|blop"
-cause: "[ADD]blop|isOnTopOf|table_l_0"
----
-fact: "[DEL]table_l_0|isUnder|blop"
-cause: "[DEL]blop|isOnTopOf|table_l_0"
-*/
+
 void RosInterface::explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
 {
   feeder_.store(msg->fact, msg->cause);

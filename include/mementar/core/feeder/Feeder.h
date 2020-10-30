@@ -2,6 +2,7 @@
 #define MEMENTAR_FEEDER_H
 
 #include "mementar/core/feeder/FeedStorage.h"
+#include "mementar/core/feeder/IdGenerator.h"
 //#include "ontologenius/core/feeder/Versionor.h"
 
 namespace mementar {
@@ -32,6 +33,7 @@ public:
 
 private:
   FeedStorage feed_storage_;
+  IdGenerator id_generator_;
   //Versionor versionor_;
   Timeline* timeline_;
 

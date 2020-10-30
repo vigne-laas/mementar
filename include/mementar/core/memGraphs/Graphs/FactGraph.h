@@ -29,11 +29,13 @@ public:
     return all_facts_;
   }
 
-  ElBTree* getTimeline() { return &timeline; }
+  ElBTree* getTimeline() { return &timeline_; }
+
+  ContextualizedFact* findRecent(const Triplet& triplet, SoftPoint::Ttime until = SoftPoint::default_time);
 
 private:
   std::vector<ContextualizedFact*> all_facts_;
-  ElBTree timeline;
+  ElBTree timeline_;
 };
 
 } // namespace mementar
