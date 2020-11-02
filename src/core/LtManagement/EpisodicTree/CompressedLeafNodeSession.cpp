@@ -71,13 +71,13 @@ void CompressedLeafNodeSession::insert(Fact* data)
   mut_.lock_shared();
   if(contexts_.size() == 0)
   {
-    Display::Error("Can not insert in empty session");
+    Display::error("Can not insert in empty session");
   }
   else
   {
     if((time_t)data->getTime() < contexts_[0].getKey())
     {
-      Display::Error("try to insert fact in past that do not exist");
+      Display::error("try to insert fact in past that do not exist");
       return;
     }
 

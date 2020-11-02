@@ -26,27 +26,27 @@ namespace mementar
 class Display
 {
 public:
-  static void Error(const std::string& text)
+  static void error(const std::string& text)
   {
     std::cout << COLOR_RED << "[ERROR]" << text << COLOR_OFF << std::endl;
   }
 
-  static void Warning(const std::string& text)
+  static void warning(const std::string& text)
   {
     std::cout << COLOR_ORANGE << "[WARNING]" << text << COLOR_OFF << std::endl;
   }
 
-  static void Info(const std::string& text)
+  static void info(const std::string& text)
   {
     std::cout << COLOR_BLUE << text << COLOR_OFF << std::endl;
   }
 
-  static void Debug(const std::string& text)
+  static void debug(const std::string& text)
   {
     std::cout << text << std::endl;
   }
 
-  static void Percent(size_t percent)
+  static void percent(size_t percent)
   {
     std::cout << "=>" << std::setw(3) << percent << "%\r" << std::flush;
   }

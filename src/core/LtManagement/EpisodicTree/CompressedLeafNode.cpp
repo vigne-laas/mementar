@@ -30,16 +30,16 @@ CompressedLeafNode::~CompressedLeafNode()
   Context::storeContexts(contexts_, directory_);
 
   mut_.lock();
-  Display::Info("Compress trees:");
+  Display::info("Compress trees:");
   size_t nb_leafs = keys_.size();
   size_t leafs_cpt = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(auto tree : btree_childs_)
   {
     compressed_childs_.push_back(CompressedLeaf(tree, directory_));
     delete tree;
-    Display::Percent((++leafs_cpt)*100/nb_leafs);
+    Display::percent((++leafs_cpt)*100/nb_leafs);
   }
 
   for(size_t i = 0; i < compressed_sessions_tree_.size(); i++)
@@ -50,9 +50,9 @@ CompressedLeafNode::~CompressedLeafNode()
         compressed_childs_[i] = std::move(CompressedLeaf(compressed_sessions_tree_[i], directory_));
       delete compressed_sessions_tree_[i];
     }
-    Display::Percent((++leafs_cpt)*100/nb_leafs);
+    Display::percent((++leafs_cpt)*100/nb_leafs);
   }
-  Display::Debug("");
+  Display::debug("");
   mut_.unlock();
 }
 
@@ -101,7 +101,7 @@ void CompressedLeafNode::insert(Fact* data)
   {
     if((time_t)data->getTime() < keys_[0])
     {
-      Display::Error("try to insert fact in past that do not exist");
+      Display::error("try to insert fact in past that do not exist");
       return;
     }
 
@@ -330,12 +330,12 @@ bool CompressedLeafNode::loadStoredData()
 {
   size_t nb_file = std::distance(std::experimental::filesystem::directory_iterator(directory_), std::experimental::filesystem::directory_iterator{});
   if(nb_file)
-    Display::Info("Load compressed files:");
+    Display::info("Load compressed files:");
   else
     return false;
 
   size_t cpt_file = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
@@ -360,15 +360,15 @@ bool CompressedLeafNode::loadStoredData()
         iss >> key;
         insert(key, CompressedLeaf(key, complete_dir));
 
-        Display::Debug(complete_dir);
+        Display::debug(complete_dir);
       }
     }
 
     cpt_file++;
-    Display::Percent(cpt_file*100/nb_file);
+    Display::percent(cpt_file*100/nb_file);
   }
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 
   if(compressed_childs_.size())
   {

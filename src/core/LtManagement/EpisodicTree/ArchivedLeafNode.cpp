@@ -34,19 +34,19 @@ ArchivedLeafNode::~ArchivedLeafNode()
       delete tree;
   }
 
-  Display::Info("Archive trees:");
+  Display::info("Archive trees:");
   size_t nb_leafs = archived_sessions_tree_.size();
   size_t leafs_cpt = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(auto tree : archived_sessions_tree_)
   {
     if(tree != nullptr)
       delete tree;
-    Display::Percent((++leafs_cpt)*100/nb_leafs);
+    Display::percent((++leafs_cpt)*100/nb_leafs);
   }
 
-  Display::Debug("");
+  Display::debug("");
   mut_.unlock();
 }
 
@@ -64,7 +64,7 @@ void ArchivedLeafNode::insert(Fact* data)
   {
     if((time_t)data->getTime() < keys_[0])
     {
-      Display::Error("try to insert fact in past that do not exist");
+      Display::error("try to insert fact in past that do not exist");
       return;
     }
 
@@ -276,10 +276,10 @@ int ArchivedLeafNode::getKeyIndex(const time_t& key)
 
 void ArchivedLeafNode::loadStoredData()
 {
-  Display::Info("Load archived files:");
+  Display::info("Load archived files:");
   size_t nb_file = std::distance(std::experimental::filesystem::directory_iterator(directory_), std::experimental::filesystem::directory_iterator{});
   size_t cpt_file = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
@@ -299,15 +299,15 @@ void ArchivedLeafNode::loadStoredData()
         iss >> key;
         insert(key, ArchivedLeaf(key, complete_dir));
 
-        Display::Debug(complete_dir);
+        Display::debug(complete_dir);
       }
     }
 
     cpt_file++;
-    Display::Percent(cpt_file*100/nb_file);
+    Display::percent(cpt_file*100/nb_file);
   }
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 
   CompressedLeafNode* comp = new CompressedLeafNode(directory_);
   if(comp->getKey() != time_t(-1))
@@ -319,7 +319,7 @@ void ArchivedLeafNode::loadStoredData()
     modified_.push_back(false);
   }
   else
-    Display::Warning("No compressed data loaded");
+    Display::warning("No compressed data loaded");
 
   if(archived_childs_.size())
   {

@@ -6,6 +6,7 @@
 #include <ros/callback_queue.h>
 
 #include "mementar/core/utility/error_code.h"
+#include "mementar/graphical/Display.h"
 
 namespace mementar
 {
@@ -150,7 +151,7 @@ void RosInterface::feedThread()
       std::vector<std::string> notifications = feeder_.getNotifications();
       for(auto notif : notifications)
       {
-        //Display::error(notif);
+        Display::error(notif);
         if(name_ != "")
           notif = "[" + name_ + "]" + notif;
         msg.data = notif;

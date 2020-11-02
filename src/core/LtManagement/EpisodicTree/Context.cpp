@@ -147,9 +147,9 @@ void Context::fromString(const std::string& string)
 
 void Context::storeContexts(std::vector<Context>& contexts, const std::string& directory)
 {
-  Display::Info("Save contexts:");
+  Display::info("Save contexts:");
 
-  Display::Percent(0);
+  Display::percent(0);
   std::string res;
   res += "[" + std::to_string(contexts.size()) + "]\n";
   for(size_t i = 0; i < contexts.size(); i++)
@@ -157,7 +157,7 @@ void Context::storeContexts(std::vector<Context>& contexts, const std::string& d
     res += "{" + std::to_string(contexts[i].getKey()) + "}{\n";
     res += contexts[i].toString();
     res += "}\n";
-    Display::Percent((i+1)*100/contexts.size());
+    Display::percent((i+1)*100/contexts.size());
   }
 
   std::ofstream file;
@@ -165,15 +165,15 @@ void Context::storeContexts(std::vector<Context>& contexts, const std::string& d
   file << res;
   file.close();
 
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 }
 
 std::string Context::ContextsToString(std::vector<Context>& contexts)
 {
-  Display::Info("Convert contexts:");
+  Display::info("Convert contexts:");
 
-  Display::Percent(0);
+  Display::percent(0);
   std::string res;
   res += "[" + std::to_string(contexts.size()) + "]\n";
   for(size_t i = 0; i < contexts.size(); i++)
@@ -181,11 +181,11 @@ std::string Context::ContextsToString(std::vector<Context>& contexts)
     res += "{" + std::to_string(contexts[i].getKey()) + "}{\n";
     res += contexts[i].toString();
     res += "}\n";
-    Display::Percent((i+1)*100/contexts.size());
+    Display::percent((i+1)*100/contexts.size());
   }
 
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 
   return res;
 }
@@ -193,7 +193,7 @@ std::string Context::ContextsToString(std::vector<Context>& contexts)
 void Context::loadContexts(std::vector<Context>& contexts, const std::string& directory)
 {
   //contexts must have a key
-  Display::Info("Load contexts:");
+  Display::info("Load contexts:");
   std::ifstream t(directory + "/context.txt");
   if(t)
   {
@@ -210,7 +210,7 @@ void Context::loadContexts(std::vector<Context>& contexts, const std::string& di
     std::istringstream iss(tmp);
     iss >> nb_contexts;
 
-    Display::Percent(0);
+    Display::percent(0);
 
     for(size_t i = 0; i < nb_contexts; i++)
     {
@@ -234,12 +234,12 @@ void Context::loadContexts(std::vector<Context>& contexts, const std::string& di
         }
       }
 
-      Display::Percent((i+1)*100/nb_contexts);
+      Display::percent((i+1)*100/nb_contexts);
     }
   }
 
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 }
 
 std::vector<Context> Context::StringToContext(const std::string& str)
