@@ -27,15 +27,15 @@ void OccasionsManager::run()
   {
     while(!empty())
     {
-      const Triplet* triplet = get();
-      if(triplet->valid())
+      Triplet triplet = get();
+      if(triplet.valid())
       {
         std::vector<size_t> ids = subscription_.evaluate(triplet);
         for(auto id : ids)
         {
           mementar::MementarOccasion msg;
           msg.id = id;
-          msg.data = triplet->toString();
+          msg.data = triplet.toString();
           msg.last = subscription_.isFinished(id);
           pub_.publish(msg);
         }
@@ -45,7 +45,7 @@ void OccasionsManager::run()
   }
 }
 
-void OccasionsManager::add(const Triplet* triplet)
+void OccasionsManager::add(const Triplet& triplet)
 {
   mutex_.lock();
   if(queue_choice_ == true)
@@ -58,7 +58,7 @@ void OccasionsManager::add(const Triplet* triplet)
 bool OccasionsManager::SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
                                         mementar::MementarOccasionSubscription::Response &res)
 {
-  Triplet triplet_patern(req.data);
+  Triplet triplet_patern = Triplet::deserialize(req.data);
   if(!triplet_patern.valid())
     return false;
 
@@ -78,9 +78,9 @@ bool OccasionsManager::UnsubscribeCallback(mementar::MementarOcassionUnsubscript
   return true;
 }
 
-const Triplet* OccasionsManager::get()
+Triplet OccasionsManager::get()
 {
-  const Triplet* res = nullptr;
+  Triplet res;
   mutex_.lock();
   if(queue_choice_ == true)
   {

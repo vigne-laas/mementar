@@ -46,6 +46,7 @@ void RosInterface::run()
   service_name = (name_ == "") ? "actions" : "actions/" + name_;
   ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
 
+  feeder_.setCallback([this](const Triplet& triplet){ this->occasions_.add(triplet); });
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
   std::thread feed_thread(&RosInterface::feedThread, this);
 
@@ -136,10 +137,10 @@ void RosInterface::feedThread()
   ros::Publisher feeder_publisher = n_->advertise<std_msgs::String>(getTopicName("feeder_notifications"), 1000);
 
   ros::Rate wait(100);
-  /*while((ros::ok()) && (onto_->isInit(false) == false) && (run_ == true))
+  while((ros::ok()) && (timeline_->isInit() == false) && (run_ == true))
   {
     wait.sleep();
-  }*/
+  }
 
   std_msgs::String msg;
   while(ros::ok() && (run_ == true))

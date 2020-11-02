@@ -42,14 +42,14 @@ bool Subscription::isFinished(size_t id)
   return res;
 }
 
-std::vector<size_t> Subscription::evaluate(const Triplet* triplet)
+std::vector<size_t> Subscription::evaluate(const Triplet& triplet)
 {
   std::vector<size_t> res;
 
   map_mut_.lock();
   for(auto& it : triplet_paterns_)
   {
-    if(triplet->fit(it.second))
+    if(triplet.fit(it.second))
     {
       if(counts_[it.first])
       {

@@ -6,7 +6,7 @@
 
 namespace mementar {
 
-Feeder::Feeder(Timeline* timeline)// : versionor_(&feed_storage_)
+Feeder::Feeder(Timeline* timeline) : callback_([this](auto triplet){ this->defaultCallback(triplet); }) //, versionor_(&feed_storage_)
 {
   timeline_ = timeline;
 }
@@ -63,6 +63,8 @@ bool Feeder::run()
       }
       else
         timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), feed.fact_.value()));
+
+      callback_(feed.fact_.value());
     }
 
   }

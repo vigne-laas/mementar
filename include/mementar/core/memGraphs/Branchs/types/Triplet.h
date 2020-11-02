@@ -54,6 +54,8 @@ public:
   {
     if(std::regex_match(str, match, regex))
       return Triplet(match[2].str(), match[3].str(), match[4].str(), match[1].str() == "A");
+    else if(std::regex_match(str, match, regex2))
+      return Triplet(match[2].str(), match[3].str(), match[4].str(), (match[1].str() == "ADD") || (match[1].str() == "add"));
     else
       return Triplet();
   }
@@ -62,6 +64,8 @@ public:
   {
     if(std::regex_match(str, match, regex))
       return new Triplet(match[2].str(), match[3].str(), match[4].str(), match[1].str() == "A");
+    else if(std::regex_match(str, match, regex2))
+      return new Triplet(match[2].str(), match[3].str(), match[4].str(), (match[1].str() == "ADD") || (match[1].str() == "add"));
     else
       return nullptr;
   }
@@ -113,6 +117,7 @@ public:
 
 protected:
   static std::regex regex;
+  static std::regex regex2;
   static std::smatch match;
 
 private:

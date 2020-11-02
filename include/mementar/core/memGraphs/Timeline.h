@@ -9,11 +9,14 @@ namespace mementar {
 class Timeline
 {
 public:
-  Timeline() : actions(&facts) {}
+  Timeline() : actions(&facts) { init_ = true; }
 
   FactGraph facts;
   ActionGraph actions;
+
+  bool isInit() { return init_; }
 private:
+  bool init_;
 };
 
 } // namespace mementar

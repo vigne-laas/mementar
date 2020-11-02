@@ -24,10 +24,15 @@ int main(int argc, char** argv)
   mementar::TimelineManipulator manip(&n);
   manip.waitInit();
 
+  std::cout << "init" << std::endl;
+
   mementar::OccasionsSubscriber sub1(&callback_1, true);
   sub1.subscribe(mementar::Fact("bob", "eat", "?"), 2);
   mementar::OccasionsSubscriber sub2(&callback_2, true);
   sub2.subscribe(mementar::Fact("max", "eat", "?"), 3);
+  sub2.subscribe(mementar::Fact("bob", "eat", "?"), 4);
+
+  std::cout << "sub" << std::endl;
 
   size_t cpt = 0;
   ros::Rate r(100);

@@ -20,7 +20,7 @@ public:
   bool isFinished(size_t id);
   bool empty() { return triplet_paterns_.size() == 0; }
 
-  std::vector<size_t> evaluate(const Triplet* triplet);
+  std::vector<size_t> evaluate(const Triplet& triplet);
 
 private:
   std::map<size_t, Triplet> triplet_paterns_;
