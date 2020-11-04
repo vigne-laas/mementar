@@ -5,6 +5,7 @@
     - catkin_make
     - cd src
     - cp -r /builds/$GITLAB_USER_LOGIN/mementar .
+    - git clone https://github.com/sarthou/ontologenius.git
     - cd ..
     - catkin_make
 
@@ -15,6 +16,7 @@
     - catkin_make
     - cd src
     - cp -r /builds/$GITLAB_USER_LOGIN/mementar .
+    - git clone https://github.com/sarthou/ontologenius.git
     - cd ..
     - catkin_make
 
