@@ -10,10 +10,6 @@ OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callba
 {
   callback_ = callback;
 
-  sub_ = n_.subscribe((name == "") ? "mementar/occasions" : "mementar/occasions/" + name, 1000, &OccasionsSubscriber::occasionCallback, this);
-  client_subscribe_ = n_.serviceClient<MementarOccasionSubscription>((name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name);
-  client_cancel_ = n_.serviceClient<MementarOcassionUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
-
   if(spin_thread)
   {
     need_to_terminate_ = false;
@@ -22,16 +18,16 @@ OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callba
   }
   else
     spin_thread_ = nullptr;
+
+  sub_ = n_.subscribe((name == "") ? "mementar/occasions" : "mementar/occasions/" + name, 1000, &OccasionsSubscriber::occasionCallback, this);
+  client_subscribe_ = n_.serviceClient<MementarOccasionSubscription>((name == "") ? "mementar/subscribe" : "mementar/subscribe/" + name);
+  client_cancel_ = n_.serviceClient<MementarOcassionUnsubscription>((name == "") ? "mementar/unsubscribe" : "mementar/unsubscribe/" + name);
 }
 
 OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callback, bool spin_thread)
 {
   callback_ = callback;
 
-  sub_ = n_.subscribe("mementar/occasions", 1000, &OccasionsSubscriber::occasionCallback, this);
-  client_subscribe_ = n_.serviceClient<MementarOccasionSubscription>("mementar/subscribe");
-  client_cancel_ = n_.serviceClient<MementarOcassionUnsubscription>("mementar/unsubscribe");
-
   if(spin_thread)
   {
     need_to_terminate_ = false;
@@ -40,16 +36,19 @@ OccasionsSubscriber::OccasionsSubscriber(std::function<void(const Fact&)> callba
   }
   else
     spin_thread_ = nullptr;
+
+  sub_ = n_.subscribe("mementar/occasions", 1000, &OccasionsSubscriber::occasionCallback, this);
+  client_subscribe_ = n_.serviceClient<MementarOccasionSubscription>("mementar/subscribe");
+  client_cancel_ = n_.serviceClient<MementarOcassionUnsubscription>("mementar/unsubscribe");
 }
 
 OccasionsSubscriber::~OccasionsSubscriber()
 {
   cancel();
+  sub_.shutdown();
   if(spin_thread_)
   {
-    terminate_mutex_.lock();
     need_to_terminate_ = true;
-    terminate_mutex_.unlock();
     spin_thread_->join();
     delete spin_thread_;
   }
@@ -109,10 +108,8 @@ void OccasionsSubscriber::spinThread()
 {
   while(n_.ok())
   {
-    terminate_mutex_.lock();
     if(need_to_terminate_)
       break;
-    terminate_mutex_.unlock();
     callback_queue_.callAvailable(ros::WallDuration(0.1));
   }
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <thread>
-#include <mutex>
+#include <atomic>
 
 #include <ros/ros.h>
 #include <ros/callback_queue.h>
@@ -28,15 +28,14 @@ public:
   bool end() { return ids_.size() == 0; }
 
 private:
-  ros::NodeHandle n_;
   ros::Subscriber sub_;
   ros::ServiceClient client_subscribe_;
   ros::ServiceClient client_cancel_;
 
-  std::mutex terminate_mutex_;
-  bool need_to_terminate_;
+  std::atomic<bool> need_to_terminate_;
   std::thread* spin_thread_;
   ros::CallbackQueue callback_queue_;
+  ros::NodeHandle n_;
 
   std::vector<size_t> ids_;
 

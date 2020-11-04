@@ -63,21 +63,35 @@ int main(int argc, char** argv)
     r.sleep();
   }*/
 
-  onto.feeder.waitConnected();
-  mementar::OccasionsSubscriber onto_sub(&ontoCallback, true);
-  onto_sub.subscribe(mementar::Fact("onto", "isA", "Ontology"), 1);
-
-  onto.feeder.addConcept("onto");
-  onto.feeder.addProperty("onto", "isA", "Ontology");
-  t1 = high_resolution_clock::now();
-
-  while(!onto_sub.end() && ros::ok())
   {
-    ros::spinOnce();
-    r.sleep();
+    onto.feeder.waitConnected();
+    mementar::OccasionsSubscriber onto_sub(&ontoCallback, true);
+    onto_sub.subscribe(mementar::Fact("onto", "isA", "Ontology"), 1);
+
+    for(size_t i = 0; i < 100; i++)
+      r.sleep();
+
+    onto.feeder.addConcept("onto");
+    onto.feeder.addProperty("onto", "isA", "Ontology");
+    t1 = high_resolution_clock::now();
+
+    while(!onto_sub.end() && ros::ok())
+      r.sleep();
+
+    duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+    std::cout << "callback in " << time_span.count() << std::endl;
+
+    onto_sub.subscribe(mementar::Fact("oro", "isUnder", "onto"), 1);
+    onto.feeder.addProperty("onto", "isOn", "oro");
+    t1 = high_resolution_clock::now();
+
+    while(!onto_sub.end() && ros::ok())
+      r.sleep();
+
+    time_span = duration_cast<duration<double>>(t2 - t1);
+    std::cout << "callback in " << time_span.count() << std::endl;
+    onto.feeder.removeProperty("onto", "isOn", "oro");
   }
-  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
-  std::cout << "callback in " << time_span.count() << std::endl;
 
   return 0;
 }
