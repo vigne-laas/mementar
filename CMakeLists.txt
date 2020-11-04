@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg
   message_generation
   pluginlib
+  ontologenius
 )
 
 ## System dependencies are found with CMake's conventions
@@ -62,7 +63,7 @@ find_package(OpenCV REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES mementar_lib
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs ontologenius
   DEPENDS OpenCV
 )
 

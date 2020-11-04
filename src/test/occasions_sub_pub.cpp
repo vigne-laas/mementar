@@ -1,9 +1,16 @@
 #include <iostream>
+#include <chrono>
 
 #include "ros/ros.h"
 
 #include "mementar/API/TimelineManipulator.h"
 #include "mementar/API/OccasionsSubscriber.h"
+
+#include "ontologenius/OntologyManipulator.h"
+
+using namespace std::chrono;
+
+high_resolution_clock::time_point t1, t2;
 
 void callback_1(const mementar::Fact& fct)
 {
@@ -15,11 +22,18 @@ void callback_2(const mementar::Fact& fct)
   std::cout << "[CB2] " << fct() << std::endl;
 }
 
+void ontoCallback(const mementar::Fact& fct)
+{
+  std::cout << "[onto] " << fct() << std::endl;
+  t2 = high_resolution_clock::now();
+}
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "occasions_sub_pub");
 
   ros::NodeHandle n;
+  OntologyManipulator onto(&n);
 
   mementar::TimelineManipulator manip(&n);
   manip.waitInit();
@@ -36,7 +50,7 @@ int main(int argc, char** argv)
 
   size_t cpt = 0;
   ros::Rate r(100);
-  while((!sub1.end() || !sub2.end()) && ros::ok())
+  /*while((!sub1.end() || !sub2.end()) && ros::ok())
   {
     cpt++;
     if(cpt > 100)
@@ -47,7 +61,23 @@ int main(int argc, char** argv)
     }
     ros::spinOnce();
     r.sleep();
+  }*/
+
+  onto.feeder.waitConnected();
+  mementar::OccasionsSubscriber onto_sub(&ontoCallback, true);
+  onto_sub.subscribe(mementar::Fact("onto", "isA", "Ontology"), 1);
+
+  onto.feeder.addConcept("onto");
+  onto.feeder.addProperty("onto", "isA", "Ontology");
+  t1 = high_resolution_clock::now();
+
+  while(!onto_sub.end() && ros::ok())
+  {
+    ros::spinOnce();
+    r.sleep();
   }
+  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+  std::cout << "callback in " << time_span.count() << std::endl;
 
   return 0;
 }
