@@ -173,6 +173,7 @@ add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 add_library(mementar_interface
   src/core/feeder/FeedStorage.cpp
   src/core/feeder/Feeder.cpp
+  src/core/Parametrization/Configuration.cpp
   src/RosInterface.cpp
 )
 target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib)
@@ -203,6 +204,10 @@ add_dependencies(mementar_timeline ${catkin_EXPORTED_TARGETS})
 ##############################
 ## Test executables
 ##############################
+
+add_executable(config src/test/config.cpp)
+target_link_libraries(config ${catkin_LIBRARIES})
+target_link_libraries(config mementar_interface)
 
 add_executable(event_sub_pub src/test/occasions_sub_pub.cpp)
 target_link_libraries(event_sub_pub ${catkin_LIBRARIES})
