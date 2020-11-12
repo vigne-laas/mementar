@@ -27,6 +27,29 @@ RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, con
     std::experimental::filesystem::create_directories(directory_);
   }
 
+  if(configuration_file != "none")
+  {
+    if(configuration_.read(configuration_file))
+    {
+      if(configuration_.exist("whitelist"))
+      {
+        if(feeder_.setWhitelist(configuration_["whitelist"].value()) == false)
+          Display::error("A whitelist can not be setted while a blacklist is used");
+        else
+          Display::info("A whitelist has been setted");
+      }
+      if(configuration_.exist("blacklist"))
+      {
+        if(feeder_.setBlacklist(configuration_["blacklist"].value()) == false)
+          Display::error("A blacklist can not be setted while a whitelist is used");
+        else
+          Display::info("A blacklist has been setted");
+      }
+    }
+    else
+      Display::error("Fail to load configuartion file : " + configuration_file);
+  }
+
   timeline_ = new Timeline();
   feeder_.link(timeline_);
 

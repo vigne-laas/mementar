@@ -12,9 +12,10 @@
 #include "mementar/StampedString.h"
 
 //#include "mementar/core/LtManagement/EpisodicTree/ArchivedLeafNode.h"
+#include "mementar/core/feeder/Feeder.h"
 #include "mementar/core/memGraphs/Timeline.h"
 #include "mementar/core/Occasions/OccasionsManager.h"
-#include "mementar/core/feeder/Feeder.h"
+#include "mementar/core/Parametrization/Configuration.h"
 
 namespace mementar
 {
@@ -35,7 +36,9 @@ public:
 private:
   ros::NodeHandle* n_;
   std::string directory_;
+  Configuration configuration_;
   size_t order_;
+
   Timeline* timeline_;
   Feeder feeder_;
   OccasionsManager occasions_;

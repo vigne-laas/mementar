@@ -1,0 +1,5 @@
+whitelist:
+  - isPositioned
+  - hasColor
+blacklist:
+  - isIn

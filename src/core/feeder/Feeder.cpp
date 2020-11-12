@@ -72,4 +72,30 @@ bool Feeder::run()
   return has_run;
 }
 
+bool Feeder::setWhitelist(std::vector<std::string> list)
+{
+  if(!is_whitelist_ || (is_whitelist_.value() == true))
+  {
+    for(auto& property : list)
+      list_.insert(property);
+    is_whitelist_ = true;
+    return true;
+  }
+  else
+    return false;
+}
+
+bool Feeder::setBlacklist(std::vector<std::string> list)
+{
+  if(!is_whitelist_ || (is_whitelist_.value() == false))
+  {
+    for(auto& property : list)
+      list_.insert(property);
+    is_whitelist_ = false;
+    return true;
+  }
+  else
+    return false;
+}
+
 } // namespace mementar

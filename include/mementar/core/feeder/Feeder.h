@@ -6,6 +6,7 @@
 //#include "ontologenius/core/feeder/Versionor.h"
 
 #include <functional>
+#include <unordered_set>
 
 namespace mementar {
 
@@ -21,6 +22,9 @@ public:
   bool run();
   void link(Timeline* timeline) {timeline_ = timeline; }
   void setCallback(const std::function<void(const Triplet&)>& callback) { callback_ = callback; }
+
+  bool setWhitelist(std::vector<std::string> list);
+  bool setBlacklist(std::vector<std::string> list);
 
   std::vector<std::string> getNotifications()
   {
@@ -40,6 +44,9 @@ private:
   //Versionor versionor_;
   Timeline* timeline_;
   std::function<void(const Triplet&)> callback_;
+
+  std::experimental::optional<bool> is_whitelist_;
+  std::unordered_set<std::string> list_;
 
   // Here the notifications are about miss formed queries
   std::vector<std::string> notifications_;
