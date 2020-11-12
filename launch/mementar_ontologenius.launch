@@ -1,9 +1,13 @@
 <launch>
+  <arg name="intern_directory" default="none"/>
+
   <group>
     <remap from="/ontologenius/insert_echo" to="/mementar/insert_stamped"/>
     <remap from="/ontologenius/insert_explanations" to="/mementar/insert_explanations"/>
     <include file="$(find ontologenius)/launch/ontologenius_full.launch"/>
   </group>
 
-  <include file="$(find mementar)/launch/mementar.launch"/>
+  <include file="$(find mementar)/launch/mementar.launch">
+    <arg name="intern_directory" value="$(arg intern_directory)" />
+  </include>
 </launch>

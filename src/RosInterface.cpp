@@ -11,18 +11,22 @@
 namespace mementar
 {
 
-RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order, std::string name) : occasions_(n, name),
+RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, const std::string& configuration_file, size_t order, std::string name) : occasions_(n, name),
                                                                                                                run_(true)
 {
   n_ = n;
   order_ = order;
-  directory_ = directory;
-  if(name == "")
-    directory_ += "/mementar";
-  else
-    directory_ += "/" + name;
+  if(directory != "none")
+  {
+    directory_ = directory;
+    if(name == "")
+      directory_ += "/mementar";
+    else
+      directory_ += "/" + name;
 
-  //std::experimental::filesystem::create_directories(directory_);
+    std::experimental::filesystem::create_directories(directory_);
+  }
+
   timeline_ = new Timeline();
   feeder_.link(timeline_);
 

@@ -22,7 +22,7 @@ namespace mementar
 class RosInterface
 {
 public:
-  RosInterface(ros::NodeHandle* n, const std::string& directory, size_t order = 10, std::string name = "");
+  RosInterface(ros::NodeHandle* n, const std::string& directory, const std::string& configuration_file, size_t order = 10, std::string name = "");
   ~RosInterface();
 
   void run();

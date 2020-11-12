@@ -5,6 +5,7 @@
 
 #include "mementar/RosInterface.h"
 #include "mementar/core/utility/error_code.h"
+#include "mementar/core/Parametrization/Parameters.h"
 
 void removeUselessSpace(std::string& text)
 {
@@ -19,7 +20,7 @@ ros::NodeHandle* n_;
 std::map<std::string, mementar::RosInterface*> interfaces_;
 std::map<std::string, std::thread> interfaces_threads_;
 
-std::string directory = "";
+mementar::Parameters params;
 
 bool deleteInterface(std::string name)
 {
@@ -56,7 +57,11 @@ bool managerHandle(mementar::MementarService::Request &req,
       res.code = NO_EFFECT;
     else
     {
-      mementar::RosInterface* tmp = new mementar::RosInterface(n_, directory, 10, req.param);
+      mementar::RosInterface* tmp = new mementar::RosInterface(n_,
+                                                               params.parameters_.at("directory").getFirst(),
+                                                               params.parameters_.at("config").getFirst(),
+                                                               10,
+                                                               req.param);
       interfaces_[req.param] = tmp;
       std::thread th(&mementar::RosInterface::run, tmp);
       interfaces_threads_[req.param] = std::move(th);
@@ -93,8 +98,11 @@ int main(int argc, char** argv)
   ros::NodeHandle n("mementar");
   n_ = &n;
 
-  directory = std::string(argv[1]);
-  std::cout << "directory " << directory << std::endl;
+  params.insert(mementar::Parameter("directory", {"-d", "--directory"}, {"none"}));
+  params.insert(mementar::Parameter("config", {"-c", "--config"}, {"none"}));
+
+  params.set(argc, argv);
+  params.display();
 
   ros::ServiceServer service = n_->advertiseService("manage", managerHandle);
 
