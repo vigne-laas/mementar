@@ -86,6 +86,17 @@ include_directories(
 ##############################
 
 ##############################
+## EVENTS
+##############################
+
+add_library(mementar_events_lib
+  src/core/Occasions/Subscription.cpp
+  src/core/Occasions/OccasionsManager.cpp
+)
+target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
+add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
+
+##############################
 ## CORE
 ##############################
 add_library(mementar_compression_lib
@@ -108,7 +119,7 @@ add_library(mementar_memGraphs_lib
   src/core/memGraphs/Graphs/FactGraph.cpp
 )
 
-add_library(mementar_core_lib
+add_library(mementar_lt_lib
   src/core/LtManagement/EpisodicTree/CompressedLeaf.cpp
   src/core/LtManagement/EpisodicTree/CompressedLeafNode.cpp
   src/core/LtManagement/EpisodicTree/Context.cpp
@@ -117,22 +128,20 @@ add_library(mementar_core_lib
   src/core/LtManagement/EpisodicTree/ArchivedLeaf.cpp
   src/core/LtManagement/EpisodicTree/ArchivedLeafNode.cpp
 )
-target_link_libraries(mementar_core_lib
+target_link_libraries(mementar_lt_lib
   mementar_compression_lib
   mementar_memGraphs_lib
   pthread
 )
 
-##############################
-## EVENTS
-##############################
-
-add_library(mementar_events_lib
-  src/core/Occasions/Subscription.cpp
-  src/core/Occasions/OccasionsManager.cpp
+add_library(mementar_core_lib
+  src/core/feeder/FeedStorage.cpp
+  src/core/feeder/Feeder.cpp
+  src/core/Parametrization/Configuration.cpp
 )
-target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
-add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
+target_link_libraries(mementar_core_lib mementar_lt_lib)
+target_link_libraries(mementar_core_lib ${catkin_LIBRARIES})
+add_dependencies(mementar_core_lib ${catkin_EXPORTED_TARGETS})
 
 ##############################
 ## DRAWER
@@ -172,9 +181,6 @@ add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 ##############################
 
 add_library(mementar_interface
-  src/core/feeder/FeedStorage.cpp
-  src/core/feeder/Feeder.cpp
-  src/core/Parametrization/Configuration.cpp
   src/RosInterface.cpp
 )
 target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib)
@@ -220,7 +226,7 @@ target_link_libraries(graphs mementar_memGraphs_lib)
 
 
 #add_executable(eventLink src/test/EventLink.cpp)
-#target_link_libraries(eventLink mementar_core_lib)
+#target_link_libraries(eventLink mementar_lt_lib)
 
 ##############################
 ## Install

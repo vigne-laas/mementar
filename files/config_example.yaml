@@ -1,5 +1,6 @@
 whitelist:
   - isPositioned
   - hasColor
-blacklist:
-  - isIn
+#blacklist:
+#  - isPositioned
+#  - hasColor

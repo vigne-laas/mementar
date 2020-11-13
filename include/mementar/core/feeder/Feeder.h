@@ -5,6 +5,8 @@
 #include "mementar/core/feeder/IdGenerator.h"
 //#include "ontologenius/core/feeder/Versionor.h"
 
+#include "ontologenius/OntologyManipulator.h"
+
 #include <functional>
 #include <unordered_set>
 
@@ -15,6 +17,7 @@ class Timeline;
 class Feeder
 {
 public:
+  Feeder(OntologyManipulator* onto, Timeline* timeline = nullptr);
   Feeder(Timeline* timeline = nullptr);
 
   void store(const std::string& feed, const SoftPoint::Ttime& stamp) { feed_storage_.insert(feed, stamp); }
@@ -43,6 +46,7 @@ private:
   IdGenerator id_generator_;
   //Versionor versionor_;
   Timeline* timeline_;
+  OntologyManipulator* onto_;
   std::function<void(const Triplet&)> callback_;
 
   std::experimental::optional<bool> is_whitelist_;
@@ -50,6 +54,8 @@ private:
 
   // Here the notifications are about miss formed queries
   std::vector<std::string> notifications_;
+
+  void setList(const std::vector<std::string>& base_list);
 
   void defaultCallback(const Triplet&) {}
 };

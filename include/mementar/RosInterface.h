@@ -7,6 +7,8 @@
 #include <ros/ros.h>
 #include "std_msgs/String.h"
 
+#include "ontologenius/OntologyManipulator.h"
+
 #include "mementar/MementarService.h"
 #include "mementar/MementarExplanation.h"
 #include "mementar/StampedString.h"
@@ -38,6 +40,7 @@ private:
   std::string directory_;
   Configuration configuration_;
   size_t order_;
+  OntologyManipulator onto_;
 
   Timeline* timeline_;
   Feeder feeder_;

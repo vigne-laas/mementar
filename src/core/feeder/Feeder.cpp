@@ -9,6 +9,13 @@ namespace mementar {
 Feeder::Feeder(Timeline* timeline) : callback_([this](auto triplet){ this->defaultCallback(triplet); }) //, versionor_(&feed_storage_)
 {
   timeline_ = timeline;
+  onto_ = nullptr;
+}
+
+Feeder::Feeder(OntologyManipulator* onto, Timeline* timeline) : callback_([this](auto triplet){ this->defaultCallback(triplet); }) //, versionor_(&feed_storage_)
+{
+  timeline_ = timeline;
+  onto_ = onto;
 }
 
 bool Feeder::run()
@@ -53,6 +60,20 @@ bool Feeder::run()
     }
     else
     {
+      if(is_whitelist_)
+      {
+        if(is_whitelist_.value() == true)
+        {
+          if(list_.find(feed.fact_.value().predicat_) == list_.end())
+            continue;
+        }
+        else
+        {
+          if(list_.find(feed.fact_.value().predicat_) != list_.end())
+            continue;
+        }
+      }
+
       if(feed.expl_)
       {
         auto explanation = timeline_->facts.findRecent(feed.expl_.value());
@@ -76,8 +97,7 @@ bool Feeder::setWhitelist(std::vector<std::string> list)
 {
   if(!is_whitelist_ || (is_whitelist_.value() == true))
   {
-    for(auto& property : list)
-      list_.insert(property);
+    setList(list);
     is_whitelist_ = true;
     return true;
   }
@@ -89,13 +109,35 @@ bool Feeder::setBlacklist(std::vector<std::string> list)
 {
   if(!is_whitelist_ || (is_whitelist_.value() == false))
   {
-    for(auto& property : list)
-      list_.insert(property);
+    setList(list);
     is_whitelist_ = false;
     return true;
   }
   else
     return false;
+}
+
+void Feeder::setList(const std::vector<std::string>& base_list)
+{
+  if(onto_ != nullptr)
+  {
+    for(auto& property : base_list)
+    {
+      auto down_properties = onto_->objectProperties.getDown(property);
+      if(down_properties.size() == 0)
+        down_properties = onto_->dataProperties.getDown(property);
+      if(down_properties.size() != 0)
+      {
+        for(auto& down : down_properties)
+          list_.insert(down);
+      }
+    }
+  }
+  else
+  {
+    for(auto& property : base_list)
+      list_.insert(property);
+  }
 }
 
 } // namespace mementar

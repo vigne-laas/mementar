@@ -11,11 +11,18 @@
 namespace mementar
 {
 
-RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, const std::string& configuration_file, size_t order, std::string name) : occasions_(n, name),
-                                                                                                               run_(true)
+RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, const std::string& configuration_file, size_t order, std::string name) :
+                                                                                                                onto_(name),
+                                                                                                                feeder_(&onto_),
+                                                                                                                occasions_(n, name),
+                                                                                                                run_(true)
+
 {
+  std::cout << "RosInterface" << std::endl;
   n_ = n;
   order_ = order;
+  onto_.close();
+
   if(directory != "none")
   {
     directory_ = directory;
