@@ -2,31 +2,45 @@
 #define MEMENTER_FEEDSTORAGE_H
 
 #include <regex>
-#include <mutex>
 #include <string>
-#include <queue>
 
+#include "mementar/core/feeder/DoubleQueue.h"
 #include "mementar/core/memGraphs/Branchs/types/Fact.h"
 
 namespace mementar {
 
-enum action_t
+enum feed_commande_t
 {
-  action_add,
-  action_del,
-  action_commit,
-  action_checkout,
-  action_nop
+  cmd_add,
+  cmd_del,
+  cmd_commit,
+  cmd_checkout,
+  cmd_nop
 };
 
-struct feed_t
+struct feed_fact_t
 {
-  action_t action_;
+  feed_commande_t cmd_;
   std::experimental::optional<Fact> fact_;
   std::experimental::optional<Fact> expl_;
   bool checkout_;
 
-  feed_t() { checkout_ = false; }
+  feed_fact_t() { checkout_ = false; }
+};
+
+struct feed_action_t
+{
+  std::string name_;
+  SoftPoint::Ttime t_start_;
+  SoftPoint::Ttime t_end_;
+  bool checkout_;
+
+  feed_action_t()
+  {
+    t_start_ = SoftPoint::default_time;
+    t_end_ = SoftPoint::default_time;
+    checkout_ = false;
+  }
 };
 
 class FeedStorage
@@ -34,21 +48,24 @@ class FeedStorage
 public:
   FeedStorage();
 
-  void insert(const std::string& regex, const SoftPoint::Ttime& stamp);
-  void insert(const std::string& regex, const std::string& expl_regex);
-  void insert(std::vector<feed_t>& datas);
-  std::queue<feed_t> get();
-  size_t size() { return fifo_1.size() + fifo_2.size(); }
+  void insertFact(const std::string& regex, const SoftPoint::Ttime& stamp);
+  void insertFact(const std::string& regex, const std::string& expl_regex);
+  void insertFacts(std::vector<feed_fact_t>& datas);
+  void insertAction(const std::string& name, const SoftPoint::Ttime& start_stamp, const SoftPoint::Ttime& end_stamp);
+  void insertActions(std::vector<feed_action_t>& datas);
+
+  std::queue<feed_fact_t> getFacts();
+  std::queue<feed_action_t> getActions();
+
+  size_t size() { return fact_queue_.size() + action_queue_.size(); }
 
 private:
   std::regex base_regex;
-  std::mutex mutex_;
 
-  bool queue_choice_;
-  std::queue<feed_t> fifo_1;
-  std::queue<feed_t> fifo_2;
+  DoubleQueue<feed_fact_t> fact_queue_;
+  DoubleQueue<feed_action_t> action_queue_;
 
-  feed_t getFeed(const std::string& regex, const SoftPoint::Ttime& stamp = SoftPoint::default_time);
+  feed_fact_t getFeedFact(const std::string& regex, const SoftPoint::Ttime& stamp = SoftPoint::default_time);
 };
 
 } // namespace mementar

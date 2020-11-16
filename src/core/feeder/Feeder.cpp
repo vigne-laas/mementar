@@ -23,23 +23,55 @@ bool Feeder::run()
   if(timeline_ == nullptr)
     return false;
 
+  bool has_run = runForFacts();
+  has_run = has_run && runForActions();
+
+  return has_run;
+}
+
+bool Feeder::setWhitelist(std::vector<std::string> list)
+{
+  if(!is_whitelist_ || (is_whitelist_.value() == true))
+  {
+    setList(list);
+    is_whitelist_ = true;
+    return true;
+  }
+  else
+    return false;
+}
+
+bool Feeder::setBlacklist(std::vector<std::string> list)
+{
+  if(!is_whitelist_ || (is_whitelist_.value() == false))
+  {
+    setList(list);
+    is_whitelist_ = false;
+    return true;
+  }
+  else
+    return false;
+}
+
+bool Feeder::runForFacts()
+{
   bool has_run = false;
-  std::queue<feed_t> feeds = feed_storage_.get();
+  std::queue<feed_fact_t> feeds = feed_storage_.getFacts();
 
   while(feeds.empty() == false)
   {
     has_run = true;
-    feed_t feed = feeds.front();
+    feed_fact_t feed = feeds.front();
     feeds.pop();
 
-    if((feed.action_ != action_add) && (feed.action_ != action_del))
+    if((feed.cmd_ != cmd_add) && (feed.cmd_ != cmd_del))
     {
-      /*if(feed.action_ == action_commit)
+      /*if(feed.cmd_ == cmd_commit)
       {
         if(!versionor_.commit(feed.from_))
           notifications_.push_back("[FAIL][commit]" + feed.from_);
       }
-      else if(feed.action_ == action_checkout)
+      else if(feed.cmd_ == cmd_checkout)
       {
         if(!versionor_.checkout(feed.from_))
           notifications_.push_back("[FAIL][checkout]" + feed.from_);
@@ -78,7 +110,10 @@ bool Feeder::run()
       {
         auto explanation = timeline_->facts.findRecent(feed.expl_.value());
         if(explanation == nullptr)
+        {
           notifications_.push_back("[FAIL][explanation does not exist]" + feed.expl_.value().Triplet::toString());
+          continue;
+        }
         else
           timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation}));
       }
@@ -93,28 +128,66 @@ bool Feeder::run()
   return has_run;
 }
 
-bool Feeder::setWhitelist(std::vector<std::string> list)
+bool Feeder::runForActions()
 {
-  if(!is_whitelist_ || (is_whitelist_.value() == true))
-  {
-    setList(list);
-    is_whitelist_ = true;
-    return true;
-  }
-  else
-    return false;
-}
+  bool has_run = false;
+  std::queue<feed_action_t> feeds = feed_storage_.getActions();
 
-bool Feeder::setBlacklist(std::vector<std::string> list)
-{
-  if(!is_whitelist_ || (is_whitelist_.value() == false))
+  while(feeds.empty() == false)
   {
-    setList(list);
-    is_whitelist_ = false;
-    return true;
+    has_run = true;
+    feed_action_t feed = feeds.front();
+    feeds.pop();
+
+    /*if(!feed.checkout_)
+      versionor_.insert(feed);*/
+
+    if(feed.name_ == "")
+    {
+      notifications_.push_back("[FAIL][no action name]");
+    }
+    else if((feed.t_start_ == SoftPoint::default_time) && (feed.t_end_ == SoftPoint::default_time))
+    {
+      notifications_.push_back("[FAIL][no time point] action " + feed.name_);
+    }
+    else
+    {
+      auto action = timeline_->actions.find(feed.name_);
+      if((feed.t_start_ != SoftPoint::default_time) && (feed.t_end_ != SoftPoint::default_time))
+      {
+        if(action != nullptr)
+          notifications_.push_back("[FAIL][action already exists] " + feed.name_);
+        else
+        {
+          action = new mementar::Action(feed.name_, feed.t_start_, feed.t_end_);
+          timeline_->actions.add(action);
+          callback_(*action->getStartFact());
+        }
+      }
+      else if(feed.t_start_ != SoftPoint::default_time)
+      {
+        if(action != nullptr)
+          notifications_.push_back("[FAIL][action already exists] " + feed.name_);
+        else
+        {
+          action = new mementar::Action(feed.name_, feed.t_start_);
+          timeline_->actions.add(action);
+          callback_(*action->getStartFact());
+        }
+      }
+      else if(feed.t_end_ != SoftPoint::default_time)
+      {
+        if(action == nullptr)
+          notifications_.push_back("[FAIL][action does not exist] " + feed.name_);
+        else if(action->setEnd(feed.t_end_) == false)
+          notifications_.push_back("[FAIL][end stamp already exist] " + feed.name_);
+        else
+          callback_(*action->getEndFact());
+      }
+    }
   }
-  else
-    return false;
+
+  return has_run;
 }
 
 void Feeder::setList(const std::vector<std::string>& base_list)

@@ -125,17 +125,17 @@ void RosInterface::release()
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
-  feeder_.store(msg->data, time(0));
+  feeder_.storeFact(msg->data, time(0));
 }
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  feeder_.store(msg->data, msg->stamp.sec);
+  feeder_.storeFact(msg->data, msg->stamp.sec);
 }
 
 void RosInterface::explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
 {
-  feeder_.store(msg->fact, msg->cause);
+  feeder_.storeFact(msg->fact, msg->cause);
 }
 
 bool RosInterface::actionsHandle(mementar::MementarService::Request &req,

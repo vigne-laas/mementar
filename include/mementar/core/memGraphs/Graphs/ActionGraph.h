@@ -39,6 +39,7 @@ public:
     return getPending();
   }
 
+  Action* find(const std::string& action_name);
 
 private:
   FactGraph* fact_graph_;

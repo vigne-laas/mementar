@@ -51,4 +51,9 @@ namespace mementar {
     return res;
   }
 
+  Action* ActionGraph::find(const std::string& action_name)
+  {
+    return container_.find(action_name);
+  }
+
 } // namespace mementar
