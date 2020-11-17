@@ -15,13 +15,13 @@ class OccasionsPublisher
 public:
   OccasionsPublisher(ros::NodeHandle* n, const std::string& name = "");
 
-  void insert(const Fact& fact, time_t stamp = 0);
+  void insert(const Fact& fact, time_t stamp = time(0));
 
 private:
   ros::NodeHandle* n_;
   ros::Publisher pub_;
 
-  void publish(const std::string& str, time_t stamp = 0);
+  void publish(const std::string& str, time_t stamp = time(0));
 };
 
 } // namespace mementar

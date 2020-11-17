@@ -9,8 +9,9 @@
 
 #include "ontologenius/OntologyManipulator.h"
 
-#include "mementar/MementarService.h"
+#include "mementar/MementarAction.h"
 #include "mementar/MementarExplanation.h"
+#include "mementar/MementarService.h"
 #include "mementar/StampedString.h"
 
 //#include "mementar/core/LtManagement/EpisodicTree/ArchivedLeafNode.h"
@@ -56,6 +57,7 @@ private:
   void knowledgeCallback(const std_msgs::String::ConstPtr& msg);
   void stampedKnowledgeCallback(const StampedString::ConstPtr& msg);
   void explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
+  void actionKnowledgeCallback(const MementarAction::ConstPtr& msg);
 
   bool actionsHandle(mementar::MementarService::Request &req,
                      mementar::MementarService::Response &res);

@@ -32,6 +32,7 @@ find_package(OpenCV REQUIRED)
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
+   MementarAction.msg
    MementarExplanation.msg
    MementarOccasion.msg
    StampedString.msg
@@ -166,6 +167,7 @@ target_link_libraries(mementar_drawer_lib
 ##############################
 
 add_library(mementar_lib
+  src/API/ActionsPublisher.cpp
   src/API/TimelineManipulator.cpp
   src/API/TimelinesManipulator.cpp
   src/API/clients/ManagerClient.cpp

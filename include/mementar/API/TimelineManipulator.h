@@ -5,13 +5,14 @@
 
 #include <ros/ros.h>
 
+#include "mementar/API/ActionsPublisher.h"
 #include "mementar/API/OccasionsPublisher.h"
 #include "mementar/API/clients/ClientBase.h"
 
 namespace mementar
 {
 
-class TimelineManipulator : public OccasionsPublisher
+class TimelineManipulator
 {
 public:
   TimelineManipulator(ros::NodeHandle* n, const std::string& name = "");
@@ -22,6 +23,9 @@ public:
   void resetNb() {actions.resetNb();}*/
 
   void verbose(bool verbose) { ClientBase::verbose(verbose); }
+
+  OccasionsPublisher fact_feeder;
+  ActionsPublisher action_feeder;
 
 private:
   ros::NodeHandle* n_;
