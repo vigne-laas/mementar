@@ -19,6 +19,8 @@
     - git clone -b proba https://github.com/sarthou/ontologenius.git
     - cd ..
     - catkin_make
+    - source devel/setup.bash
+    - catkin_make run_tests_mementar_rostest -j1 && catkin_make test -j1 -DCATKIN_WHITELIST_PACKAGES="mementar"
 
 .kinetic_before_template : &kinetic_before_definition
   before_script:

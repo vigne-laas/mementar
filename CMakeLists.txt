@@ -75,7 +75,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+  include include/mementar/API
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -255,6 +255,6 @@ install(DIRECTORY include/${PROJECT_NAME}/
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
 
-  #add_rostest_gtest(mementar_tester test/library.test src/tests/library.cpp)
-  #target_link_libraries(mementar_tester mementar_lib)
+  add_rostest_gtest(mementar_fact_pub_sub_tester test/fact_pub_sub.test src/test/CI/fact_pub_sub.cpp)
+  target_link_libraries(mementar_fact_pub_sub_tester mementar_lib ontologenius_lib)
 endif()

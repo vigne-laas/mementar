@@ -56,8 +56,8 @@ int main(int argc, char** argv)
     if(cpt > 100)
     {
       cpt = 0;
-      manip.insert(mementar::Fact("bob", "eat", "blop"));
-      manip.insert(mementar::Fact("max", "eat", "blop"));
+      manip.fact_feeder.insert(mementar::Fact("bob", "eat", "blop"));
+      manip.fact_feeder.insert(mementar::Fact("max", "eat", "blop"));
     }
     ros::spinOnce();
     r.sleep();
