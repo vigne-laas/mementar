@@ -34,8 +34,8 @@ namespace mementar {
     {
       if(action_it->second->setEnd(end))
       {
-        pending_actions_.erase(action_it);
         fact_graph_->add(action_it->second->getEndFact());
+        pending_actions_.erase(action_it);
         return true;
       }
       else

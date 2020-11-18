@@ -57,7 +57,11 @@ public:
   std::queue<feed_fact_t> getFacts();
   std::queue<feed_action_t> getActions();
 
-  size_t size() { return fact_queue_.size() + action_queue_.size(); }
+  size_t size()
+  {
+    std::cout << fact_queue_.size() << " : " << action_queue_.size() << std::endl;
+    return fact_queue_.size() + action_queue_.size();
+  }
 
 private:
   std::regex base_regex;

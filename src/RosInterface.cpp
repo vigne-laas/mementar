@@ -18,7 +18,6 @@ RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, con
                                                                                                                 run_(true)
 
 {
-  std::cout << "RosInterface" << std::endl;
   n_ = n;
   order_ = order;
   onto_.close();

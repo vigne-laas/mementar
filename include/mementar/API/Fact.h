@@ -46,7 +46,7 @@ public:
   std::string getSubject() const { return subject_; }
   std::string getPredicat() const { return predicat_; }
   std::string getObject() const { return object_; }
-  bool getAdda() const { return add_; }
+  bool getAdd() const { return add_; }
   std::string operator()() const { return (add_ ? "[add]" : "[del]") + subject_ + "|" + predicat_ + "|" + object_; }
   std::string to_string() const { return (add_ ? "[add]" : "[del]") + subject_ + "|" + predicat_ + "|" + object_; }
 

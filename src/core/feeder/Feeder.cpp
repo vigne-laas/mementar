@@ -24,7 +24,7 @@ bool Feeder::run()
     return false;
 
   bool has_run = runForFacts();
-  has_run = has_run && runForActions();
+  has_run = has_run || runForActions();
 
   return has_run;
 }
@@ -162,6 +162,7 @@ bool Feeder::runForActions()
           action = new mementar::Action(feed.name_, feed.t_start_, feed.t_end_);
           timeline_->actions.add(action);
           callback_(*action->getStartFact());
+          callback_(*action->getEndFact());
         }
       }
       else if(feed.t_start_ != SoftPoint::default_time)
@@ -179,7 +180,7 @@ bool Feeder::runForActions()
       {
         if(action == nullptr)
           notifications_.push_back("[FAIL][action does not exist] " + feed.name_);
-        else if(action->setEnd(feed.t_end_) == false)
+        else if(timeline_->actions.setEnd(feed.name_, feed.t_end_) == false)
           notifications_.push_back("[FAIL][end stamp already exist] " + feed.name_);
         else
           callback_(*action->getEndFact());

@@ -168,6 +168,7 @@ target_link_libraries(mementar_drawer_lib
 
 add_library(mementar_lib
   src/API/ActionsPublisher.cpp
+  src/API/ActionsSubscriber.cpp
   src/API/TimelineManipulator.cpp
   src/API/TimelinesManipulator.cpp
   src/API/clients/ManagerClient.cpp
@@ -257,4 +258,8 @@ if(CATKIN_ENABLE_TESTING)
 
   add_rostest_gtest(mementar_fact_pub_sub_tester test/fact_pub_sub.test src/test/CI/fact_pub_sub.cpp)
   target_link_libraries(mementar_fact_pub_sub_tester mementar_lib ontologenius_lib)
+
+  add_rostest_gtest(mementar_action_pub_sub_tester test/action_pub_sub.test src/test/CI/action_pub_sub.cpp)
+  target_link_libraries(mementar_action_pub_sub_tester mementar_lib ontologenius_lib)
+
 endif()
