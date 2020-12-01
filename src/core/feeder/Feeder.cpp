@@ -205,6 +205,8 @@ void Feeder::setList(const std::vector<std::string>& base_list)
         for(auto& down : down_properties)
           list_.insert(down);
       }
+      else
+        list_.insert(property);
     }
   }
   else
