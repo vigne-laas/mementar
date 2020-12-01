@@ -147,19 +147,10 @@ int main(int argc, char** argv)
 {
   mementar::Timeline* timeline = getTimeline();
 
-  CvFont font;
-  cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 1, 1, 0, 2);
-
-  std::cout << "-------- READ ACTIONS---------" << std::endl;
-  mementar::ActionReader actions;
-  actions.read(&timeline->facts, &font);
-  std::cout << "-------- READ EVENTS---------" << std::endl;
-  mementar::FactReader facts;
-  facts.read(&timeline->facts, &font);
   std::cout << "-------- DRAW---------" << std::endl;
 
   mementar::TimelineDrawer drawer;
-  drawer.draw("out.png", timeline, &actions, &facts);
+  drawer.draw("out.png", timeline);
 
   /*std::cout << "width = " << ontologenius::commit_t::global_width << std::endl;
   std::cout << "height = " << ontologenius::commit_t::global_height << std::endl;

@@ -1,36 +1,44 @@
 #include "mementar/graphical/timeline/TimelineDrawer.h"
 
-#define UNIT_SPACE 70
-#define SIDE_SPACE 100
-#define EDGE_RADIUS 30
-#define TEXT_WIDTH 750
-#define MARK_WIDTH 20
-#define MARGIN 50
+#define UNIT_SPACE 35
+#define SIDE_SPACE 50
+#define EDGE_RADIUS 15
+#define TEXT_WIDTH 350
+#define MARK_WIDTH 10
+#define MARGIN 25
 
 namespace mementar {
 
-void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline, ActionReader* actions, FactReader* facts)
+void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
 {
+  CvFont font;
+  cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 0.5, 0.5, 0, 0.5);
+
+  ActionReader actions_reader_;
+  actions_reader_.read(&timeline->facts, &font);
+  FactReader facts_reader_;
+  facts_reader_.read(&timeline->facts, &font);
+
   size_t start = timeline->facts.getTimeline()->getFirst()->getKey();
   size_t end = timeline->facts.getTimeline()->getLast()->getKey();
-  size_t width = (actions->max_level_ + 1) * SIDE_SPACE + actions->max_text_size_ + MARGIN * 3 + SIDE_SPACE + facts->max_text_size_;
+  size_t width = (actions_reader_.max_level_ + 1) * SIDE_SPACE + actions_reader_.max_text_size_ + MARGIN * 3 + SIDE_SPACE + facts_reader_.max_text_size_;
   size_t height = (end - start) * UNIT_SPACE + MARGIN * 2;
 
   std::cout << "image size = " << width << " : " << height << std::endl;
   image_ = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 3);
   cvSet(image_, cvScalar(255,255,255));
 
-  size_t line_pose = (actions->max_level_ + 1) * SIDE_SPACE + actions->max_text_size_ + MARGIN * 2;
+  size_t line_pose = (actions_reader_.max_level_ + 1) * SIDE_SPACE + actions_reader_.max_text_size_ + MARGIN * 2;
 
-  drawVector(start, end, line_pose);
+  drawVector(start, end, line_pose, &font);
 
   std::cout << "---ACTIONS----" << std::endl;
-  for(auto act : actions->actions_)
-    drawAction(act.second, line_pose, actions->max_level_, start);
+  for(auto act : actions_reader_.actions_)
+    drawAction(act.second, line_pose, actions_reader_.max_level_, start, &font);
 
   std::cout << "---FACTS----" << std::endl;
-  for(auto evt : facts->facts)
-    drawEvent(evt, line_pose, start);
+  for(auto evt : facts_reader_.facts)
+    drawEvent(evt, line_pose, start, &font);
 
   if(file_name != "")
   {
@@ -44,14 +52,12 @@ void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline, Acti
     cvReleaseImage(&image_);
 }
 
-void TimelineDrawer::drawVector(size_t start, size_t end, size_t pose)
+void TimelineDrawer::drawVector(size_t start, size_t end, size_t pose, CvFont* font)
 {
   cvLine(image_, cvPoint(pose, MARGIN),
                  cvPoint(pose, MARGIN + (end - start) * UNIT_SPACE),
                  cvScalar(50,50,50), 2);
 
-  CvFont font;
-  cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 1, 1, 0, 2);
 
   for(size_t i = 0; i < (end - start) + 1; i++)
   {
@@ -61,12 +67,12 @@ void TimelineDrawer::drawVector(size_t start, size_t end, size_t pose)
 
     std::string txt_num = std::to_string(start + i);
 
-    cvPutText(image_, txt_num.c_str(), cvPoint(pose - getTextSize(txt_num, &font) - 2,MARGIN + i * UNIT_SPACE - 2), &font,
+    cvPutText(image_, txt_num.c_str(), cvPoint(pose - getTextSize(txt_num, font) - 2,MARGIN + i * UNIT_SPACE - 2), font,
            cvScalar(50,50,50));
   }
 }
 
-void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time)
+void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time, CvFont* font)
 {
   size_t x_end_pose = line_pose;
   size_t x_mid_pose = x_end_pose - action.level * SIDE_SPACE;
@@ -129,13 +135,11 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
                    cvScalar(114,102,204), 8);
   }
 
-  CvFont font;
-  cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 1, 1, 0, 2);
-  cvPutText(image_, action.name.c_str(), cvPoint(x_start_pose - getTextSize(action.name, &font) - 2, y_mid_pose), &font,
+  cvPutText(image_, action.name.c_str(), cvPoint(x_start_pose - getTextSize(action.name, font) - 2, y_mid_pose), font,
          cvScalar(32, 20, 122));
 }
 
-void TimelineDrawer::drawEvent(const fact_t& event, size_t line_pose, size_t start_time)
+void TimelineDrawer::drawEvent(const fact_t& event, size_t line_pose, size_t start_time, CvFont* font)
 {
   size_t x_start_pose = line_pose;
   size_t x_end_pose = x_start_pose + SIDE_SPACE;
@@ -156,9 +160,8 @@ void TimelineDrawer::drawEvent(const fact_t& event, size_t line_pose, size_t sta
                     cvScalar(149,86,86), 8);
    }
 
-  CvFont font;
-  cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 1, 1, 0, 2);
-  cvPutText(image_, event.data.c_str(), cvPoint(x_end_pose + 2, y_pose), &font,
+
+  cvPutText(image_, event.data.c_str(), cvPoint(x_end_pose + 2, y_pose), font,
          cvScalar(89, 26, 16));
 }
 
