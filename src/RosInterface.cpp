@@ -7,6 +7,7 @@
 
 #include "mementar/core/utility/error_code.h"
 #include "mementar/graphical/Display.h"
+#include "mementar/graphical/timeline/TimelineDrawer.h"
 
 namespace mementar
 {
@@ -14,7 +15,7 @@ namespace mementar
 RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, const std::string& configuration_file, size_t order, std::string name) :
                                                                                                                 onto_(name),
                                                                                                                 feeder_(&onto_),
-                                                                                                                occasions_(n, name),
+                                                                                                                occasions_(n, &onto_, name),
                                                                                                                 run_(true)
 
 {
@@ -93,6 +94,9 @@ void RosInterface::run()
 
   occasions_.stop();
   occasions_thread.join();
+
+  //TimelineDrawer drawer;
+  //drawer.draw("/home/gsarthou/Pictures/no_move.png", timeline_);
 }
 
 void RosInterface::reset()

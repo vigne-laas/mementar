@@ -186,7 +186,7 @@ add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 add_library(mementar_interface
   src/RosInterface.cpp
 )
-target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib)
+target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib mementar_drawer_lib)
 target_link_libraries(mementar_interface ${catkin_LIBRARIES})
 add_dependencies(mementar_interface ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 

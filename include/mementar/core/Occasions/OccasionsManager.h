@@ -7,6 +7,8 @@
 
 #include <ros/ros.h>
 
+#include "ontologenius/OntologyManipulator.h"
+
 #include "mementar/MementarOccasionSubscription.h"
 #include "mementar/MementarOcassionUnsubscription.h"
 
@@ -20,6 +22,7 @@ class OccasionsManager
 {
 public:
   OccasionsManager(ros::NodeHandle* n, std::string name = "");
+  OccasionsManager(ros::NodeHandle* n, OntologyManipulator* onto, std::string name = "");
 
   void run();
 
@@ -30,6 +33,7 @@ public:
 
 private:
   ros::NodeHandle* n_;
+  OntologyManipulator* onto_;
   Subscription subscription_;
   std::atomic<bool> run_;
 

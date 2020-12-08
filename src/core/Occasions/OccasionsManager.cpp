@@ -5,10 +5,28 @@
 namespace mementar
 {
 
-OccasionsManager::OccasionsManager(ros::NodeHandle* n, std::string name) : run_(false),
+OccasionsManager::OccasionsManager(ros::NodeHandle* n, std::string name) :
+                                                                     run_(false),
                                                                      pub_(n->advertise<mementar::MementarOccasion>((name == "") ? "occasions" : "occasions/" + name, 1000))
 {
   n_ = n;
+  onto_ = nullptr;
+  std::string service_name;
+
+  service_name = (name == "") ? "subscribe" : "subscribe/" + name;
+  sub_service_ = n_->advertiseService(service_name, &OccasionsManager::SubscribeCallback, this);
+
+  service_name = (name == "") ? "unsubscribe" : "unsubscribe/" + name;
+  unsub_service_ = n_->advertiseService(service_name, &OccasionsManager::UnsubscribeCallback, this);
+}
+
+OccasionsManager::OccasionsManager(ros::NodeHandle* n, OntologyManipulator* onto, std::string name) :
+                                                                     subscription_(onto),
+                                                                     run_(false),
+                                                                     pub_(n->advertise<mementar::MementarOccasion>((name == "") ? "occasions" : "occasions/" + name, 1000))
+{
+  n_ = n;
+  onto_ = onto;
   std::string service_name;
 
   service_name = (name == "") ? "subscribe" : "subscribe/" + name;
