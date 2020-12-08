@@ -18,7 +18,12 @@ void FeedStorage::insertFact(const std::string& regex, const SoftPoint::Ttime& s
 void FeedStorage::insertFact(const std::string& regex, const std::string& expl_regex)
 {
   feed_fact_t feed = getFeedFact(regex);
-  feed.expl_ = getFeedFact(expl_regex).fact_;
+  size_t expl_pose = expl_regex.find("]") + 1;
+  std::string expl_action = expl_regex.substr(0, expl_pose);
+
+  auto explanations = split(expl_regex.substr(expl_pose), ";");
+  for(auto& expl : explanations)
+    feed.expl_.push_back(getFeedFact(expl_action + expl).fact_.value());
   fact_queue_.insert(feed);
 }
 
@@ -86,6 +91,27 @@ feed_fact_t FeedStorage::getFeedFact(const std::string& regex, const SoftPoint::
 
   feed.fact_ = Fact(Triplet(base_match[2].str(), feed.cmd_ == cmd_add), stamp);
   return feed;
+}
+
+std::vector<std::string> FeedStorage::split(const std::string& str, const std::string& delim)
+{
+  std::vector<std::string> tokens;
+  size_t prev = 0, pos = 0;
+  do
+  {
+    pos = str.find(delim, prev);
+    if (pos == std::string::npos)
+      pos = str.length();
+
+    std::string token = str.substr(prev, pos-prev);
+
+    if (!token.empty())
+      tokens.push_back(token);
+    prev = pos + delim.length();
+  }
+  while ((pos < str.length()) && (prev < str.length()));
+
+  return tokens;
 }
 
 } // namespace mementar

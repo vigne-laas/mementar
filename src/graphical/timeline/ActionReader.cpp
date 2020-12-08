@@ -35,9 +35,6 @@ void ActionReader::read(FactGraph* graph, CvFont* font)
 
     node = node->getNextLeaf();
   }
-
-  std::cout << "max_level_ = " << max_level_ << std::endl;
-  std::cout << "max_text_size_ = " << max_text_size_ << std::endl;
 }
 
 action_t ActionReader::getAction(Action* action)

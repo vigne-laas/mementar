@@ -94,9 +94,6 @@ void RosInterface::run()
 
   occasions_.stop();
   occasions_thread.join();
-
-  //TimelineDrawer drawer;
-  //drawer.draw("/home/gsarthou/Pictures/no_move.png", timeline_);
 }
 
 void RosInterface::reset()
@@ -165,6 +162,11 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
   }
   else */if(req.action == "reset")
     reset();
+  if(req.action == "draw")
+  {
+    TimelineDrawer drawer;
+    drawer.draw(req.param, timeline_);
+  }
   else
     res.code = UNKNOW_ACTION;
 

@@ -3,6 +3,7 @@
 
 #include <regex>
 #include <string>
+#include <vector>
 
 #include "mementar/core/feeder/DoubleQueue.h"
 #include "mementar/core/memGraphs/Branchs/types/Fact.h"
@@ -22,7 +23,7 @@ struct feed_fact_t
 {
   feed_commande_t cmd_;
   std::experimental::optional<Fact> fact_;
-  std::experimental::optional<Fact> expl_;
+  std::vector<Fact> expl_;
   bool checkout_;
 
   feed_fact_t() { checkout_ = false; }
@@ -70,6 +71,7 @@ private:
   DoubleQueue<feed_action_t> action_queue_;
 
   feed_fact_t getFeedFact(const std::string& regex, const SoftPoint::Ttime& stamp = SoftPoint::default_time);
+  std::vector<std::string> split(const std::string& str, const std::string& delim);
 };
 
 } // namespace mementar

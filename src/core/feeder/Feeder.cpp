@@ -86,10 +86,6 @@ bool Feeder::runForFacts()
     {
       notifications_.push_back("[FAIL][fact poorly formed]" + feed.fact_.value().Triplet::toString());
     }
-    else if(feed.expl_ && (feed.expl_.value().valid() == false))
-    {
-      notifications_.push_back("[FAIL][explanation poorly formed]" + feed.expl_.value().Triplet::toString());
-    }
     else
     {
       if(is_whitelist_)
@@ -106,12 +102,35 @@ bool Feeder::runForFacts()
         }
       }
 
-      if(feed.expl_)
+      if(feed.expl_.size())
       {
-        auto explanation = timeline_->facts.findRecent(feed.expl_.value());
+        ContextualizedFact* explanation = nullptr;
+        Fact fact_explanation = feed.expl_[0];
+        for(auto& feed_expl : feed.expl_)
+        {
+          if(feed_expl.valid() == false)
+          {
+            notifications_.push_back("[FAIL][explanation poorly formed]" + feed_expl.Triplet::toString());
+          }
+          else
+          {
+            auto tmp_explanation = timeline_->facts.findRecent(feed_expl);
+            if(explanation == nullptr)
+            {
+              explanation = tmp_explanation;
+              fact_explanation = feed_expl;
+            }
+            else if(explanation < tmp_explanation)
+            {
+              explanation = tmp_explanation;
+              fact_explanation = feed_expl;
+            }
+          }
+        }
+
         if(explanation == nullptr)
         {
-          notifications_.push_back("[FAIL][explanation does not exist]" + feed.expl_.value().Triplet::toString());
+          notifications_.push_back("[FAIL][explanation does not exist]" + feed.fact_.value().Triplet::toString() + " -- " + fact_explanation.Triplet::toString());
           continue;
         }
         else

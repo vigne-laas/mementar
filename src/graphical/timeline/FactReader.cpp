@@ -38,7 +38,6 @@ void FactReader::getTextSize(const std::string& txt, CvFont* font)
   int baseline;
   cvGetTextSize(txt.c_str(), font, &size, &baseline);
   size_t text_width = size.width;
-  std::cout << "size.width = " << size.width << std::endl;
   if(text_width > max_text_size_)
     max_text_size_ = text_width;
 }
