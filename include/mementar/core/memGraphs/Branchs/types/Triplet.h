@@ -77,7 +77,7 @@ public:
 
   std::string toString() const
   {
-    return (add_ ? "[add]" : "[del]") + subject_ + " | " + predicat_ + " | " + object_;
+    return (add_ ? "[add]" : "[del]") + subject_ + "|" + predicat_ + "|" + object_;
   }
 
   bool operator==(const Triplet& other) const
