@@ -1,7 +1,7 @@
 #include "mementar/graphical/timeline/TimelineDrawer.h"
 
 #define UNIT_SPACE 35
-#define SIDE_SPACE 50
+#define SIDE_SPACE 120
 #define EDGE_RADIUS 15
 #define TEXT_WIDTH 350
 #define MARK_WIDTH 10
