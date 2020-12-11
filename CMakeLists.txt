@@ -231,6 +231,61 @@ target_link_libraries(graphs mementar_memGraphs_lib)
 #add_executable(eventLink src/test/EventLink.cpp)
 #target_link_libraries(eventLink mementar_lt_lib)
 
+##############################################################################
+# Qt Environment
+##############################################################################
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+
+##############################################################################
+# Sections
+##############################################################################
+
+file(GLOB QT_FORMS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ui/*.ui)
+file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}  resources/*.qrc)
+
+QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
+QT5_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
+
+add_definitions( -std=c++11 -fPIC)
+
+##############################################################################
+# Sources
+##############################################################################
+
+set( QT_SOURCES
+    src/graphical/mementarGUI/main.cpp
+    src/graphical/mementarGUI/mementargui.cpp
+    src/graphical/mementarGUI/DarkStyle.cpp
+    src/graphical/mementarGUI/QPushButtonExtended.cpp
+    src/graphical/mementarGUI/QCheckBoxExtended.cpp
+    src/graphical/mementarGUI/QLineEditExtended.cpp
+
+    include/mementar/graphical/mementarGUI/mementargui.h
+    include/mementar/graphical/mementarGUI/DarkStyle.h
+    include/mementar/graphical/mementarGUI/QPushButtonExtended.h
+    include/mementar/graphical/mementarGUI/QCheckBoxExtended.h
+    include/mementar/graphical/mementarGUI/QLineEditExtended.h
+)
+##############################################################################
+# Binaries
+##############################################################################
+
+add_executable(mementarGUI ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
+target_include_directories(mementarGUI
+  PRIVATE
+    ${catkin_INCLUDE_DIRS}
+)
+add_dependencies(mementarGUI mementar_gencpp)
+target_link_libraries(mementarGUI
+    ${catkin_LIBRARIES}
+    Qt5::Core
+    Qt5::Widgets
+    Qt5::PrintSupport
+)
+install(TARGETS mementarGUI RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 ##############################
 ## Install
 ##############################
