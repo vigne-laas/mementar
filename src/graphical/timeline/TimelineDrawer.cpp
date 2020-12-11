@@ -9,7 +9,7 @@
 
 namespace mementar {
 
-void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
+bool TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
 {
   CvFont font;
   cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 0.5, 0.5, 0, 0.5);
@@ -18,6 +18,9 @@ void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
   actions_reader_.read(&timeline->facts, &font);
   FactReader facts_reader_;
   facts_reader_.read(&timeline->facts, &font);
+
+  if(timeline->facts.getTimeline()->getFirst() == nullptr)
+    return false;
 
   size_t start = timeline->facts.getTimeline()->getFirst()->getKey();
   size_t end = timeline->facts.getTimeline()->getLast()->getKey();
@@ -46,10 +49,14 @@ void TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
 
     if((height != 1) && (width != 1))
       cv::imwrite(file_name.c_str(), cv::cvarrToMat(image_));
-  }
 
-  if(image_ != nullptr)
-    cvReleaseImage(&image_);
+    if(image_ != nullptr)
+      cvReleaseImage(&image_);
+
+    return true;
+  }
+  else
+    return false;
 }
 
 void TimelineDrawer::drawVector(size_t start, size_t end, size_t pose, CvFont* font)

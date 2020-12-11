@@ -165,7 +165,8 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
   if(req.action == "draw")
   {
     TimelineDrawer drawer;
-    drawer.draw(req.param, timeline_);
+    if(drawer.draw(req.param, timeline_) == false)
+      res.code = NO_EFFECT;
   }
   else
     res.code = UNKNOW_ACTION;

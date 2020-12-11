@@ -209,7 +209,7 @@ void mementarGUI::deleteInstanceSlot()
   {
     start();
     if(srv.response.code == 4)
-      ui->static_result_editext->setText(QString::fromStdString(srv.request.param + " don't exist"));
+      ui->static_result_editext->setText(QString::fromStdString("Instance \'" + srv.request.param + "\' don't exist"));
     else
       ui->static_result_editext->setText(QString::fromStdString(""));
     displayInstancesList();
@@ -230,7 +230,7 @@ void mementarGUI::saveInstanceSlot()
   else
   {
     if(srv.response.code == 4)
-      ui->static_result_editext->setText(QString::fromStdString(srv.request.param + " don't exist"));
+      ui->static_result_editext->setText(QString::fromStdString("path \'" + srv.request.param + "\' don't exist"));
     else
       ui->static_result_editext->setText(QString::fromStdString(""));
   }
@@ -250,7 +250,7 @@ void mementarGUI::drawInstanceSlot()
   else
   {
     if(srv.response.code == 4)
-      ui->static_result_editext->setText(QString::fromStdString(srv.request.param + " don't exist"));
+      ui->static_result_editext->setText(QString::fromStdString("path \'" + srv.request.param + "\' don't exist"));
     else
       ui->static_result_editext->setText(QString::fromStdString(""));
   }

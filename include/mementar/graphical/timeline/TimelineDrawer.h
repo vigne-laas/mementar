@@ -16,7 +16,7 @@ class TimelineDrawer
 {
 public:
 
-  void draw(const std::string& file_name, Timeline* timeline);
+  bool draw(const std::string& file_name, Timeline* timeline);
 private:
   IplImage* image_;
 
