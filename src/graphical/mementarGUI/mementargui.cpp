@@ -40,6 +40,7 @@ mementarGUI::mementarGUI(QWidget *parent) :
 
     QObject::connect( this, SIGNAL( feederSetHtmlSignal(QString) ), ui->feeder_info_edittext, SLOT( setHtml(QString) ), Qt::BlockingQueuedConnection);
     QObject::connect( this, SIGNAL( setTimeSignal(QString) ), ui->static_current_time_editline, SLOT( setText(QString) ), Qt::BlockingQueuedConnection);
+    QObject::connect(ui->static_current_time_editline, SIGNAL( editingFinished() ), this, SLOT( currentTimeEditingFinishedSlot() ));
 }
 
 mementarGUI::~mementarGUI()
@@ -307,6 +308,24 @@ void mementarGUI::timesourceChangedSlot(int index)
   }
 }
 
+void mementarGUI::currentTimeEditingFinishedSlot()
+{
+  if(time_source_ == 2)
+  {
+    std::string time_str = ui->static_current_time_editline->text().toStdString();
+    int time_int;
+    if(sscanf(time_str.c_str(), "%d", &time_int) == 1)
+    {
+      current_time_.store(ros::Time(time_int, 0), std::memory_order_release);
+      ui->static_result_editext->setText(QString::fromStdString(""));
+    }
+    else
+    {
+      ui->static_result_editext->setText(QString::fromStdString("impossible to convert " + time_str + " to integer"));
+    }
+  }
+}
+
 void mementarGUI::feederCallback(const std_msgs::String& msg)
 {
   feeder_notifications_ += "<p>-" + msg.data + "</p>";
@@ -342,7 +361,7 @@ void mementarGUI::feederAddSlot()
     {
       mementar::MementarAction msg;
       msg.name = subject;
-      msg.start_stamp = ros::Time::now();
+      msg.start_stamp = current_time_;
       msg.end_stamp = ros::Time(0);
       actions_publishers_[instance_ns].publish(msg);
     }
@@ -350,7 +369,7 @@ void mementarGUI::feederAddSlot()
     {
       mementar::StampedString msg;
       msg.data = "[ADD]" + subject + "|" + predicat + "|" + object;
-      msg.stamp = ros::Time::now();
+      msg.stamp = current_time_;
       facts_publishers_[instance_ns].publish(msg);
     }
   }
@@ -377,14 +396,14 @@ void mementarGUI::feederDelSlot()
       mementar::MementarAction msg;
       msg.name = subject;
       msg.start_stamp = ros::Time(0);
-      msg.end_stamp = ros::Time::now();
+      msg.end_stamp = current_time_;
       actions_publishers_[instance_ns].publish(msg);
     }
     else
     {
       mementar::StampedString msg;
       msg.data = "[DEL]" + subject + "|" + predicat + "|" + object;
-      msg.stamp = ros::Time::now();
+      msg.stamp = current_time_;
       facts_publishers_[instance_ns].publish(msg);
     }
   }

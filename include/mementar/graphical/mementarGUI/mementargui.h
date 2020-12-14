@@ -61,6 +61,7 @@ public slots:
   void InstanceNameAddDelChangedSlot(const QString&);
   void InstanceNameChangedSlot(const QString&);
   void timesourceChangedSlot(int index);
+  void currentTimeEditingFinishedSlot();
 
   void feederCallback(const std_msgs::String& msg);
   void feederAddSlot();
