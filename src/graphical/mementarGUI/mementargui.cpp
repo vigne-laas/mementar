@@ -249,7 +249,7 @@ void mementarGUI::saveInstanceSlot()
   srv.request.param = ui->manager_save_path_editline->text().toStdString();
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/manage client call failed");
+    displayErrorInfo("mementar/actions client call failed");
   else
   {
     if(srv.response.code == 4)
@@ -269,7 +269,7 @@ void mementarGUI::drawInstanceSlot()
   srv.request.param = ui->manager_save_path_editline->text().toStdString();
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/manage client call failed");
+    displayErrorInfo("mementar/actions client call failed");
   else
   {
     if(srv.response.code == 4)
