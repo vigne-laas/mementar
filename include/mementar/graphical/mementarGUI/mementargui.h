@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "include/mementar/graphical/mementarGUI/QCheckBoxExtended.h"
+#include "include/mementar/graphical/mementarGUI/CallBackTimer.h"
 #include <QTextCursor>
 
 #include <ros/ros.h>
@@ -36,11 +37,17 @@ private:
   std::map<std::string, ros::Subscriber> feeder_notifications_subs_;
   std::string feeder_notifications_;
 
+  int time_source_;
+  std::atomic<ros::Time> current_time_;
+  CallBackTimer timer_;
+
   void displayInstancesList();
   void displayErrorInfo(const std::string& text);
 
   std::string vector2string(const std::vector<std::string>& vect);
   std::string vector2html(const std::vector<std::string>& vect);
+
+  void updateTime();
 
 public slots:
   void nameEditingFinishedSlot();
@@ -53,6 +60,7 @@ public slots:
   void drawInstanceSlot();
   void InstanceNameAddDelChangedSlot(const QString&);
   void InstanceNameChangedSlot(const QString&);
+  void timesourceChangedSlot(int index);
 
   void feederCallback(const std_msgs::String& msg);
   void feederAddSlot();
@@ -63,6 +71,7 @@ public slots:
 
 signals:
   void feederSetHtmlSignal(QString);
+  void setTimeSignal(QString);
 };
 
 #endif // MEMENTAR_MEMENTARGUI_H

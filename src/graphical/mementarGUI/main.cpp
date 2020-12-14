@@ -21,35 +21,36 @@ void spinThread(bool* run)
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+  ros::init(argc, argv, "mementarGUI");
 
-    a.setStyle(new DarkStyle);
+  ros::NodeHandle n;
 
-    std::string path = ros::package::getPath("mementar");
-    path = path + "/docs/img/logo/mementar.ico";
-    QIcon icon(QString::fromStdString(path));
-    a.setWindowIcon(icon);
+  QApplication a(argc, argv);
 
-    mementarGUI w;
-    w.show();
+  a.setStyle(new DarkStyle);
 
-    ros::init(argc, argv, "mementarGUI");
+  std::string path = ros::package::getPath("mementar");
+  path = path + "/docs/img/logo/mementar.ico";
+  QIcon icon(QString::fromStdString(path));
+  a.setWindowIcon(icon);
 
-    ros::NodeHandle n;
-    bool run = true;
+  mementarGUI w;
+  w.show();
 
-    w.init(&n);
-    w.wait();
+  bool run = true;
 
-    w.start();
+  w.init(&n);
+  w.wait();
 
-    std::thread spin_thread(spinThread,&run);
+  w.start();
 
-    signal(SIGINT, SIG_DFL);
-    auto a_exec = a.exec();
+  std::thread spin_thread(spinThread,&run);
 
-    run = false;
-    spin_thread.join();
+  signal(SIGINT, SIG_DFL);
+  auto a_exec = a.exec();
 
-    return a_exec;
+  run = false;
+  spin_thread.join();
+
+  return a_exec;
 }

@@ -16,7 +16,8 @@
 
 mementarGUI::mementarGUI(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::mementarGUI)
+    ui(new Ui::mementarGUI),
+    current_time_(ros::Time::now())
 {
     ui->setupUi(this);
 
@@ -34,9 +35,11 @@ mementarGUI::mementarGUI(QWidget *parent) :
     QObject::connect(ui->manager_instance_name_editline, SIGNAL(textChanged(const QString&)), this, SLOT(InstanceNameAddDelChangedSlot(const QString&)));
     QObject::connect(ui->static_instance_name_editline, SIGNAL(textChanged(const QString&)), this, SLOT(InstanceNameChangedSlot(const QString&)));
     QObject::connect(ui->static_instance_name_editline, SIGNAL(editingFinished()),this, SLOT(nameEditingFinishedSlot()));
+    QObject::connect(ui->static_time_source_combobox, SIGNAL(currentIndexChanged(int)),this, SLOT(timesourceChangedSlot(int)));
     QObject::connect(ui->static_tab_widget, SIGNAL(currentChanged(int)),this, SLOT(currentTabChangedSlot(int)));
 
-    QObject::connect( this, SIGNAL( feederSetHtmlSignal(QString) ), ui->feeder_info_edittext, SLOT( setHtml(QString) ) ,Qt::BlockingQueuedConnection);
+    QObject::connect( this, SIGNAL( feederSetHtmlSignal(QString) ), ui->feeder_info_edittext, SLOT( setHtml(QString) ), Qt::BlockingQueuedConnection);
+    QObject::connect( this, SIGNAL( setTimeSignal(QString) ), ui->static_current_time_editline, SLOT( setText(QString) ), Qt::BlockingQueuedConnection);
 }
 
 mementarGUI::~mementarGUI()
@@ -47,6 +50,8 @@ mementarGUI::~mementarGUI()
 void mementarGUI::init(ros::NodeHandle* n)
 {
   n_ = n;
+  timesourceChangedSlot(0);
+
   facts_publishers_["_"] = n_->advertise<mementar::StampedString>("/mementar/insert_fact_stamped", QUEU_SIZE);
   actions_publishers_["_"] = n_->advertise<mementar::MementarAction>("/mementar/insert_action", QUEU_SIZE);
   feeder_notifications_subs_["_"] = n_->subscribe("mementar/feeder_notifications", QUEU_SIZE, &mementarGUI::feederCallback, this);
@@ -135,6 +140,23 @@ std::string mementarGUI::vector2html(const std::vector<std::string>& vect)
   for(const auto& v : vect)
     res += " - " + v + "<br>";
   return res;
+}
+
+void mementarGUI::updateTime()
+{
+  if(time_source_ == 0)
+  {
+    current_time_.store(ros::Time::now(), std::memory_order_release);
+    setTimeSignal(QString::fromStdString(std::to_string(current_time_.load(std::memory_order_acquire).sec)));
+    //ui->static_current_time_editline->setText();
+  }
+  else if(time_source_ == 1)
+  {
+    struct timeval tp;
+    gettimeofday(&tp, NULL);
+    current_time_.store(ros::Time(tp.tv_sec, tp.tv_usec), std::memory_order_release);
+    setTimeSignal(QString::fromStdString(std::to_string(current_time_.load(std::memory_order_acquire).sec)));
+  }
 }
 
 void mementarGUI::currentTabChangedSlot(int index)
@@ -266,6 +288,23 @@ void mementarGUI::InstanceNameChangedSlot(const QString& text)
 {
   if(ui->manager_instance_name_editline->text() != text)
     ui->manager_instance_name_editline->setText(text);
+}
+
+void mementarGUI::timesourceChangedSlot(int index)
+{
+  time_source_ = index;
+  if(index == 2) // manual
+  {
+    if(timer_.isRunning())
+      timer_.stop();
+    ui->static_current_time_editline->setReadOnly(false);
+  }
+  else
+  {
+    ui->static_current_time_editline->setReadOnly(true);
+    if(timer_.isRunning() == false)
+      timer_.start(250, [this](){ this->updateTime(); });
+  }
 }
 
 void mementarGUI::feederCallback(const std_msgs::String& msg)
