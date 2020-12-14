@@ -266,7 +266,7 @@ void mementarGUI::drawInstanceSlot()
 
   mementar::MementarService srv;
   srv.request.action = "draw";
-  srv.request.param = ui->manager_save_path_editline->text().toStdString();
+  srv.request.param = ui->manager_draw_path_editline->text().toStdString();
 
   if(!client.call(srv))
     displayErrorInfo("mementar/manage_instance client call failed");
