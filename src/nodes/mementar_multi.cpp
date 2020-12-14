@@ -104,7 +104,7 @@ int main(int argc, char** argv)
   params.set(argc, argv);
   params.display();
 
-  ros::ServiceServer service = n_->advertiseService("manage", managerHandle);
+  ros::ServiceServer service = n_->advertiseService("manage_multi", managerHandle);
 
   ros::spin();
 
