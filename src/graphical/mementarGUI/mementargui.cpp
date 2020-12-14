@@ -241,7 +241,7 @@ void mementarGUI::deleteInstanceSlot()
 
 void mementarGUI::saveInstanceSlot()
 {
-  std::string service_name = (ui->manager_instance_name_editline->text().toStdString() == "") ? "mementar/actions" : "mementar/actions/" + ui->manager_instance_name_editline->text().toStdString();
+  std::string service_name = (ui->manager_instance_name_editline->text().toStdString() == "") ? "mementar/manage_instance" : "mementar/manage_instance/" + ui->manager_instance_name_editline->text().toStdString();
   ros::ServiceClient client = n_->serviceClient<mementar::MementarService>(service_name);
 
   mementar::MementarService srv;
@@ -249,7 +249,7 @@ void mementarGUI::saveInstanceSlot()
   srv.request.param = ui->manager_save_path_editline->text().toStdString();
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/actions client call failed");
+    displayErrorInfo("mementar/manage_instance client call failed");
   else
   {
     if(srv.response.code == 4)
@@ -261,7 +261,7 @@ void mementarGUI::saveInstanceSlot()
 
 void mementarGUI::drawInstanceSlot()
 {
-  std::string service_name = (ui->manager_instance_name_editline->text().toStdString() == "") ? "mementar/actions" : "mementar/actions/" + ui->manager_instance_name_editline->text().toStdString();
+  std::string service_name = (ui->manager_instance_name_editline->text().toStdString() == "") ? "mementar/manage_instance" : "mementar/manage_instance/" + ui->manager_instance_name_editline->text().toStdString();
   ros::ServiceClient client = n_->serviceClient<mementar::MementarService>(service_name);
 
   mementar::MementarService srv;
@@ -269,7 +269,7 @@ void mementarGUI::drawInstanceSlot()
   srv.request.param = ui->manager_save_path_editline->text().toStdString();
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/actions client call failed");
+    displayErrorInfo("mementar/manage_instance client call failed");
   else
   {
     if(srv.response.code == 4)

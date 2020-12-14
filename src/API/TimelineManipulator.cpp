@@ -12,7 +12,7 @@ TimelineManipulator::TimelineManipulator(ros::NodeHandle* n, const std::string& 
 
 bool TimelineManipulator::waitInit(int32_t timeout)
 {
-  std::string servive_name = (name_ == "") ? "mementar/actions" : "mementar/actions/" + name_;
+  std::string servive_name = (name_ == "") ? "mementar/manage_instance" : "mementar/manage_instance/" + name_;
   return ros::service::waitForService(servive_name, timeout);
 }
 

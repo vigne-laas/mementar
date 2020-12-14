@@ -70,16 +70,13 @@ RosInterface::~RosInterface()
 
 void RosInterface::run()
 {
-  std::string service_name;
-
   ros::Subscriber knowledge_subscriber = n_->subscribe(getTopicName("insert_fact"), 1000, &RosInterface::knowledgeCallback, this);
   ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(getTopicName("insert_fact_stamped"), 1000, &RosInterface::stampedKnowledgeCallback, this);
   ros::Subscriber explanation_knowledge_subscriber = n_->subscribe(getTopicName("insert_fact_explanations"), 1000, &RosInterface::explanationKnowledgeCallback, this);
   ros::Subscriber action_knowledge_subscriber = n_->subscribe(getTopicName("insert_action"), 1000, &RosInterface::actionKnowledgeCallback, this);
 
   // Start up ROS service with callbacks
-  service_name = (name_ == "") ? "actions" : "actions/" + name_;
-  ros::ServiceServer service = n_->advertiseService(service_name, &RosInterface::actionsHandle, this);
+  ros::ServiceServer service = n_->advertiseService(getTopicName("manage_instance"), &RosInterface::actionsHandle, this);
 
   feeder_.setCallback([this](const Triplet& triplet){ this->occasions_.add(triplet); });
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
