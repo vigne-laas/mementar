@@ -33,6 +33,12 @@ mementarGUI::mementarGUI(QWidget *parent) :
     QObject::connect(ui->action_getEndStamp_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
     QObject::connect(ui->action_getDuration_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
     QObject::connect(ui->action_getDuration_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
+    QObject::connect(ui->action_getStartFact_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
+    QObject::connect(ui->action_getStartFact_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
+    QObject::connect(ui->action_getEndFact_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
+    QObject::connect(ui->action_getEndFact_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
+    QObject::connect(ui->action_getFactsDuring_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
+    QObject::connect(ui->action_getFactsDuring_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
 
     QObject::connect(ui->action_exist_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
@@ -40,6 +46,9 @@ mementarGUI::mementarGUI(QWidget *parent) :
     QObject::connect(ui->action_getStartStamp_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getEndStamp_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getDuration_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
+    QObject::connect(ui->action_getStartFact_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
+    QObject::connect(ui->action_getEndFact_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
+    QObject::connect(ui->action_getFactsDuring_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
 
     QObject::connect(ui->manager_refresh_button, SIGNAL(clicked()),this, SLOT(displayInstancesListSlot()));
     QObject::connect(ui->manager_add_instance_button, SIGNAL(clicked()),this, SLOT(addInstanceSlot()));

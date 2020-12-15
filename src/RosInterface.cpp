@@ -204,6 +204,20 @@ bool RosInterface::actionHandle(mementar::MementarService::Request &req,
     res.time_value = ros::Time(timeline_->actions.getEndStamp(params()));
   else if(req.action == "getDuration")
     res.time_value = ros::Time(timeline_->actions.getDuration(params()));
+  else if(req.action == "getStartFact")
+  {
+    auto fact_name = timeline_->actions.getStartFact(params());
+    if(fact_name != "")
+      res.values.push_back(fact_name);
+  }
+  else if(req.action == "getEndFact")
+  {
+    auto fact_name = timeline_->actions.getEndFact(params());
+    if(fact_name != "")
+      res.values.push_back(fact_name);
+  }
+  else if(req.action == "getFactsDuring")
+    set_res = timeline_->actions.getFactsDuring(params());
   else
     res.code = UNKNOW_ACTION;
 

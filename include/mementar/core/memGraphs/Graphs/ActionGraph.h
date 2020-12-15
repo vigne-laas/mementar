@@ -28,6 +28,9 @@ public:
   SoftPoint::Ttime getStartStamp(const std::string& action_name);
   SoftPoint::Ttime getEndStamp(const std::string& action_name);
   SoftPoint::Ttime getDuration(const std::string& action_name);
+  std::string getStartFact(const std::string& action_name);
+  std::string getEndFact(const std::string& action_name);
+  std::unordered_set<std::string> getFactsDuring(const std::string& action_name);
 
   std::vector<Action*> get()
   {

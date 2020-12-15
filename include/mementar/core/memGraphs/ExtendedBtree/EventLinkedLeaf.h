@@ -25,6 +25,14 @@ public:
   SelfType* getNext() { return next_elem_; }
   SelfType* getPrevious() { return prev_elem_; }
 
+  Tleaf* getLeaf()
+  {
+    if(leaf_ == nullptr)
+      return nullptr;
+    else
+      return static_cast<Tleaf*>(leaf_);
+  }
+
   Tleaf* getNextLeaf()
   {
     if(leaf_ == nullptr)

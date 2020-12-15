@@ -80,7 +80,7 @@ namespace mementar {
     if(action_branch == nullptr)
       return SoftPoint::default_time;
     else if(action_branch->isPending())
-      return false;
+      return SoftPoint::default_time;
     else
       return action_branch->getEndFact()->getTime();
   }
@@ -92,6 +92,64 @@ namespace mementar {
       return SoftPoint::default_time;
     else
       return action_branch->getDuration();
+  }
+
+  std::string ActionGraph::getStartFact(const std::string& action_name)
+  {
+    auto action_branch = find(action_name);
+    if(action_branch == nullptr)
+      return "";
+    else
+      return action_branch->getStartFact()->getValue();
+  }
+
+  std::string ActionGraph::getEndFact(const std::string& action_name)
+  {
+    auto action_branch = find(action_name);
+    if(action_branch == nullptr)
+      return "";
+    else if(action_branch->isPending())
+      return "";
+    else
+      return action_branch->getEndFact()->getValue();
+  }
+
+  std::unordered_set<std::string> ActionGraph::getFactsDuring(const std::string& action_name)
+  {
+    std::unordered_set<std::string> res;
+    auto action_branch = find(action_name);
+    if(action_branch != nullptr)
+    {
+      auto start_fact = action_branch->getStartFact();
+      auto leaf = start_fact->getLeaf()->getNextLeaf();
+      if(action_branch->isPending())
+      {
+        while(leaf != nullptr)
+        {
+          auto data = leaf->getData();
+          for(auto& fact : data)
+            res.insert(fact->getValue());
+          leaf = leaf->getNextLeaf();
+        }
+      }
+      else
+      {
+        auto end_fact = action_branch->getEndFact();
+        while(leaf != nullptr)
+        {
+          auto data = leaf->getData();
+          if(data.size())
+            if(data[0] >= end_fact)
+              break;
+
+          for(auto& fact : data)
+            res.insert(fact->getValue());
+          leaf = leaf->getNextLeaf();
+        }
+      }
+    }
+
+    return res;
   }
 
   std::vector<Action*> ActionGraph::getPendingPtr()
