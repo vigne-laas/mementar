@@ -50,6 +50,11 @@ private:
   void updateTime();
 
 public slots:
+  void actionButtonHoverEnterSlot();
+  void actionButtonHoverLeaveSlot();
+
+  void actionButtonClickedSlot();
+
   void nameEditingFinishedSlot();
   void currentTabChangedSlot(int);
 
