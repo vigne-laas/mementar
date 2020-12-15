@@ -4,8 +4,8 @@
 #include <string>
 #include <ctime>
 
-#include "mementar/core/memGraphs/Btree/Btree.h"
-#include "mementar/core/memGraphs/Branchs/types/Event.h"
+#include "mementar/core/memGraphs/Btree/BplusTree.h"
+#include "mementar/core/memGraphs/Branchs/types/Fact.h"
 
 namespace mementar
 {
@@ -13,18 +13,18 @@ namespace mementar
 class CompressedLeaf
 {
 public:
-  CompressedLeaf(Btree<time_t, Event*>* tree, const std::string& directory);
+  CompressedLeaf(BplusTree<time_t, Fact*>* tree, const std::string& directory);
   CompressedLeaf(const time_t& key, const std::string& directory);
 
   std::string getDirectory() { return directory_; }
   time_t getKey() { return key_; }
 
-  Btree<time_t, Event*>* getTree();
+  BplusTree<time_t, Fact*>* getTree();
 private:
   time_t key_;
   std::string directory_;
 
-  std::string treeToString(Btree<time_t, Event*>* tree);
+  std::string treeToString(BplusTree<time_t, Fact*>* tree);
 };
 
 } // namespace mementar

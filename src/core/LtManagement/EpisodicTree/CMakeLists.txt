@@ -19,8 +19,8 @@ add_library(mementar_compression_lib
 )
 
 add_library(mementar_tree_lib
-  ../../memGraphs/Branchs/types/Event.cpp
   ../../memGraphs/Branchs/types/Fact.cpp
+  ../../memGraphs/Branchs/types/Triplet.cpp
   CompressedLeaf.cpp
   CompressedLeafNode.cpp
   Context.cpp

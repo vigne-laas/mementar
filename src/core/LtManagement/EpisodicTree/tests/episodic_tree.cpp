@@ -25,7 +25,7 @@ int main()
     for(size_t i = 0; i < 400000; i++)
     {
       //std::cout << i << std::endl;
-      compressed_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(i)), i));
+      compressed_node.insert(new mementar::Fact(mementar::Triplet("bob", "hasValue", std::to_string(i)), i));
       //usleep(1);
     }
     std::cout << " *************" << std::endl;
@@ -35,7 +35,7 @@ int main()
     std::cout << "took " << time_span.count() << " to insert" << std::endl;
 
     compressed_node.remove(compressed_node.find(102)->getData()[0]);
-    compressed_node.insert(new mementar::Event(mementar::Fact("bob", "hasValue", std::to_string(0)), 0));
+    compressed_node.insert(new mementar::Fact(mementar::Triplet("bob", "hasValue", std::to_string(0)), 102));
 
     std::cout << " *************" << std::endl;
 

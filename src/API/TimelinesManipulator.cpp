@@ -17,7 +17,7 @@ TimelinesManipulator::~TimelinesManipulator()
 
 bool TimelinesManipulator::waitInit(int32_t timeout)
 {
-  return ros::service::waitForService("mementar/manage", timeout);
+  return ros::service::waitForService("mementar/manage_multi", timeout);
 }
 
 TimelineManipulator* TimelinesManipulator::operator[](const std::string& name)

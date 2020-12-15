@@ -3,8 +3,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
-#include "mementar/core/memGraphs/Btree/BtreeLeaf.h"
-#include "mementar/core/memGraphs/Btree/Btree.h"
+#include "mementar/core/memGraphs/Btree/BplusTree.h"
 
 using namespace std::chrono;
 
@@ -16,7 +15,7 @@ int main()
 
   high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
-  mementar::Btree<size_t, size_t> tree(5);
+  mementar::BplusTree<size_t, size_t, 5> tree;
   for(size_t i = 0; true; i+=2)
     if(tree.insert(i, i) >= nb/2)
       break;
@@ -35,9 +34,6 @@ int main()
   t2 = high_resolution_clock::now();
   time_span = duration_cast<duration<double>>(t2 - t1);
   std::cout << "took " << time_span.count()*1000 << " for " << nb/2 << std::endl;
-
-  //tree.display();
-  std::cout << "level = " << tree.estimateMaxLevel(nb) << ">=" << tree.getCurrentLevel() << std::endl;
 
   return 0;
 }

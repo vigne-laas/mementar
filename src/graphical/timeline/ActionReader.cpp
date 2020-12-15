@@ -10,18 +10,18 @@ ActionReader::ActionReader()
   max_text_size_ = 0;
 }
 
-void ActionReader::read(EventGraph* graph, CvFont* font)
+void ActionReader::read(FactGraph* graph, CvFont* font)
 {
   auto tree = graph->getTimeline();
-  DllNode<DllLinkedElement*>* node = tree->getFirst();
+  auto node = static_cast<BplusLeaf<SoftPoint::Ttime, ContextualizedFact*>*>(tree->getFirst());
 
   while(node != nullptr)
   {
-    for(auto evt : node->getData())
+    for(auto fact : node->getData())
     {
-      if(dynamic_cast<ContextualizedEvent*>(evt)->isPartOfAction())
+      if(fact->isPartOfAction())
       {
-        auto action = dynamic_cast<ContextualizedEvent*>(evt)->getActionPart();
+        auto action = fact->getActionPart();
         if(actions_.find(action->getValue()) == actions_.end())
         {
           action_t act = getAction(action);
@@ -33,16 +33,13 @@ void ActionReader::read(EventGraph* graph, CvFont* font)
       }
     }
 
-    node = node->getNextNode();
+    node = node->getNextLeaf();
   }
-
-  std::cout << "max_level_ = " << max_level_ << std::endl;
-  std::cout << "max_text_size_ = " << max_text_size_ << std::endl;
 }
 
 action_t ActionReader::getAction(Action* action)
 {
-  action_t new_action(*action->getStartEvent());
+  action_t new_action(*action->getStartFact());
   new_action.name = action->getValue();
   new_action.level = getMinLevel();
 
@@ -58,7 +55,7 @@ void ActionReader::closeAction(Action* action)
   auto act_it = actions_.find(action->getValue());
   auto level_it = std::find(levels_.begin(), levels_.end(), act_it->second.level);
   levels_.erase(level_it);
-  act_it->second.end = SoftPoint(*action->getEndEvent());
+  act_it->second.end = SoftPoint(*action->getEndFact());
 }
 
 size_t ActionReader::getMinLevel()

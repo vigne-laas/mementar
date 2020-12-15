@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   genmsg
   message_generation
   pluginlib
+  ontologenius
 )
 
 ## System dependencies are found with CMake's conventions
@@ -31,6 +32,8 @@ find_package(OpenCV REQUIRED)
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
+   MementarAction.msg
+   MementarExplanation.msg
    MementarOccasion.msg
    StampedString.msg
  )
@@ -61,7 +64,7 @@ find_package(OpenCV REQUIRED)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES mementar_lib
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs ontologenius
   DEPENDS OpenCV
 )
 
@@ -72,7 +75,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+  include include/mementar/API
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -82,6 +85,17 @@ include_directories(
 ##############################
 ## ARCHIVING & COMPRESSION
 ##############################
+
+##############################
+## EVENTS
+##############################
+
+add_library(mementar_events_lib
+  src/core/Occasions/Subscription.cpp
+  src/core/Occasions/OccasionsManager.cpp
+)
+target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
+add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 ##############################
 ## CORE
@@ -100,16 +114,13 @@ add_library(mementar_memGraphs_lib
   src/core/memGraphs/Branchs/ValuedNode.cpp
   src/core/memGraphs/Branchs/types/Action.cpp
   src/core/memGraphs/Branchs/types/Fact.cpp
-  src/core/memGraphs/Branchs/types/Event.cpp
-  src/core/memGraphs/DoublyLinkedList/DllCargoNode.cpp
-  src/core/memGraphs/DoublyLinkedList/DllLinkedElement.cpp
-  src/core/memGraphs/EventLinkedList/EllElement.cpp
-  src/core/memGraphs/EventLinkedList/EllNode.cpp
+  src/core/memGraphs/Branchs/types/SoftPoint.cpp
+  src/core/memGraphs/Branchs/types/Triplet.cpp
   src/core/memGraphs/Graphs/ActionGraph.cpp
-  src/core/memGraphs/Graphs/EventGraph.cpp
+  src/core/memGraphs/Graphs/FactGraph.cpp
 )
 
-add_library(mementar_core_lib
+add_library(mementar_lt_lib
   src/core/LtManagement/EpisodicTree/CompressedLeaf.cpp
   src/core/LtManagement/EpisodicTree/CompressedLeafNode.cpp
   src/core/LtManagement/EpisodicTree/Context.cpp
@@ -118,22 +129,20 @@ add_library(mementar_core_lib
   src/core/LtManagement/EpisodicTree/ArchivedLeaf.cpp
   src/core/LtManagement/EpisodicTree/ArchivedLeafNode.cpp
 )
-target_link_libraries(mementar_core_lib
+target_link_libraries(mementar_lt_lib
   mementar_compression_lib
   mementar_memGraphs_lib
   pthread
 )
 
-##############################
-## EVENTS
-##############################
-
-add_library(mementar_events_lib
-  src/core/Occasions/Subscription.cpp
-  src/core/Occasions/OccasionsManager.cpp
+add_library(mementar_core_lib
+  src/core/feeder/FeedStorage.cpp
+  src/core/feeder/Feeder.cpp
+  src/core/Parametrization/Configuration.cpp
 )
-target_link_libraries(mementar_events_lib ${catkin_LIBRARIES})
-add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
+target_link_libraries(mementar_core_lib mementar_lt_lib)
+target_link_libraries(mementar_core_lib ${catkin_LIBRARIES})
+add_dependencies(mementar_core_lib ${catkin_EXPORTED_TARGETS})
 
 ##############################
 ## DRAWER
@@ -141,7 +150,7 @@ add_dependencies(mementar_events_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 add_library(mementar_drawer_lib
   src/graphical/timeline/ActionReader.cpp
-  src/graphical/timeline/EventReader.cpp
+  src/graphical/timeline/FactReader.cpp
   src/graphical/timeline/TimelineDrawer.cpp
 )
 target_include_directories(mementar_drawer_lib
@@ -158,6 +167,8 @@ target_link_libraries(mementar_drawer_lib
 ##############################
 
 add_library(mementar_lib
+  src/API/ActionsPublisher.cpp
+  src/API/ActionsSubscriber.cpp
   src/API/TimelineManipulator.cpp
   src/API/TimelinesManipulator.cpp
   src/API/clients/ManagerClient.cpp
@@ -175,7 +186,7 @@ add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 add_library(mementar_interface
   src/RosInterface.cpp
 )
-target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib)
+target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib mementar_drawer_lib)
 target_link_libraries(mementar_interface ${catkin_LIBRARIES})
 add_dependencies(mementar_interface ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
@@ -204,6 +215,10 @@ add_dependencies(mementar_timeline ${catkin_EXPORTED_TARGETS})
 ## Test executables
 ##############################
 
+add_executable(config src/test/config.cpp)
+target_link_libraries(config ${catkin_LIBRARIES})
+target_link_libraries(config mementar_interface)
+
 add_executable(event_sub_pub src/test/occasions_sub_pub.cpp)
 target_link_libraries(event_sub_pub ${catkin_LIBRARIES})
 target_link_libraries(event_sub_pub mementar_lib)
@@ -214,7 +229,62 @@ target_link_libraries(graphs mementar_memGraphs_lib)
 
 
 #add_executable(eventLink src/test/EventLink.cpp)
-#target_link_libraries(eventLink mementar_core_lib)
+#target_link_libraries(eventLink mementar_lt_lib)
+
+##############################################################################
+# Qt Environment
+##############################################################################
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+
+##############################################################################
+# Sections
+##############################################################################
+
+file(GLOB QT_FORMS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ui/*.ui)
+file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}  resources/*.qrc)
+
+QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
+QT5_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
+
+add_definitions( -std=c++11 -fPIC)
+
+##############################################################################
+# Sources
+##############################################################################
+
+set( QT_SOURCES
+    src/graphical/mementarGUI/main.cpp
+    src/graphical/mementarGUI/mementargui.cpp
+    src/graphical/mementarGUI/DarkStyle.cpp
+    src/graphical/mementarGUI/QPushButtonExtended.cpp
+    src/graphical/mementarGUI/QCheckBoxExtended.cpp
+    src/graphical/mementarGUI/QLineEditExtended.cpp
+
+    include/mementar/graphical/mementarGUI/mementargui.h
+    include/mementar/graphical/mementarGUI/DarkStyle.h
+    include/mementar/graphical/mementarGUI/QPushButtonExtended.h
+    include/mementar/graphical/mementarGUI/QCheckBoxExtended.h
+    include/mementar/graphical/mementarGUI/QLineEditExtended.h
+)
+##############################################################################
+# Binaries
+##############################################################################
+
+add_executable(mementarGUI ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
+target_include_directories(mementarGUI
+  PRIVATE
+    ${catkin_INCLUDE_DIRS}
+)
+add_dependencies(mementarGUI mementar_gencpp)
+target_link_libraries(mementarGUI
+    ${catkin_LIBRARIES}
+    Qt5::Core
+    Qt5::Widgets
+    Qt5::PrintSupport
+)
+install(TARGETS mementarGUI RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ##############################
 ## Install
@@ -241,6 +311,10 @@ install(DIRECTORY include/${PROJECT_NAME}/
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
 
-  #add_rostest_gtest(mementar_tester test/library.test src/tests/library.cpp)
-  #target_link_libraries(mementar_tester mementar_lib)
+  add_rostest_gtest(mementar_fact_pub_sub_tester test/fact_pub_sub.test src/test/CI/fact_pub_sub.cpp)
+  target_link_libraries(mementar_fact_pub_sub_tester mementar_lib ontologenius_lib)
+
+  add_rostest_gtest(mementar_action_pub_sub_tester test/action_pub_sub.test src/test/CI/action_pub_sub.cpp)
+  target_link_libraries(mementar_action_pub_sub_tester mementar_lib ontologenius_lib)
+
 endif()

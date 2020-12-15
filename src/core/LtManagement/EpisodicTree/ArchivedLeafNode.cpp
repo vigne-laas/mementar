@@ -34,23 +34,23 @@ ArchivedLeafNode::~ArchivedLeafNode()
       delete tree;
   }
 
-  Display::Info("Archive trees:");
+  Display::info("Archive trees:");
   size_t nb_leafs = archived_sessions_tree_.size();
   size_t leafs_cpt = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(auto tree : archived_sessions_tree_)
   {
     if(tree != nullptr)
       delete tree;
-    Display::Percent((++leafs_cpt)*100/nb_leafs);
+    Display::percent((++leafs_cpt)*100/nb_leafs);
   }
 
-  Display::Debug("");
+  Display::debug("");
   mut_.unlock();
 }
 
-void ArchivedLeafNode::insert(Event* data)
+void ArchivedLeafNode::insert(Fact* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -64,7 +64,7 @@ void ArchivedLeafNode::insert(Event* data)
   {
     if((time_t)data->getTime() < keys_[0])
     {
-      Display::Error("try to insert fact in past that do not exist");
+      Display::error("try to insert fact in past that do not exist");
       return;
     }
 
@@ -117,7 +117,7 @@ void ArchivedLeafNode::insert(Event* data)
     earlier_key_ = data->getTime();
 }
 
-void ArchivedLeafNode::remove(Event* data)
+void ArchivedLeafNode::remove(Fact* data)
 {
   mut_.lock_shared();
   int index = getKeyIndex(data->getTime());
@@ -137,9 +137,9 @@ void ArchivedLeafNode::remove(Event* data)
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::find(const time_t& key)
+ArchivedLeafNode::LeafType* ArchivedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -159,9 +159,9 @@ BtreeLeaf<time_t, Event*>* ArchivedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::findNear(const time_t& key)
+ArchivedLeafNode::LeafType* ArchivedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -182,9 +182,9 @@ BtreeLeaf<time_t, Event*>* ArchivedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getFirst()
+ArchivedLeafNode::LeafType* ArchivedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(archived_childs_.size())
@@ -201,9 +201,9 @@ BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* ArchivedLeafNode::getLast()
+ArchivedLeafNode::LeafType* ArchivedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  ArchivedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
@@ -244,7 +244,7 @@ void ArchivedLeafNode::newSession()
 void ArchivedLeafNode::createNewCompressedChild(const time_t& key)
 {
   mut_.lock();
-  compressed_childs_.push_back(new CompressedLeafNode(directory_, order_));
+  compressed_childs_.push_back(new CompressedLeafNode(directory_));
   keys_.push_back(key);
   mut_.unlock();
 }
@@ -276,10 +276,10 @@ int ArchivedLeafNode::getKeyIndex(const time_t& key)
 
 void ArchivedLeafNode::loadStoredData()
 {
-  Display::Info("Load archived files:");
+  Display::info("Load archived files:");
   size_t nb_file = std::distance(std::experimental::filesystem::directory_iterator(directory_), std::experimental::filesystem::directory_iterator{});
   size_t cpt_file = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
@@ -299,17 +299,17 @@ void ArchivedLeafNode::loadStoredData()
         iss >> key;
         insert(key, ArchivedLeaf(key, complete_dir));
 
-        Display::Debug(complete_dir);
+        Display::debug(complete_dir);
       }
     }
 
     cpt_file++;
-    Display::Percent(cpt_file*100/nb_file);
+    Display::percent(cpt_file*100/nb_file);
   }
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 
-  CompressedLeafNode* comp = new CompressedLeafNode(directory_, order_);
+  CompressedLeafNode* comp = new CompressedLeafNode(directory_);
   if(comp->getKey() != time_t(-1))
   {
     compressed_childs_.push_back(comp);
@@ -319,7 +319,7 @@ void ArchivedLeafNode::loadStoredData()
     modified_.push_back(false);
   }
   else
-    Display::Warning("No compressed data loaded");
+    Display::warning("No compressed data loaded");
 
   if(archived_childs_.size())
   {

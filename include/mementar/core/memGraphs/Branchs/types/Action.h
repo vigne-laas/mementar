@@ -8,13 +8,15 @@
 
 namespace mementar {
 
-class ContextualizedEvent;
+class ContextualizedFact;
 
 class Action : public ValuedNode
 {
 public:
-  Action(const std::string& name, const SoftPoint& start, const std::experimental::optional<SoftPoint>& end = std::experimental::nullopt);
-  Action(const std::string& name, const SoftPoint& start, const SoftPoint::Ttime& end);
+  Action(const std::string& name, const SoftPoint& start);
+  Action(const std::string& name, const SoftPoint& start, const SoftPoint& end);
+
+  Action(const Action& other) = delete;
 
   bool setEnd(const SoftPoint& end);
 
@@ -25,14 +27,14 @@ public:
   size_t getMaxDuration();
 
   bool isSoft();
-  bool isPending() { return !end_; }
+  bool isPending() { return end_ == std::experimental::nullopt; }
 
-  ContextualizedEvent* getStartEvent() { return start_; }
-  ContextualizedEvent* getEndEvent() { return end_.value(); }
+  ContextualizedFact* getStartFact() { return start_; }
+  ContextualizedFact* getEndFact() { return end_.value(); }
 
 private:
-  ContextualizedEvent* start_;
-  std::experimental::optional<ContextualizedEvent*> end_;
+  ContextualizedFact* start_;
+  std::experimental::optional<ContextualizedFact*> end_;
 };
 
 } // namespace mementar

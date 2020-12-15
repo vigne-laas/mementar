@@ -9,8 +9,9 @@ namespace mementar {
 class SoftPoint
 {
 public:
-  //typedef size_t Ttime;
-  typedef float Ttime;
+  typedef size_t Ttime;
+  static Ttime default_time;
+  //typedef float Ttime;
 
   SoftPoint(Ttime t_start, std::experimental::optional<Ttime> t_end = std::experimental::nullopt)
   {

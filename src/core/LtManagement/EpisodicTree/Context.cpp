@@ -11,45 +11,45 @@
 namespace mementar
 {
 
-void Context::insert(const Fact* fact)
+void Context::insert(const Triplet* triplet)
 {
   std::map<std::string, size_t>::iterator it;
 
-  it = subjects_.find(fact->subject_);
+  it = subjects_.find(triplet->subject_);
   if(it != subjects_.end())
     it->second++;
   else
-    subjects_[fact->subject_] = 1;
+    subjects_[triplet->subject_] = 1;
 
-  it = predicats_.find(fact->predicat_);
+  it = predicats_.find(triplet->predicat_);
   if(it != predicats_.end())
     it->second++;
   else
-    predicats_[fact->predicat_] = 1;
+    predicats_[triplet->predicat_] = 1;
 
-  if(fact->object_.find(":") == std::string::npos)
+  if(triplet->object_.find(":") == std::string::npos)
   {
-    it = objects_.find(fact->object_);
+    it = objects_.find(triplet->object_);
     if(it != objects_.end())
       it->second++;
     else
-      objects_[fact->object_] = 1;
+      objects_[triplet->object_] = 1;
   }
 }
 
-void Context::remove(const Fact* fact)
+void Context::remove(const Triplet* triplet)
 {
   std::map<std::string, size_t>::iterator it;
 
-  it = subjects_.find(fact->subject_);
+  it = subjects_.find(triplet->subject_);
   if(it != subjects_.end())
     it->second--;
 
-  it = predicats_.find(fact->predicat_);
+  it = predicats_.find(triplet->predicat_);
   if(it != predicats_.end())
     it->second--;
 
-  it = objects_.find(fact->object_);
+  it = objects_.find(triplet->object_);
   if(it != objects_.end())
     it->second--;
 }
@@ -147,9 +147,9 @@ void Context::fromString(const std::string& string)
 
 void Context::storeContexts(std::vector<Context>& contexts, const std::string& directory)
 {
-  Display::Info("Save contexts:");
+  Display::info("Save contexts:");
 
-  Display::Percent(0);
+  Display::percent(0);
   std::string res;
   res += "[" + std::to_string(contexts.size()) + "]\n";
   for(size_t i = 0; i < contexts.size(); i++)
@@ -157,7 +157,7 @@ void Context::storeContexts(std::vector<Context>& contexts, const std::string& d
     res += "{" + std::to_string(contexts[i].getKey()) + "}{\n";
     res += contexts[i].toString();
     res += "}\n";
-    Display::Percent((i+1)*100/contexts.size());
+    Display::percent((i+1)*100/contexts.size());
   }
 
   std::ofstream file;
@@ -165,15 +165,15 @@ void Context::storeContexts(std::vector<Context>& contexts, const std::string& d
   file << res;
   file.close();
 
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 }
 
 std::string Context::ContextsToString(std::vector<Context>& contexts)
 {
-  Display::Info("Convert contexts:");
+  Display::info("Convert contexts:");
 
-  Display::Percent(0);
+  Display::percent(0);
   std::string res;
   res += "[" + std::to_string(contexts.size()) + "]\n";
   for(size_t i = 0; i < contexts.size(); i++)
@@ -181,11 +181,11 @@ std::string Context::ContextsToString(std::vector<Context>& contexts)
     res += "{" + std::to_string(contexts[i].getKey()) + "}{\n";
     res += contexts[i].toString();
     res += "}\n";
-    Display::Percent((i+1)*100/contexts.size());
+    Display::percent((i+1)*100/contexts.size());
   }
 
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 
   return res;
 }
@@ -193,7 +193,7 @@ std::string Context::ContextsToString(std::vector<Context>& contexts)
 void Context::loadContexts(std::vector<Context>& contexts, const std::string& directory)
 {
   //contexts must have a key
-  Display::Info("Load contexts:");
+  Display::info("Load contexts:");
   std::ifstream t(directory + "/context.txt");
   if(t)
   {
@@ -210,7 +210,7 @@ void Context::loadContexts(std::vector<Context>& contexts, const std::string& di
     std::istringstream iss(tmp);
     iss >> nb_contexts;
 
-    Display::Percent(0);
+    Display::percent(0);
 
     for(size_t i = 0; i < nb_contexts; i++)
     {
@@ -234,12 +234,12 @@ void Context::loadContexts(std::vector<Context>& contexts, const std::string& di
         }
       }
 
-      Display::Percent((i+1)*100/nb_contexts);
+      Display::percent((i+1)*100/nb_contexts);
     }
   }
 
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 }
 
 std::vector<Context> Context::StringToContext(const std::string& str)

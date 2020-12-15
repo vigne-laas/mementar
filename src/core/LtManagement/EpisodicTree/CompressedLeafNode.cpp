@@ -7,10 +7,9 @@
 namespace mementar
 {
 
-CompressedLeafNode::CompressedLeafNode(std::string directory, size_t order)
+CompressedLeafNode::CompressedLeafNode(const std::string& directory)
 {
   directory_ = directory;
-  order_ = order;
 
   last_tree_nb_leafs_ = 0;
   earlier_key_ = 0;
@@ -31,16 +30,16 @@ CompressedLeafNode::~CompressedLeafNode()
   Context::storeContexts(contexts_, directory_);
 
   mut_.lock();
-  Display::Info("Compress trees:");
+  Display::info("Compress trees:");
   size_t nb_leafs = keys_.size();
   size_t leafs_cpt = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(auto tree : btree_childs_)
   {
     compressed_childs_.push_back(CompressedLeaf(tree, directory_));
     delete tree;
-    Display::Percent((++leafs_cpt)*100/nb_leafs);
+    Display::percent((++leafs_cpt)*100/nb_leafs);
   }
 
   for(size_t i = 0; i < compressed_sessions_tree_.size(); i++)
@@ -51,9 +50,9 @@ CompressedLeafNode::~CompressedLeafNode()
         compressed_childs_[i] = std::move(CompressedLeaf(compressed_sessions_tree_[i], directory_));
       delete compressed_sessions_tree_[i];
     }
-    Display::Percent((++leafs_cpt)*100/nb_leafs);
+    Display::percent((++leafs_cpt)*100/nb_leafs);
   }
-  Display::Debug("");
+  Display::debug("");
   mut_.unlock();
 }
 
@@ -62,7 +61,6 @@ CompressedLeafNode* CompressedLeafNode::split()
   mut_.lock();
   CompressedLeafNode* new_one = new CompressedLeafNode();
   new_one->directory_ = directory_;
-  new_one->order_ = order_;
 
   size_t nb = keys_.size()/2;
   for(size_t i = 0; i < nb; i++)
@@ -88,7 +86,7 @@ CompressedLeafNode* CompressedLeafNode::split()
   return new_one;
 }
 
-void CompressedLeafNode::insert(Event* data)
+void CompressedLeafNode::insert(Fact* data)
 {
   mut_.lock_shared();
   if(keys_.size() == 0)
@@ -103,7 +101,7 @@ void CompressedLeafNode::insert(Event* data)
   {
     if((time_t)data->getTime() < keys_[0])
     {
-      Display::Error("try to insert fact in past that do not exist");
+      Display::error("try to insert fact in past that do not exist");
       return;
     }
 
@@ -162,7 +160,7 @@ void CompressedLeafNode::insert(Event* data)
     earlier_key_ = data->getTime();
 }
 
-void CompressedLeafNode::remove(Event* data)
+void CompressedLeafNode::remove(Fact* data)
 {
   mut_.lock_shared();
   int index = getKeyIndex(data->getTime());
@@ -188,9 +186,9 @@ void CompressedLeafNode::remove(Event* data)
   mut_.unlock_shared();
 }
 
-BtreeLeaf<time_t,Event*>* CompressedLeafNode::find(const time_t& key)
+CompressedLeafNode::LeafType* CompressedLeafNode::find(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -210,9 +208,9 @@ BtreeLeaf<time_t,Event*>* CompressedLeafNode::find(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* CompressedLeafNode::findNear(const time_t& key)
+CompressedLeafNode::LeafType* CompressedLeafNode::findNear(const time_t& key)
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   int index = getKeyIndex(key);
@@ -233,9 +231,9 @@ BtreeLeaf<time_t, Event*>* CompressedLeafNode::findNear(const time_t& key)
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* CompressedLeafNode::getFirst()
+CompressedLeafNode::LeafType* CompressedLeafNode::getFirst()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(compressed_childs_.size())
@@ -252,9 +250,9 @@ BtreeLeaf<time_t, Event*>* CompressedLeafNode::getFirst()
   return res;
 }
 
-BtreeLeaf<time_t, Event*>* CompressedLeafNode::getLast()
+CompressedLeafNode::LeafType* CompressedLeafNode::getLast()
 {
-  BtreeLeaf<time_t, Event*>* res = nullptr;
+  CompressedLeafNode::LeafType* res = nullptr;
 
   mut_.lock_shared();
   if(btree_childs_.size())
@@ -281,7 +279,7 @@ void CompressedLeafNode::display(time_t key)
     if((size_t)index < compressed_childs_.size())
       std::cout << compressed_childs_[index].getDirectory() << std::endl;
     else
-      btree_childs_[index - compressed_childs_.size()]->display();
+      btree_childs_[index - compressed_childs_.size()]->displayTree();
   }
   mut_.unlock_shared();
 }
@@ -295,7 +293,7 @@ void CompressedLeafNode::init()
 void CompressedLeafNode::createNewTreeChild(const time_t& key)
 {
   mut_.lock();
-  btree_childs_.push_back(new Btree<time_t, Event*>(order_));
+  btree_childs_.push_back(new BplusTree<time_t, Fact*>());
   keys_.push_back(key);
   contexts_.push_back(Context(key));
   mut_.unlock();
@@ -332,12 +330,12 @@ bool CompressedLeafNode::loadStoredData()
 {
   size_t nb_file = std::distance(std::experimental::filesystem::directory_iterator(directory_), std::experimental::filesystem::directory_iterator{});
   if(nb_file)
-    Display::Info("Load compressed files:");
+    Display::info("Load compressed files:");
   else
     return false;
 
   size_t cpt_file = 0;
-  Display::Percent(0);
+  Display::percent(0);
 
   for(const auto& entry : std::experimental::filesystem::directory_iterator(directory_))
   {
@@ -362,15 +360,15 @@ bool CompressedLeafNode::loadStoredData()
         iss >> key;
         insert(key, CompressedLeaf(key, complete_dir));
 
-        Display::Debug(complete_dir);
+        Display::debug(complete_dir);
       }
     }
 
     cpt_file++;
-    Display::Percent(cpt_file*100/nb_file);
+    Display::percent(cpt_file*100/nb_file);
   }
-  Display::Percent(100);
-  Display::Debug("");
+  Display::percent(100);
+  Display::debug("");
 
   if(compressed_childs_.size())
   {

@@ -1,28 +1,27 @@
 #include "mementar/core/memGraphs/Branchs/types/Action.h"
 
-#include "mementar/core/memGraphs/Branchs/ContextualizedEvent.h"
+#include "mementar/core/memGraphs/Branchs/ContextualizedFact.h"
 
 namespace mementar {
 
-Action::Action(const std::string& name, const SoftPoint& start, const std::experimental::optional<SoftPoint>& end) : ValuedNode(name)
+Action::Action(const std::string& name, const SoftPoint& start) : ValuedNode(name)
 {
-  start_ = new ContextualizedEvent(std::string(name + "_start"), Event(name + "|_|start", start), this);
-  if(end)
-    end_ = new ContextualizedEvent(std::string(name + "_end"), Event(name + "|_|end", end.value()), this);
+  start_ = new ContextualizedFact(std::string(name + "_start"), Fact(name + "|_|start", start), this);
+  end_ = std::experimental::nullopt;
 }
 
-Action::Action(const std::string& name, const SoftPoint& start, const SoftPoint::Ttime& end) : ValuedNode(name)
+Action::Action(const std::string& name, const SoftPoint& start, const SoftPoint& end) : ValuedNode(name)
 {
-  start_ = new ContextualizedEvent(std::string(name + "_start"), Event(name + "|_|start", start), this);
-  end_ = new ContextualizedEvent(std::string(name + "_end"), Event(name + "|_|end", end), this);
+  start_ = new ContextualizedFact(std::string(name + "_start"), Fact(name + "|_|start", start), this);
+  end_ = new ContextualizedFact(std::string(name + "_end"), Fact(name + "|_|end", end), this);
 }
 
 bool Action::setEnd(const SoftPoint& end)
 {
-  if(end_)
+  if(end_ != std::experimental::nullopt)
     return false;
 
-  end_ = new ContextualizedEvent(std::string(getValue() + "_end"), Event(getValue() + "|_|end", end), this);
+  end_ = new ContextualizedFact(std::string(getValue() + "_end"), Fact(getValue() + "|_|end", end), this);
   return true;
 }
 

@@ -6,7 +6,7 @@ namespace mementar
 {
 
 OccasionsPublisher::OccasionsPublisher(ros::NodeHandle* n, const std::string& name) :
-            pub_(n->advertise<StampedString>((name == "") ? "mementar/insert_stamped" : "mementar/insert_stamped/" + name, 1000))
+            pub_(n->advertise<StampedString>((name == "") ? "mementar/insert_fact_stamped" : "mementar/insert_fact_stamped/" + name, 1000))
 {
   n_ = n;
 }
@@ -20,10 +20,7 @@ void OccasionsPublisher::publish(const std::string& str, time_t stamp)
 {
   StampedString msg;
   msg.data = str;
-  if(stamp == 0)
-    msg.stamp.sec = time(0);
-  else
-    msg.stamp.sec = stamp;
+  msg.stamp.sec = stamp;
   pub_.publish(msg);
 }
 

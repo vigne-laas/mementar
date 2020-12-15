@@ -2,141 +2,98 @@
 #define MEMENTAR_FACT_H
 
 #include <string>
-#include <vector>
-#include <regex>
-#include <iostream>
+#include <ostream>
 
-namespace mementar
-{
+#include "mementar/core/memGraphs/Branchs/types/SoftPoint.h"
+#include "mementar/core/memGraphs/Branchs/types/Triplet.h"
 
-class Fact
+namespace mementar {
+
+class Fact : public SoftPoint, public Triplet
 {
 public:
-  Fact(const std::string& subject, const std::string& predicat, const std::string& object, bool add = true)
+  Fact(const std::string& data, SoftPoint::Ttime t_start, std::experimental::optional<SoftPoint::Ttime> t_end = std::experimental::nullopt) : SoftPoint(t_start, t_end), Triplet(data)
   {
-    subject_ = subject;
-    predicat_ = predicat;
-    object_ = object;
-    add_ = add;
   }
 
-  Fact(const std::string& triplet = "", bool add = true)
+  Fact(const std::string& data, const SoftPoint& soft_point) : SoftPoint(soft_point), Triplet(data)
   {
-    std::vector<std::string> splitted = split(triplet, "|");
-    if(splitted.size() >= 1)
-      subject_ = splitted[0];
-    if(splitted.size() >= 2)
-      predicat_ = splitted[1];
-    if(splitted.size() >= 3)
-      object_ = splitted[2];
-    add_ = add;
   }
 
-  Fact(const Fact& other)
+  Fact(const Triplet& triplet, const SoftPoint& soft_point) : SoftPoint(soft_point), Triplet(triplet)
   {
-    subject_ = other.subject_;
-    predicat_ = other.predicat_;
-    object_ = other.object_;
-    add_ = other.add_;
+  }
+
+
+  Fact(const Fact& other) : SoftPoint(other), Triplet(other)
+  {
   }
 
   static std::string serialize(const Fact& fact)
   {
-    return (fact.add_ ? "A|" : "D|") + fact.subject_ + "|" + fact.predicat_ + "|" + fact.object_;
+    if(fact.isInstantaneous())
+      return "[" + std::to_string(fact.getTimeStart()) + "]{" + Triplet::serialize(&fact) + "}";
+    else
+      return "[" + std::to_string(fact.getTimeStart()) + "," + std::to_string(fact.getTimeEnd()) + "]{" + Triplet::serialize(&fact) + "}";
   }
 
   static std::string serialize(const Fact* fact)
   {
-    return (fact->add_ ? "A|" : "D|") + fact->subject_ + "|" + fact->predicat_ + "|" + fact->object_;
+    if(fact->isInstantaneous())
+      return "[" + std::to_string(fact->getTimeStart()) + "]{" + Triplet::serialize(fact) + "}";
+    else
+      return "[" + std::to_string(fact->getTimeStart()) + "," + std::to_string(fact->getTimeEnd()) + "]{" + Triplet::serialize(fact) + "}";
   }
 
   static Fact deserialize(const std::string& str)
   {
     if(std::regex_match(str, match, regex))
-      return Fact(match[2].str(), match[3].str(), match[4].str(), match[1].str() == "A");
+    {
+      if(match[3].str() == "")
+        return Fact(Triplet::deserialize(match[4].str()), std::stoul(match[1].str()));
+      else
+        return Fact(Triplet::deserialize(match[4].str()), SoftPoint(std::stoul(match[1].str()), std::stoul(match[3].str())));
+    }
     else
-      return Fact();
+      return Fact("", 0);
   }
 
   static Fact* deserializePtr(const std::string& str)
   {
     if(std::regex_match(str, match, regex))
-      return new Fact(match[2].str(), match[3].str(), match[4].str(), match[1].str() == "A");
+    {
+      if(match[3].str() == "")
+        return new Fact(Triplet::deserialize(match[4].str()), std::stoul(match[1].str()));
+      else
+        return new Fact(Triplet::deserialize(match[4].str()), SoftPoint(std::stoul(match[1].str()), std::stoul(match[3].str())));
+    }
     else
       return nullptr;
   }
 
-  bool valid() const
-  {
-    return((subject_ != "") && (predicat_ != "") && (object_ != ""));
-  }
+  std::string getData() const { return Triplet::toString(); }
 
-  std::string toString() const
+  friend std::ostream& operator<<(std::ostream& os, Fact* fact)
   {
-    return (add_ ? "[add]" : "[del]") + subject_ + " | " + predicat_ + " | " + object_;
+    std::string space = " ";
+    os << fact->getData();
+    return os;
   }
 
   bool operator==(const Fact& other) const
   {
-    return ( (add_ == other.add_)
-            && (subject_ == other.subject_)
-            && (predicat_ == other.predicat_)
-            && (object_ == other.object_));
+    return Triplet::operator==(other);
   }
 
   bool operator==(const Fact* other) const
   {
-    return ( (add_ == other->add_)
-            && (subject_ == other->subject_)
-            && (predicat_ == other->predicat_)
-            && (object_ == other->object_));
+    return Triplet::operator==(other);
   }
-
-  bool fit(const Fact& other) const
-  {
-    return ( (add_ == other.add_)
-            && ((subject_ == other.subject_) || (subject_ == "?") || (other.subject_ == "?"))
-            && ((predicat_ == other.predicat_) || (predicat_ == "?") || (other.predicat_ == "?"))
-            && ((object_ == other.object_) || (object_ == "?") || (other.object_ == "?")));
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const Fact& fact)
-  {
-    os << fact.toString();
-    return os;
-  }
-
-  std::string subject_;
-  std::string predicat_;
-  std::string object_;
-  bool add_;
 
 protected:
+
   static std::regex regex;
   static std::smatch match;
-
-private:
-
-  std::vector<std::string> split(const std::string& str, const std::string& delim)
-  {
-    std::vector<std::string> tokens;
-    size_t prev = 0, pos = 0;
-    do
-    {
-      pos = str.find(delim, prev);
-      if (pos == std::string::npos)
-        pos = str.length();
-
-      std::string token = str.substr(prev, pos-prev);
-
-      if (!token.empty())
-        tokens.push_back(token);
-      prev = pos + delim.length();
-    }
-    while ((pos < str.length()) && (prev < str.length()));
-
-    return tokens;
-  }
 };
 
 } // namespace mementar
