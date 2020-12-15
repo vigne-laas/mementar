@@ -51,7 +51,7 @@ int main()
   action_graph.add(new mementar::Action("place_1", 7, mementar::SoftPoint(9, 10)));
   action_graph.add(new mementar::Action("pick_2", 12));
 
-  auto pending = action_graph.getPendingSafe();
+  auto pending = action_graph.getPendingPtrSafe();
   for(auto action : pending)
     std::cout << action->getName() << " is a pending action" << std::endl;
 

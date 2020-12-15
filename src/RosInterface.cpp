@@ -9,6 +9,8 @@
 #include "mementar/graphical/Display.h"
 #include "mementar/graphical/timeline/TimelineDrawer.h"
 
+#include "mementar/utils/String.h"
+
 namespace mementar
 {
 
@@ -76,7 +78,8 @@ void RosInterface::run()
   ros::Subscriber action_knowledge_subscriber = n_->subscribe(getTopicName("insert_action"), 1000, &RosInterface::actionKnowledgeCallback, this);
 
   // Start up ROS service with callbacks
-  ros::ServiceServer service = n_->advertiseService(getTopicName("manage_instance"), &RosInterface::actionsHandle, this);
+  ros::ServiceServer manage_instance_service = n_->advertiseService(getTopicName("manage_instance"), &RosInterface::managerInstanceHandle, this);
+  ros::ServiceServer action_service = n_->advertiseService(getTopicName("action"), &RosInterface::actionHandle, this);
 
   feeder_.setCallback([this](const Triplet& triplet){ this->occasions_.add(triplet); });
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
@@ -143,13 +146,14 @@ void RosInterface::actionKnowledgeCallback(const MementarAction::ConstPtr& msg)
                       (msg->end_stamp.sec != 0) ? msg->end_stamp.sec : SoftPoint::default_time);
 }
 
-bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
-                                 mementar::MementarService::Response &res)
+bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req,
+                                         mementar::MementarService::Response &res)
 {
   res.code = 0;
 
   removeUselessSpace(req.action);
   removeUselessSpace(req.param);
+  param_t params = getParams(req.param);
 
   /*if(req.action == "newSession")
   {
@@ -170,6 +174,45 @@ bool RosInterface::actionsHandle(mementar::MementarService::Request &req,
 
   return true;
 }
+
+bool RosInterface::actionHandle(mementar::MementarService::Request &req,
+                                mementar::MementarService::Response &res)
+{
+  res.code = 0;
+
+  removeUselessSpace(req.action);
+  removeUselessSpace(req.param);
+  param_t params = getParams(req.param);
+
+  std::unordered_set<std::string> set_res;
+
+  if(req.action == "exist")
+  {
+    if(timeline_->actions.exist(params()))
+      res.values.push_back(params());
+  }
+  else if(req.action == "getPending")
+    set_res = timeline_->actions.getPending();
+  else if(req.action == "isPending")
+  {
+    if(timeline_->actions.isPending(params()))
+      res.values.push_back(params());
+  }
+  else if(req.action == "getStartStamp")
+    res.time_value = ros::Time(timeline_->actions.getStartStamp(params()));
+  else if(req.action == "getEndStamp")
+    res.time_value = ros::Time(timeline_->actions.getEndStamp(params()));
+  else if(req.action == "getDuration")
+    res.time_value = ros::Time(timeline_->actions.getDuration(params()));
+  else
+    res.code = UNKNOW_ACTION;
+
+  if(res.values.size() == 0)
+      set2vector(set_res, res.values);
+
+  return true;
+}
+
 
 /***************
 *
@@ -224,6 +267,48 @@ void RosInterface::removeUselessSpace(std::string& text)
 
   while((text[text.size() - 1] == ' ') && (text.size() != 0))
     text.erase(text.size() - 1,1);
+}
+
+void RosInterface::set2string(const std::unordered_set<std::string>& word_set, std::string& result)
+{
+  for(const std::string& it : word_set)
+    result += it + " ";
+}
+
+void RosInterface::set2vector(const std::unordered_set<std::string>& word_set, std::vector<std::string>& result)
+{
+  for(const std::string& it : word_set)
+    result.push_back(it);
+}
+
+param_t RosInterface::getParams(const std::string& param)
+{
+  param_t parameters;
+  std::vector<std::string> str_params = split(param, " ");
+
+  if(str_params.size())
+    parameters.base = str_params[0];
+
+  bool option_found = false;
+  for(size_t i = 1; i < str_params.size(); i++)
+  {
+    /*if((str_params[i] == "-i") || (str_params[i] == "--take_id"))
+    {
+      i++;
+      bool tmp = false;
+      if(str_params[i] == "true")
+        tmp = true;
+
+      parameters.take_id = tmp;
+      option_found = true;
+    }
+    else if(option_found)
+      Display::warning("[WARNING] unknow parameter \"" + str_params[i] + "\"");
+    else*/
+      parameters.base += " " + str_params[i];
+  }
+
+  return parameters;
 }
 
 } // namespace mementar

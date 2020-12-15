@@ -23,6 +23,13 @@
 namespace mementar
 {
 
+struct param_t
+{
+  std::string base;
+
+  std::string operator()() { return base; }
+};
+
 class RosInterface
 {
 public:
@@ -59,12 +66,17 @@ private:
   void explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
   void actionKnowledgeCallback(const MementarAction::ConstPtr& msg);
 
-  bool actionsHandle(mementar::MementarService::Request &req,
-                     mementar::MementarService::Response &res);
+  bool managerInstanceHandle(mementar::MementarService::Request &req,
+                             mementar::MementarService::Response &res);
+  bool actionHandle(mementar::MementarService::Request &req,
+                    mementar::MementarService::Response &res);
 
    void feedThread();
 
   void removeUselessSpace(std::string& text);
+  void set2string(const std::unordered_set<std::string>& word_set, std::string& result);
+  void set2vector(const std::unordered_set<std::string>& word_set, std::vector<std::string>& result);
+  param_t getParams(const std::string& param);
 
   std::string getTopicName(const std::string& topic_name)
   {
