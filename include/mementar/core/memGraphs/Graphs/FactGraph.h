@@ -21,6 +21,7 @@ public:
   bool isActionPart(const std::string& fact_id);
   std::string getActionPart(const std::string& fact_id);
   std::string getData(const std::string& fact_id);
+  SoftPoint::Ttime getStamp(const std::string& fact_id);
 
   std::vector<ContextualizedFact*> get()
   {

@@ -261,6 +261,8 @@ bool RosInterface::factHandle(mementar::MementarService::Request &req,
     if(fact_data != "")
       res.values.push_back(fact_data);
   }
+  else if(req.action == "getStamp")
+    res.time_value = ros::Time(timeline_->facts.getStamp(params()));
   else
     res.code = UNKNOW_ACTION;
 

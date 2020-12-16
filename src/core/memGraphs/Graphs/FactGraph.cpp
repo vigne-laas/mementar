@@ -51,6 +51,15 @@ std::string FactGraph::getData(const std::string& fact_id)
     return fact->getData();
 }
 
+SoftPoint::Ttime FactGraph::getStamp(const std::string& fact_id)
+{
+  auto fact = find(fact_id);
+  if(fact == nullptr)
+    return SoftPoint::default_time;
+  else
+    return fact->getTime();
+}
+
 ContextualizedFact* FactGraph::find(const std::string& fact_id)
 {
   return container_.find(fact_id);
