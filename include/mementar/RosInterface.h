@@ -70,6 +70,8 @@ private:
                              mementar::MementarService::Response &res);
   bool actionHandle(mementar::MementarService::Request &req,
                     mementar::MementarService::Response &res);
+  bool factHandle(mementar::MementarService::Request &req,
+                  mementar::MementarService::Response &res);
 
    void feedThread();
 

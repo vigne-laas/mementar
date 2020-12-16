@@ -80,6 +80,7 @@ void RosInterface::run()
   // Start up ROS service with callbacks
   ros::ServiceServer manage_instance_service = n_->advertiseService(getTopicName("manage_instance"), &RosInterface::managerInstanceHandle, this);
   ros::ServiceServer action_service = n_->advertiseService(getTopicName("action"), &RosInterface::actionHandle, this);
+  ros::ServiceServer fact_service = n_->advertiseService(getTopicName("fact"), &RosInterface::factHandle, this);
 
   feeder_.setCallback([this](const Triplet& triplet){ this->occasions_.add(triplet); });
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
@@ -227,6 +228,47 @@ bool RosInterface::actionHandle(mementar::MementarService::Request &req,
   return true;
 }
 
+bool RosInterface::factHandle(mementar::MementarService::Request &req,
+                              mementar::MementarService::Response &res)
+{
+  res.code = 0;
+
+  removeUselessSpace(req.action);
+  removeUselessSpace(req.param);
+  param_t params = getParams(req.param);
+
+  std::unordered_set<std::string> set_res;
+
+  if(req.action == "exist")
+  {
+    if(timeline_->facts.exist(params()))
+      res.values.push_back(params());
+  }
+  else if(req.action == "isActionPart")
+  {
+    if(timeline_->facts.isActionPart(params()))
+      res.values.push_back(params());
+  }
+  else if(req.action == "getActionPart")
+  {
+    auto action_name = timeline_->facts.getActionPart(params());
+    if(action_name != "")
+      res.values.push_back(action_name);
+  }
+  else if(req.action == "getData")
+  {
+    auto fact_data = timeline_->facts.getData(params());
+    if(fact_data != "")
+      res.values.push_back(fact_data);
+  }
+  else
+    res.code = UNKNOW_ACTION;
+
+  if(res.values.size() == 0)
+      set2vector(set_res, res.values);
+
+  return true;
+}
 
 /***************
 *
