@@ -40,6 +40,17 @@ mementarGUI::mementarGUI(QWidget *parent) :
     QObject::connect(ui->action_getFactsDuring_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
     QObject::connect(ui->action_getFactsDuring_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
 
+    QObject::connect(ui->fact_exist_button, SIGNAL(hoverEnter()),this, SLOT(factButtonHoverEnterSlot()));
+    QObject::connect(ui->fact_exist_button, SIGNAL(hoverLeave()),this, SLOT(factButtonHoverLeaveSlot()));
+    QObject::connect(ui->fact_getData_button, SIGNAL(hoverEnter()),this, SLOT(factButtonHoverEnterSlot()));
+    QObject::connect(ui->fact_getData_button, SIGNAL(hoverLeave()),this, SLOT(factButtonHoverLeaveSlot()));
+    QObject::connect(ui->fact_getActionPart_button, SIGNAL(hoverEnter()),this, SLOT(factButtonHoverEnterSlot()));
+    QObject::connect(ui->fact_getActionPart_button, SIGNAL(hoverLeave()),this, SLOT(factButtonHoverLeaveSlot()));
+    QObject::connect(ui->fact_isActionPart_button, SIGNAL(hoverEnter()),this, SLOT(factButtonHoverEnterSlot()));
+    QObject::connect(ui->fact_isActionPart_button, SIGNAL(hoverLeave()),this, SLOT(factButtonHoverLeaveSlot()));
+    QObject::connect(ui->fact_getStamp_button, SIGNAL(hoverEnter()),this, SLOT(factButtonHoverEnterSlot()));
+    QObject::connect(ui->fact_getStamp_button, SIGNAL(hoverLeave()),this, SLOT(factButtonHoverLeaveSlot()));
+
     QObject::connect(ui->action_exist_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_isPending_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
@@ -49,6 +60,12 @@ mementarGUI::mementarGUI(QWidget *parent) :
     QObject::connect(ui->action_getStartFact_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getEndFact_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getFactsDuring_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
+
+    QObject::connect(ui->fact_exist_button, SIGNAL(clicked()),this, SLOT(factButtonClickedSlot()));
+    QObject::connect(ui->fact_getData_button, SIGNAL(clicked()),this, SLOT(factButtonClickedSlot()));
+    QObject::connect(ui->fact_getActionPart_button, SIGNAL(clicked()),this, SLOT(factButtonClickedSlot()));
+    QObject::connect(ui->fact_isActionPart_button, SIGNAL(clicked()),this, SLOT(factButtonClickedSlot()));
+    QObject::connect(ui->fact_getStamp_button, SIGNAL(clicked()),this, SLOT(factButtonClickedSlot()));
 
     QObject::connect(ui->manager_refresh_button, SIGNAL(clicked()),this, SLOT(displayInstancesListSlot()));
     QObject::connect(ui->manager_add_instance_button, SIGNAL(clicked()),this, SLOT(addInstanceSlot()));
@@ -117,6 +134,16 @@ void mementarGUI::actionButtonHoverLeaveSlot()
   ui->action_description_textedit->setText("");
 }
 
+void mementarGUI::factButtonHoverEnterSlot()
+{
+  ui->fact_description_textedit->setText(dynamic_cast<QWidget*>(sender())->whatsThis());
+}
+
+void mementarGUI::factButtonHoverLeaveSlot()
+{
+  ui->fact_description_textedit->setText("");
+}
+
 void mementarGUI::actionButtonClickedSlot()
 {
   std::string service_name = (ui->static_instance_name_editline->text().toStdString() == "") ? "mementar/action" : "mementar/action/" + ui->static_instance_name_editline->text().toStdString();
@@ -127,6 +154,31 @@ void mementarGUI::actionButtonClickedSlot()
   srv.request.param = ui->action_parameter_editline->text().toStdString();
   QString text = dynamic_cast<QPushButtonExtended *>(sender())->text() + " : " + ui->action_parameter_editline->text();
   ui->action_description_textedit->setText(text);
+
+  if(!client.call(srv))
+    displayErrorInfo(service_name + " client call failed");
+  else
+  {
+    start();
+    std::string res;
+    if(srv.response.values.size())
+      res = vector2string(srv.response.values);
+    else if(srv.response.time_value.sec != 0)
+      res = std::to_string(srv.response.time_value.sec);
+    ui->static_result_editext->setText(QString::fromStdString(res));
+  }
+}
+
+void mementarGUI::factButtonClickedSlot()
+{
+  std::string service_name = (ui->static_instance_name_editline->text().toStdString() == "") ? "mementar/fact" : "mementar/fact/" + ui->static_instance_name_editline->text().toStdString();
+  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>(service_name);
+
+  mementar::MementarService srv;
+  srv.request.action = dynamic_cast<QPushButtonExtended *>(sender())->text().toStdString();
+  srv.request.param = ui->fact_parameter_editline->text().toStdString();
+  QString text = dynamic_cast<QPushButtonExtended *>(sender())->text() + " : " + ui->fact_parameter_editline->text();
+  ui->fact_description_textedit->setText(text);
 
   if(!client.call(srv))
     displayErrorInfo(service_name + " client call failed");

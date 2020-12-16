@@ -52,8 +52,11 @@ private:
 public slots:
   void actionButtonHoverEnterSlot();
   void actionButtonHoverLeaveSlot();
+  void factButtonHoverEnterSlot();
+  void factButtonHoverLeaveSlot();
 
   void actionButtonClickedSlot();
+  void factButtonClickedSlot();
 
   void nameEditingFinishedSlot();
   void currentTabChangedSlot(int);
