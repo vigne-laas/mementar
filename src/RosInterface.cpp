@@ -97,6 +97,7 @@ void RosInterface::run()
 
   occasions_.stop();
   occasions_thread.join();
+  feed_thread.join();
 }
 
 void RosInterface::reset()
