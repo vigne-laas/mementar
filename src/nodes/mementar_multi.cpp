@@ -25,13 +25,16 @@ mementar::Parameters params;
 bool deleteInterface(std::string name)
 {
   interfaces_[name]->stop();
+  usleep(1000);
   try
   {
     interfaces_threads_[name].join();
   }
-  catch(...)
+  catch(std::runtime_error& ex)
   {
-    return false;
+    mementar::Display::error("Catch error when joining the interface thread : " + std::string(ex.what()));
+    mementar::Display::warning("The thread will be detached");
+    interfaces_threads_[name].detach();
   }
 
   interfaces_threads_.erase(name);
