@@ -8,7 +8,7 @@
   <arg name="mementar_config_file" default="$(find mementar)/files/config_example.yaml"/>
 
   <group>
-    <include file="$(find ontologenius)/launch/ontologenius_full.launch">
+    <include file="$(find ontologenius)/launch/ontologenius_multi_full.launch">
       <arg name="display" value="$(arg onto_display)" />
       <arg name="config_file" value="$(arg onto_config_file)" />
       <arg name="files" value="$(arg onto_files)" />
@@ -16,7 +16,7 @@
     </include>
   </group>
 
-  <include file="$(find mementar)/launch/mementar_full.launch">
+  <include file="$(find mementar)/launch/mementar_multi_full.launch">
     <arg name="intern_directory" value="$(arg mementar_intern_directory)" />
     <arg name="config_file" value="$(arg mementar_config_file)" />
   </include>

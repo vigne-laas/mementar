@@ -17,6 +17,12 @@ public:
 
   void add(ContextualizedFact* fact);
 
+  bool exist(const std::string& fact_id);
+  bool isActionPart(const std::string& fact_id);
+  std::string getActionPart(const std::string& fact_id);
+  std::string getData(const std::string& fact_id);
+  SoftPoint::Ttime getStamp(const std::string& fact_id);
+
   std::vector<ContextualizedFact*> get()
   {
     return all_facts_;
@@ -31,6 +37,7 @@ public:
 
   ElBTree* getTimeline() { return &timeline_; }
 
+  ContextualizedFact* find(const std::string& fact_id);
   ContextualizedFact* findRecent(const Triplet& triplet, SoftPoint::Ttime until = SoftPoint::default_time);
 
 private:

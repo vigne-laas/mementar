@@ -76,10 +76,13 @@ void RosInterface::run()
   ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(getTopicName("insert_fact_stamped"), 1000, &RosInterface::stampedKnowledgeCallback, this);
   ros::Subscriber explanation_knowledge_subscriber = n_->subscribe(getTopicName("insert_fact_explanations"), 1000, &RosInterface::explanationKnowledgeCallback, this);
   ros::Subscriber action_knowledge_subscriber = n_->subscribe(getTopicName("insert_action"), 1000, &RosInterface::actionKnowledgeCallback, this);
+  ros::Subscriber onto_stamped_knowledge_subscriber = n_->subscribe(getOntoTopicName("insert_echo"), 1000, &RosInterface::ontoStampedKnowledgeCallback, this);
+  ros::Subscriber onto_explanation_knowledge_subscriber = n_->subscribe(getOntoTopicName("insert_explanations"), 1000, &RosInterface::ontoExplanationKnowledgeCallback, this);
 
   // Start up ROS service with callbacks
   ros::ServiceServer manage_instance_service = n_->advertiseService(getTopicName("manage_instance"), &RosInterface::managerInstanceHandle, this);
   ros::ServiceServer action_service = n_->advertiseService(getTopicName("action"), &RosInterface::actionHandle, this);
+  ros::ServiceServer fact_service = n_->advertiseService(getTopicName("fact"), &RosInterface::factHandle, this);
 
   feeder_.setCallback([this](const Triplet& triplet){ this->occasions_.add(triplet); });
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
@@ -145,6 +148,22 @@ void RosInterface::actionKnowledgeCallback(const MementarAction::ConstPtr& msg)
                       (msg->start_stamp.sec != 0) ? msg->start_stamp.sec : SoftPoint::default_time,
                       (msg->end_stamp.sec != 0) ? msg->end_stamp.sec : SoftPoint::default_time);
 }
+
+void RosInterface::ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg)
+{
+  feeder_.storeFact(msg->data, msg->stamp.sec);
+}
+
+void RosInterface::ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
+{
+  feeder_.storeFact(msg->fact, msg->cause);
+}
+
+/***************
+*
+* Services
+*
+****************/
 
 bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req,
                                          mementar::MementarService::Response &res)
@@ -227,6 +246,49 @@ bool RosInterface::actionHandle(mementar::MementarService::Request &req,
   return true;
 }
 
+bool RosInterface::factHandle(mementar::MementarService::Request &req,
+                              mementar::MementarService::Response &res)
+{
+  res.code = 0;
+
+  removeUselessSpace(req.action);
+  removeUselessSpace(req.param);
+  param_t params = getParams(req.param);
+
+  std::unordered_set<std::string> set_res;
+
+  if(req.action == "exist")
+  {
+    if(timeline_->facts.exist(params()))
+      res.values.push_back(params());
+  }
+  else if(req.action == "isActionPart")
+  {
+    if(timeline_->facts.isActionPart(params()))
+      res.values.push_back(params());
+  }
+  else if(req.action == "getActionPart")
+  {
+    auto action_name = timeline_->facts.getActionPart(params());
+    if(action_name != "")
+      res.values.push_back(action_name);
+  }
+  else if(req.action == "getData")
+  {
+    auto fact_data = timeline_->facts.getData(params());
+    if(fact_data != "")
+      res.values.push_back(fact_data);
+  }
+  else if(req.action == "getStamp")
+    res.time_value = ros::Time(timeline_->facts.getStamp(params()));
+  else
+    res.code = UNKNOW_ACTION;
+
+  if(res.values.size() == 0)
+      set2vector(set_res, res.values);
+
+  return true;
+}
 
 /***************
 *

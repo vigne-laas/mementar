@@ -139,7 +139,7 @@ namespace mementar {
         {
           auto data = leaf->getData();
           if(data.size())
-            if(data[0] >= end_fact)
+            if(data[0]->getTime() >= end_fact->getTime())
               break;
 
           for(auto& fact : data)

@@ -57,15 +57,15 @@
 
         <div class="contents">
           <div id="contents-toggle" class=""></div>
-          <h3><a href="CppAPI.html">All C++ Classes</a></h3>
+          <h3><a href="cpp_API/CppAPI.html">All C++ Classes</a></h3>
           <ul style="display: block;">
-            <li class="level1"><a href="ClientBase.html">ClientBase</a></li>
-            <li class="level1"><a href="Fact.html">Fact</a></li>
-            <li class="level1"><a href="ManagerClient.html">ManagerClient</a></li>
-            <li class="level1"><a href="OccasionsPublisher.html">OccasionsPublisher</a></li>
-            <li class="level1"><a href="OccasionsSubscriber.html">OccasionsSubscriber</a></li>
-            <li class="level1"><a href="TimelineManipulator.html">TimelineManipulator</a></li>
-            <li class="level1"><a href="TimelinesManipulator.html">TimelinesManipulator</a></li>
+            <li class="level1"><a href="cpp_API/ClientBase.html">ClientBase</a></li>
+            <li class="level1"><a href="cpp_API/Fact.html">Fact</a></li>
+            <li class="level1"><a href="cpp_API/ManagerClient.html">ManagerClient</a></li>
+            <li class="level1"><a href="cpp_API/OccasionsPublisher.html">OccasionsPublisher</a></li>
+            <li class="level1"><a href="cpp_API/OccasionsSubscriber.html">OccasionsSubscriber</a></li>
+            <li class="level1"><a href="cpp_API/TimelineManipulator.html">TimelineManipulator</a></li>
+            <li class="level1"><a href="cpp_API/TimelinesManipulator.html">TimelinesManipulator</a></li>
           </ul>
         </div>
       </div>
@@ -74,9 +74,11 @@
         <h1 class="title">Install Mementar</h1>
         <p>Since Mementar is a ROS package, make sure that ROS is installed on your platform. Mementar is fully supported and maintained by <a class="type" href="http://wiki.ros.org/kinetic/Installation">ROS Kinetic Kame</a> and <a class="type" href="http://wiki.ros.org/melodic/Installation">ROS Melodic Morenia</a>. Desktop ROS configuration is not required for use of mementar.</p>
 
+        <p>Mementar is strongly linked to the Ontologenius software to provide a semantic abstraction of the knowledge it stores.</p>
+
         <p>Clone the package on your catkin workspace:</p>
         <div class="code_block">
-          <p>cd ~/catkin_ws/src/</br></br>git clone https://github.com/sarthou/mementar.git</br></br>cd ..</br></br>catkin_make</p>
+          <p>cd ~/catkin_ws/src/</br>git clone https://github.com/sarthou/mementar.git</br>git clone https://github.com/sarthou/ontologenius.git</br>cd ..</br>catkin_make</p>
         </div>
 
         <h2>Troubles</h2>
@@ -88,14 +90,14 @@
         <div class="code_block">
           <p>sudo apt-get install ros-DISTRO-qt-build</p>
         </div>
-        <!--
+
         <h2>Test Mementar installation</h2>
         <p>Just run rostest to check if all the features work well on your platform:</p>
         <div class="code_block">
           <p>catkin_make run_tests_mementar_rostest</p>
         </div>
-        <p class="tip">Some asynchronous mechanisms are used. A computer with little computing power can therefore affect some tests due to a slow response time.</p>
-        -->
+        <!--p class="tip">Some asynchronous mechanisms are used. A computer with little computing power can therefore affect some tests due to a slow response time.</p-->
+
         <nav class="course-pagination">
           <span class="course-pagination__separator"></span>
           <a href="SetUp.html" class="course-pagination__btn">

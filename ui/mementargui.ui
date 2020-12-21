@@ -202,6 +202,128 @@
       </widget>
       <!-- END OF ACTION TAB -->
 
+      <!-- BEGIN OF FACT TAB -->
+      <widget class="QWidget" name="FactTab">
+       <attribute name="title">
+        <string>Fact</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="fact_tab_layout">
+
+        <item>
+         <layout class="QHBoxLayout" name="fact_parameter_layout">
+          <item>
+           <widget class="QLabel" name="fact_parameter_label">
+            <property name="text">
+             <string>Parameter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEditExtended" name="fact_parameter_editline">
+             <property name="whatsThis">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Enter your parameters here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="fact_functions_layer1_layout">
+          <item>
+           <widget class="QPushButtonExtended" name="fact_exist_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;exist&lt;/span&gt; allows you to test whether the fact (fact id) provided in parameter exists in this timeline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>exist</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="fact_getData_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getData&lt;/span&gt; returns the fact as a triplet for the fact (fact id) provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getData</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="fact_getStamp_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getStamp&lt;/span&gt; returns the timestamp for the fact (fact id) provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getStamp</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="fact_functions_layer2_layout">
+          <item>
+           <widget class="QPushButtonExtended" name="fact_isActionPart_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;isActionPart&lt;/span&gt; allows you to test whether the fact (fact id) provided in parameter is part of an action.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>isActionPart</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="fact_getActionPart_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getActionPart&lt;/span&gt; returns the action to which the fact (fact id) provided in parameter refers&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getActionPart</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <widget class="QTextEdit" name="fact_description_textedit">
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+      <!-- END OF FACT TAB -->
+
       <!-- BEGIN OF FEEDER TAB -->
       <widget class="QWidget" name="FeederTab">
        <attribute name="title">
@@ -558,9 +680,6 @@
           </property>
           <property name="cursorWidth">
            <number>1</number>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
           </property>
          </widget>
         </item>
