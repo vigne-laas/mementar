@@ -65,6 +65,8 @@ private:
   void stampedKnowledgeCallback(const StampedString::ConstPtr& msg);
   void explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
   void actionKnowledgeCallback(const MementarAction::ConstPtr& msg);
+  void ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg);
+  void ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
 
   bool managerInstanceHandle(mementar::MementarService::Request &req,
                              mementar::MementarService::Response &res);
@@ -88,6 +90,16 @@ private:
   std::string getTopicName(const std::string& topic_name, const std::string& onto_name)
   {
     return (onto_name == "") ? "/mementar/" + topic_name : "/mementar/" + topic_name + "/" + onto_name;
+  }
+
+  std::string getOntoTopicName(const std::string& topic_name)
+  {
+    return getOntoTopicName(topic_name, name_);
+  }
+
+  std::string getOntoTopicName(const std::string& topic_name, const std::string& onto_name)
+  {
+    return (onto_name == "") ? "/ontologenius/" + topic_name : "/ontologenius/" + topic_name + "/" + onto_name;
   }
 };
 

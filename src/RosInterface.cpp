@@ -76,6 +76,8 @@ void RosInterface::run()
   ros::Subscriber stamped_knowledge_subscriber = n_->subscribe(getTopicName("insert_fact_stamped"), 1000, &RosInterface::stampedKnowledgeCallback, this);
   ros::Subscriber explanation_knowledge_subscriber = n_->subscribe(getTopicName("insert_fact_explanations"), 1000, &RosInterface::explanationKnowledgeCallback, this);
   ros::Subscriber action_knowledge_subscriber = n_->subscribe(getTopicName("insert_action"), 1000, &RosInterface::actionKnowledgeCallback, this);
+  ros::Subscriber onto_stamped_knowledge_subscriber = n_->subscribe(getOntoTopicName("insert_echo"), 1000, &RosInterface::ontoStampedKnowledgeCallback, this);
+  ros::Subscriber onto_explanation_knowledge_subscriber = n_->subscribe(getOntoTopicName("insert_explanations"), 1000, &RosInterface::ontoExplanationKnowledgeCallback, this);
 
   // Start up ROS service with callbacks
   ros::ServiceServer manage_instance_service = n_->advertiseService(getTopicName("manage_instance"), &RosInterface::managerInstanceHandle, this);
@@ -146,6 +148,22 @@ void RosInterface::actionKnowledgeCallback(const MementarAction::ConstPtr& msg)
                       (msg->start_stamp.sec != 0) ? msg->start_stamp.sec : SoftPoint::default_time,
                       (msg->end_stamp.sec != 0) ? msg->end_stamp.sec : SoftPoint::default_time);
 }
+
+void RosInterface::ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg)
+{
+  feeder_.storeFact(msg->data, msg->stamp.sec);
+}
+
+void RosInterface::ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
+{
+  feeder_.storeFact(msg->fact, msg->cause);
+}
+
+/***************
+*
+* Services
+*
+****************/
 
 bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req,
                                          mementar::MementarService::Response &res)
