@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>mementar</name>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <description>The mementar package</description>
 
   <maintainer email="guillaume.sarthou@laas.fr">srth</maintainer>
@@ -23,6 +23,7 @@
   <build_depend>pluginlib</build_depend>
   <build_depend>qtbase5-dev</build_depend>
   <build_depend>rostest</build_depend>
+  <build_depend>ontologenius</build_depend>
 
   <run_depend>message_runtime</run_depend>
   <run_depend>diagnostic_msgs</run_depend>
@@ -30,6 +31,7 @@
   <run_depend>roscpp</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>pluginlib</run_depend>
+  <run_depend>ontologenius</run_depend>
 
   <!--export>
     <ontologenius plugin="${prefix}/reasoners_plugins.xml" />

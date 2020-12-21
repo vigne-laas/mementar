@@ -9,7 +9,11 @@ namespace mementar {
 class SoftPoint
 {
 public:
-  SoftPoint(size_t t_start, std::experimental::optional<size_t> t_end = std::experimental::nullopt)
+  typedef size_t Ttime;
+  static Ttime default_time;
+  //typedef float Ttime;
+
+  SoftPoint(Ttime t_start, std::experimental::optional<Ttime> t_end = std::experimental::nullopt)
   {
     t_start_ = t_start;
     t_end_ = t_end;
@@ -23,15 +27,21 @@ public:
     t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
   }
 
-  bool isInstantaneous() { return t_end_ == std::experimental::nullopt; }
-  size_t getTime() { return t_; }
-  size_t getTimeStart() { return t_start_; }
-  size_t getTimeEnd() { return t_end_.value_or(t_start_); }
-  size_t getTransitionDuration() { return t_end_.value_or(t_start_) - t_start_; }
+  SoftPoint(const SoftPoint* other)
+  {
+    t_start_ = other->t_start_;
+    t_end_ = other->t_end_;
+    t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
+  }
 
-  std::string toString() { return "[" + std::to_string(t_start_) + std::string(t_end_ ? "," + std::to_string(t_end_.value()) : "") + "]"; }
+  bool isInstantaneous() const { return t_end_ == std::experimental::nullopt; }
+  Ttime getTime() const { return t_; }
+  Ttime getTimeStart() const { return t_start_; }
+  Ttime getTimeEnd() const { return t_end_.value_or(t_start_); }
+  Ttime getTransitionDuration() const { return t_end_.value_or(t_start_) - t_start_; }
 
-  typedef size_t Ttime;
+  std::string toString() const { return "[" + std::to_string(t_start_) + std::string(t_end_ ? "," + std::to_string(t_end_.value()) : "") + "]"; }
+
 
 protected:
   Ttime t_start_;

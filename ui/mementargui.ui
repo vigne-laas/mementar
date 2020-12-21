@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mementarGUI</class>
+ <widget class="QMainWindow" name="mementarGUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>680</width>
+    <height>680</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>mementarGUI</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+
+    <!-- BEGIN TABS -->
+    <item>
+     <widget class="QTabWidget" name="static_tab_widget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+
+      <!-- BEGIN OF ACTION TAB -->
+      <widget class="QWidget" name="ActionTab">
+       <attribute name="title">
+        <string>Action</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="action_tab_layout">
+
+        <item>
+         <layout class="QHBoxLayout" name="action_parameter_layout">
+          <item>
+           <widget class="QLabel" name="action_parameter_label">
+            <property name="text">
+             <string>Parameter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEditExtended" name="action_parameter_editline">
+             <property name="whatsThis">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Enter your parameters here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="action_functions_layer1_layout">
+          <item>
+           <widget class="QPushButtonExtended" name="action_exist_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;exist&lt;/span&gt; allows you to test whether the action provided in parameter exists in this timeline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>exist</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="action_getPending_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getPending&lt;/span&gt; will give you all the pending actions (i.e. started but not yet finished)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getPending</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="action_isPending_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;isPending&lt;/span&gt; allows you to test whether the action provided in parameter is pending (i.e. started but not yet finished)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>isPending</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="action_functions_layer2_layout">
+          <item>
+           <widget class="QPushButtonExtended" name="action_getStartStamp_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getStartStamp&lt;/span&gt; returns the timestamp of the start of the action provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getStartStamp</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="action_getEndStamp_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getEndStamp&lt;/span&gt; returns the timestamp of the end of the action provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getEndStamp</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="action_getDuration_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getDuration&lt;/span&gt; returns the duraction of the action provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getDuration</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="action_functions_layer3_layout">
+          <item>
+           <widget class="QPushButtonExtended" name="action_getStartFact_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getStartFact&lt;/span&gt; returns the identifier of the fact representing the start of the action provided as a parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getStartFact</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="action_getEndFact_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getEndFact&lt;/span&gt; returns the identifier of the fact representing the end of the action provided as a parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getEndFact</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="action_getFactsDuring_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getFactsDuring&lt;/span&gt; returns the identifiers of all the facts that took place during the execution of the action provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getFactsDuring</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <widget class="QTextEdit" name="action_description_textedit">
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+      <!-- END OF ACTION TAB -->
+
+      <!-- BEGIN OF FACT TAB -->
+      <widget class="QWidget" name="FactTab">
+       <attribute name="title">
+        <string>Fact</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="fact_tab_layout">
+
+        <item>
+         <layout class="QHBoxLayout" name="fact_parameter_layout">
+          <item>
+           <widget class="QLabel" name="fact_parameter_label">
+            <property name="text">
+             <string>Parameter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEditExtended" name="fact_parameter_editline">
+             <property name="whatsThis">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Enter your parameters here.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="fact_functions_layer1_layout">
+          <item>
+           <widget class="QPushButtonExtended" name="fact_exist_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;exist&lt;/span&gt; allows you to test whether the fact (fact id) provided in parameter exists in this timeline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>exist</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="fact_getData_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getData&lt;/span&gt; returns the fact as a triplet for the fact (fact id) provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getData</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="fact_getStamp_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getStamp&lt;/span&gt; returns the timestamp for the fact (fact id) provided in parameter&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getStamp</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="fact_functions_layer2_layout">
+          <item>
+           <widget class="QPushButtonExtended" name="fact_isActionPart_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;isActionPart&lt;/span&gt; allows you to test whether the fact (fact id) provided in parameter is part of an action.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>isActionPart</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButtonExtended" name="fact_getActionPart_button">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;getActionPart&lt;/span&gt; returns the action to which the fact (fact id) provided in parameter refers&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>getActionPart</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+         <widget class="QTextEdit" name="fact_description_textedit">
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
+         </widget>
+        </item>
+
+       </layout>
+      </widget>
+      <!-- END OF FACT TAB -->
+
+      <!-- BEGIN OF FEEDER TAB -->
+      <widget class="QWidget" name="FeederTab">
+       <attribute name="title">
+        <string>Feeder</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="feeder_tab_layout">
+        <item>
+         <layout class="QVBoxLayout" name="feeder_left_part_layout">
+           <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_feeder_subject">
+
+               <item >
+                <widget class="QLabel" name="label_feeder_subject">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Subject / Action : </string>
+                 </property>
+                </widget>
+               </item>
+
+               <item>
+                <widget class="QLineEdit" name="feeder_subject_editline">
+                 </widget>
+               </item>
+
+             </layout>
+           </item>
+
+           <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_feeder_property">
+
+               <item >
+                <widget class="QLabel" name="label_feeder_property">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Property : </string>
+                 </property>
+                </widget>
+               </item>
+
+               <item>
+                <widget class="QLineEdit" name="feeder_property_editline">
+                 </widget>
+               </item>
+
+             </layout>
+           </item>
+
+           <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_feeder_object">
+
+               <item >
+                <widget class="QLabel" name="label_feeder_object">
+                  <property name="minimumSize">
+                   <size>
+                    <width>130</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>130</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Object : </string>
+                 </property>
+                </widget>
+               </item>
+
+               <item>
+                <widget class="QLineEdit" name="feeder_object_editline">
+                 </widget>
+               </item>
+
+             </layout>
+           </item>
+
+           <item>
+            <widget class="QPushButtonExtended" name="feeder_add_start_button">
+             <property name="text">
+              <string>ADD / START</string>
+             </property>
+            </widget>
+           </item>
+
+           <item>
+            <widget class="QPushButtonExtended" name="feeder_remove_end_button">
+             <property name="text">
+              <string>REMOVE / END</string>
+             </property>
+            </widget>
+           </item>
+
+           <item>
+            <widget class="Line" name="line4">
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+
+           <item>
+            <widget class="QLineEdit" name="feeder_commit_name_editline">
+             </widget>
+           </item>
+
+           <item>
+            <widget class="QPushButtonExtended" name="feeder_commit_button">
+             <property name="text">
+              <string>Commit</string>
+             </property>
+            </widget>
+           </item>
+
+           <item>
+            <widget class="QPushButtonExtended" name="feeder_checkout_button">
+             <property name="text">
+              <string>Checkout</string>
+             </property>
+            </widget>
+           </item>
+
+         </layout>
+        </item>
+
+        <item>
+         <widget class="QTextEdit" name="feeder_info_edittext">
+          <property name="maximumSize">
+           <size>
+            <width>350</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="cursorWidth">
+           <number>1</number>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <!-- END OF FEEDER TAB -->
+
+      <!-- BEGIN OF MANAGER TAB -->
+      <widget class="QWidget" name="ManagerTab">
+       <attribute name="title">
+        <string>Manager</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="manager_tab_layout">
+        <item>
+         <layout class="QVBoxLayout" name="manager_left_part_layout">
+
+          <item >
+           <widget class="QLabel" name="label_manager_header">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>This second can only be used with the "mementar_multi" executable</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+
+         <item>
+          <widget class="QPushButtonExtended" name="manager_add_instance_button">
+           <property name="text">
+            <string>ADD(name) / COPY(dest=src)</string>
+           </property>
+          </widget>
+         </item>
+
+         <item>
+          <widget class="QPushButtonExtended" name="manager_delete_instance_button">
+           <property name="text">
+            <string>DELETE(name)</string>
+           </property>
+          </widget>
+         </item>
+
+          <item>
+           <widget class="QLineEdit" name="manager_instance_name_editline">
+            </widget>
+          </item>
+
+          <item >
+           <widget class="QLabel" name="label_manager_spacer_0">
+           </widget>
+          </item>
+
+           <item>
+            <widget class="Line" name="manager_delimiter_0">
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="lineWidth">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+
+           <item >
+            <widget class="QLabel" name="label_manager_spacer_1">
+            </widget>
+           </item>
+
+           <item>
+             <layout class="QHBoxLayout" name="manager_save_layout">
+
+               <item>
+                 <widget class="QPushButtonExtended" name="manager_save_button">
+                   <property name="geometry">
+                    <rect>
+                     <width>20</width>
+                     <height>20</height>
+                    </rect>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <activeon>:/darkstyle/icon_save.png</activeon>
+                    </iconset>
+                   </property>
+                  </widget>
+               </item>
+
+               <item>
+                <widget class="QLineEdit" name="manager_save_path_editline">
+                 </widget>
+               </item>
+
+             </layout>
+           </item>
+
+           <item>
+             <layout class="QHBoxLayout" name="manager_draw_layout">
+
+               <item>
+                 <widget class="QPushButtonExtended" name="manager_draw_button">
+                   <property name="geometry">
+                    <rect>
+                     <width>20</width>
+                     <height>20</height>
+                    </rect>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <activeon>:/darkstyle/icon_draw.png</activeon>
+                    </iconset>
+                   </property>
+                  </widget>
+               </item>
+
+               <item>
+                <widget class="QLineEdit" name="manager_draw_path_editline">
+                 </widget>
+               </item>
+
+             </layout>
+           </item>
+
+          <item>
+            <widget class="QPushButtonExtended" name="manager_refresh_button">
+              <property name="geometry">
+               <rect>
+                <width>20</width>
+                <height>20</height>
+               </rect>
+              </property>
+              <property name="icon">
+               <iconset>
+                <activeon>:/darkstyle/icon_refresh.png</activeon>
+               </iconset>
+              </property>
+             </widget>
+          </item>
+
+         </layout>
+        </item>
+
+        <item>
+         <widget class="QTextEdit" name="manager_instances_list_edittext">
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="cursorWidth">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <!-- END OF MANAGER TAB -->
+
+     </widget>
+    </item>
+    <!-- END TABS -->
+
+    <!-- BEGIN OF BOTTOM STATIC CONTENT -->
+    <item>
+     <layout class="QHBoxLayout" name="static_layout">
+      <item>
+       <layout class="QVBoxLayout" name="static_left_part_layout">
+
+        <item>
+         <widget class="QTextEdit" name="static_info_area">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>200</width>
+            <height>200</height>
+           </size>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="html">
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+                    &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+                    p, li { white-space: pre-wrap; }
+                    &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Noto Sans'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+                    &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+
+        <item>
+         <layout class="QHBoxLayout" name="static_instance_name_layout">
+          <item>
+           <widget class="QLabel" name="label_static_instance_name">
+            <property name="text">
+             <string>Name</string>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="static_instance_name_editline">
+             <property name="maximumSize">
+              <size>
+               <width>145</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+          </item>
+         </layout>
+        </item>
+
+        <item>
+          <layout class="QHBoxLayout" name="static_time_source_layout">
+            <item>
+              <widget class="QComboBox" name="static_time_source_combobox" >
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <item>
+                  <property name="text" >
+                    <string>Ros</string>
+                  </property>
+                </item>
+                <item>
+                  <property name="text" >
+                    <string>Epoch</string>
+                  </property>
+                </item>
+                <item>
+                  <property name="text" >
+                    <string>Manual</string>
+                  </property>
+                </item>
+              </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="static_current_time_editline">
+               <property name="maximumSize">
+                <size>
+                 <width>145</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+            </item>
+          </layout>
+        </item>
+
+       </layout>
+      </item>
+
+      <item>
+       <widget class="Line" name="static_vertical_delimiter">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+
+      <item>
+       <widget class="QTextEdit" name="static_result_editext">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>260</height>
+         </size>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+
+     </layout>
+    </item>
+    <!-- END OF BOTTOM STATIC CONTENT -->
+
+   </layout>
+  </widget>
+
+ </widget>
+
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QPushButtonExtended</class>
+   <extends>QPushButton</extends>
+   <header>include/mementar/graphical/mementarGUI/QPushButtonExtended.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QCheckBoxExtended</class>
+   <extends>QCheckBox</extends>
+   <header>include/mementar/graphical/mementarGUI/QCheckBoxExtended.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QLineEditExtended</class>
+   <extends>QLineEdit</extends>
+   <header>include/mementar/graphical/mementarGUI/QLineEditExtended.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

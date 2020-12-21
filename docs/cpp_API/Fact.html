@@ -1,0 +1,177 @@
+<html lang="en_US">
+
+<head>
+  <title>Fact Class | Mementar 0.0.3</title>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <link href="../style/mementar_api.css" rel="stylesheet" type="text/css">
+  <link href="../img/logo/favicon.ico" rel="shortcut icon">
+  <link href="../img/logo/favicon-32x32.png" rel="icon" type="image/png">
+  <link href="../img/logo/favicon-16x16.png" rel="icon" type="image/png">
+</head>
+
+<body>
+  <div class="header" id="header">
+    <header class="fixed" id="navbar">
+      <div class="container">
+          <div class="navbar-header">
+            <div id="header-buttons">
+                <ul id="header-ul" data-event="hover_intent" data-effect="fade" data-effect-speed="500">
+                    <li class="header-item"><a class="header-link" href="https://github.com/sarthou/mementar/wiki" tabindex="0">Wiki</a></li>
+                    <li class="header-item"><a class="header-link" href="https://github.com/sarthou/mementar" tabindex="0"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/1200px-Octicons-mark-github.svg.png" alt="github" width="40px" height="40px"/></a></li>
+                </ul>
+            </div>
+            <a class="navbar-icon" href="../index.html">
+              <img src="../img/logo/mementar.png " alt="mementar" width="65px" height="65px"/>
+            </a>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <div class="main">
+
+    <div class="navigationbar">
+      <ul class="sub-navigation">
+        <li><a href="https://github.com/sarthou/mementar/tree/master/src/API">C++ API sources</a></li>
+        <li><a href="https://github.com/sarthou/mementar/tree/master/include/mementar/API">C++ API headers</a></li>
+        <li><a href="https://gitlab.com/sarthou/mementar/pipelines">Pipelines</a></li>
+      </ul>
+      <h1>Mementar API Documentation</h1>
+      <h2>Mementar 0.0.3</h2>
+    </div>
+
+    <div class="content">
+      <div class="sidebar" style="transition: all 0.2s ease-out 0s; top: -588px;">
+        <div class="contents class-content">
+          <div id="contents-toggle" class=""></div>
+          <h3>Contents</h3>
+          <ul style="display: block;">
+            <li class="level1"><a href="#public-functions">Public Functions</a></li>
+            <li class="level1"><a href="#details">Detailed Description</a></li>
+          </ul>
+        </div>
+
+        <div class="contents">
+          <div id="contents-toggle" class=""></div>
+          <h3>Getting Start</h3>
+          <ul style="display: block;">
+            <li class="level1"><a href="../Download.html">Download</a></li>
+            <li class="level1"><a href="../InstallMementar.html">Install Mementar</a></li>
+            <li class="level1"><a href="../SetUp.html">Set Up Your Environnement</a></li>
+            <li class="level1"><a href="../Tutorials.html">Tutorials</a></li>
+          </ul>
+        </div>
+
+        <div class="contents">
+          <div id="contents-toggle" class=""></div>
+          <h3><a href="CppAPI.html">All C++ Classes</a></h3>
+          <ul style="display: block;">
+            <li class="level1"><a href="ClientBase.html">ClientBase</a></li>
+            <li class="level1"><a href="Fact.html"><b>Fact</b></a></li>
+            <li class="level1"><a href="ManagerClient.html">ManagerClient</a></li>
+            <li class="level1"><a href="OccasionsPublisher.html">OccasionsPublisher</a></li>
+            <li class="level1"><a href="OccasionsSubscriber.html">OccasionsSubscriber</a></li>
+            <li class="level1"><a href="TimelineManipulator.html">TimelineManipulator</a></li>
+            <li class="level1"><a href="TimelinesManipulator.html">TimelinesManipulator</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="context">
+        <h1 class="title">Fact Class</h1>
+        <p>The Fact class provides a way to represent facts in mementar. <a href="#details">More...</a></p>
+        <div class="table">
+          <table class="alignedsummary">
+            <tbody>
+              <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &quot;mementar/API/Fact.h&quot;</span>
+            </tbody>
+          </table>
+        </div>
+
+        <a name="public-functions"></a>
+        <h2 id="public-functions">Public Functions</h2>
+        <div class="table">
+          <table class="alignedsummary">
+            <tbody>
+              <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#Fact">Fact</a></b>(const std::string&amp; <i>fact</i>)</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#Fact2">Fact</a></b>(const std::string&amp; <i>subject</i>, const std::string&amp; <i>predicat</i>, const std::string&amp; <i>object</i>)</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> std::string </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#subject_get">subject</a></b>()</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> std::string </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#predicat_get">predicat</a></b>()</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> std::string </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#object_get">object</a></b>()</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> std::string </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#operator_get">operator()</a></b>()</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#subject_set">subject</a></b>(const std::string&amp; <i>subject</i>)</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#predicat_set">predicat</a></b>(const std::string&amp; <i>predicat</i>)</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#object_set">object</a></b>(const std::string&amp; <i>object</i>)</td></tr>
+              <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="Fact.html#operator_set">operator()</a></b>(const std::string&amp; <i>fact</i>)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <a name="details"></a>
+        <div class="descr">
+          <h2 id="details">Detailed Description</h2>
+          <p>The Fact class provides a way to represent facts in mementar.</p>
+          <p>Mementar formats the data representing an fact to be able to communicate them at the level of ROS messages. The Fact class makes it possible to make the link between this formatted representation and the representation in the form of a triplet.</p>
+          <p>In mementar, a fact is a datum that is not linked to a temporal stamp. When a fact occurs at a moment t, it is
+            called an occasion. An occasion is a particular time or instance of an event. An event occurs on a time interval.
+            It is thus composed of two occasions, one being the beginning of the event and the other the end. An event is
+            therefore a change of state of a fact, so that two facts have the same subject and the same predicate, but the
+            object changes.</p>
+        </div>
+
+        <div class="func">
+          <h2>Public Functions Documentation</h2>
+
+          <h3 class="fn" id="Fact"><a name="Fact"></a>mementar::Fact::<span class="name">Fact</span>(const <span class="type">std::string</span>&amp; <i>fact</i>)</h3>
+          <p>Constructs a new fact from the formatted parameter <i>fact</i>.</p>
+          <p>In its formatted form, an fact is written as follows: subject|predicat|object</p>
+
+          <h3 class="fn" id="Fact2"><a name="Fact2"></a>mementar::Fact::<span class="name">Fact</span>(const <span class="type">std::string</span>&amp; <i>subject</i>, const <span class="type">std::string</span>&amp; <i>predicat</i>, const <span class="type">std::string</span>&amp; <i>object</i>)</h3>
+          <p>Constructs a new fact from the triplet defined by the parameters <i>subject</i>, <i>predicat</i> and <i>object</i>.</p>
+
+          <h3 class="fn" id="subject_get"><a name="subject_get"></a><span class="type">std::string</span> mementar::Fact::<span class="name">subject</span>()</h3>
+          <p>Return the subject of the fact.</p>
+
+          <h3 class="fn" id="predicat_get"><a name="predicat_get"></a><span class="type">std::string</span> mementar::Fact::<span class="name">predicat</span>()</h3>
+          <p>Return the predicat of the fact.</p>
+
+          <h3 class="fn" id="object_get"><a name="object_get"></a><span class="type">std::string</span> mementar::Fact::<span class="name">object</span>()</h3>
+          <p>Return the object of the fact.</p>
+
+          <h3 class="fn" id="operator_get"><a name="operator_get"></a><span class="type">std::string</span> mementar::Fact::<span class="name">operator()</span>()</h3>
+          <p>Return the fact in its formatted form.</p>
+          <p>In its formatted form, an fact is written as follows: subject|predicat|object</p>
+
+          <h3 class="fn" id="subject_set"><a name="subject_set"></a><span class="type">void</span> mementar::Fact::<span class="name">subject</span>(const <span class="type">std::string</span>&amp; <i>subject</i>)</h3>
+          <p>Set the subject of the fact.</p>
+
+          <h3 class="fn" id="predicat_set"><a name="predicat_set"></a><span class="type">void</span> mementar::Fact::<span class="name">predicat</span>(const <span class="type">std::string</span>&amp; <i>predicat</i>)</h3>
+          <p>Set the predicat of the fact.</p>
+
+          <h3 class="fn" id="object_set"><a name="object_set"></a><span class="type">void</span> mementar::Fact::<span class="name">object</span>(const <span class="type">std::string</span>&amp; <i>object</i>)</h3>
+          <p>Set the object of the fact.</p>
+
+          <h3 class="fn" id="operator_set"><a name="operator_set"></a><span class="type">void</span> mementar::Fact::<span class="name">operator()</span>(const <span class="type">std::string</span>&amp; <i>fact</i>)</h3>
+          <p>Set the fact using its formatted form.</p>
+          <p>In its formatted form, an fact is written as follows: subject|predicat|object</p>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+<footer>
+  <div align="center">
+    <p>
+      Brought to you by:
+      <a class="laas_logo" href="https://www.laas.fr/public/">
+        <img src="../img/LogoLAAS-2016_BW.png " alt="LAAS-CNRS" height="60px"/>
+      </a>
+    </p>
+  </div>
+</footer>
+
+</html>
