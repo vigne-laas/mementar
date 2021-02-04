@@ -23,7 +23,7 @@ bool TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
     return false;
 
   size_t start = timeline->facts.getTimeline()->getFirst()->getKey();
-  size_t end = timeline->facts.getTimeline()->getLast()->getKey();
+  size_t end = timeline->facts.getTimeline()->getLast()->getKey() + 2;
   size_t width = (actions_reader_.max_level_ + 1) * SIDE_SPACE + actions_reader_.max_text_size_ + MARGIN * 3 + SIDE_SPACE + facts_reader_.max_text_size_;
   size_t height = (end - start) * UNIT_SPACE + MARGIN * 2;
 
@@ -37,7 +37,7 @@ bool TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
 
   std::cout << "---ACTIONS----" << std::endl;
   for(auto act : actions_reader_.actions_)
-    drawAction(act.second, line_pose, actions_reader_.max_level_, start, &font);
+    drawAction(act.second, line_pose, actions_reader_.max_level_, start, end, &font);
 
   std::cout << "---FACTS----" << std::endl;
   for(auto evt : facts_reader_.facts)
@@ -79,17 +79,44 @@ void TimelineDrawer::drawVector(size_t start, size_t end, size_t pose, CvFont* f
   }
 }
 
-void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time, CvFont* font)
+void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time, size_t end_time, CvFont* font)
 {
   size_t x_end_pose = line_pose;
   size_t x_mid_pose = x_end_pose - action.level * SIDE_SPACE;
   size_t x_start_pose = x_end_pose - (max_level + 1) * SIDE_SPACE;
 
   size_t y_start_pose = MARGIN + (action.start.getTime() - start_time) * UNIT_SPACE;
-  size_t y_end_pose = MARGIN + (action.end.value().getTime() - start_time) * UNIT_SPACE;
+  size_t y_end_pose = MARGIN + (end_time - start_time) * UNIT_SPACE;
+  if(action.end != std::experimental::nullopt)
+    y_end_pose = MARGIN + (action.end.value().getTime() - start_time) * UNIT_SPACE;
   size_t y_mid_pose = y_start_pose + EDGE_RADIUS;
 
-  if(action.start.getTime() != action.end.value().getTime())
+  if(action.end == std::experimental::nullopt)
+  {
+    cvLine(image_, cvPoint(x_end_pose, y_start_pose),
+                      cvPoint(x_mid_pose + EDGE_RADIUS, y_start_pose),
+                      cvScalar(32, 20, 122), 4);
+
+    cvLine(image_, cvPoint(x_mid_pose, y_start_pose + EDGE_RADIUS),
+                      cvPoint(x_mid_pose, y_end_pose),
+                      cvScalar(32, 20, 122), 4);
+
+    size_t dot_size = UNIT_SPACE/4;
+    cvLine(image_, cvPoint(x_mid_pose, y_end_pose - dot_size*4),
+                      cvPoint(x_mid_pose, y_end_pose - dot_size*3),
+                      cvScalar(255, 255, 255), 4, CV_AA);
+
+    cvLine(image_, cvPoint(x_mid_pose, y_end_pose - dot_size*2),
+                      cvPoint(x_mid_pose, y_end_pose - dot_size),
+                      cvScalar(255, 255, 255), 4, CV_AA);
+
+    drawElipseStart(x_mid_pose, y_start_pose);
+
+    cvLine(image_, cvPoint(x_start_pose, y_mid_pose),
+                      cvPoint(x_mid_pose, y_mid_pose),
+                      cvScalar(32, 20, 122), 4);
+  }
+  else if(action.start.getTime() != action.end.value().getTime())
   {
     cvLine(image_, cvPoint(x_end_pose, y_end_pose),
                        cvPoint(x_mid_pose + EDGE_RADIUS, y_end_pose),
@@ -132,15 +159,16 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
                    cvScalar(114,102,204), 8);
   }
 
-  if(action.end.value().isInstantaneous() == false)
-  {
-    size_t y_soft_start_pose = MARGIN + (action.end.value().getTimeStart() - start_time) * UNIT_SPACE;
-    size_t y_soft_end_pose = MARGIN + (action.end.value().getTimeEnd() - start_time) * UNIT_SPACE;
+  if(action.end != std::experimental::nullopt)
+    if(action.end.value().isInstantaneous() == false)
+    {
+      size_t y_soft_start_pose = MARGIN + (action.end.value().getTimeStart() - start_time) * UNIT_SPACE;
+      size_t y_soft_end_pose = MARGIN + (action.end.value().getTimeEnd() - start_time) * UNIT_SPACE;
 
-    cvLine(image_, cvPoint(line_pose - 4, y_soft_start_pose),
-                   cvPoint(line_pose - 4, y_soft_end_pose),
-                   cvScalar(114,102,204), 8);
-  }
+      cvLine(image_, cvPoint(line_pose - 4, y_soft_start_pose),
+                     cvPoint(line_pose - 4, y_soft_end_pose),
+                     cvScalar(114,102,204), 8);
+    }
 
   cvPutText(image_, action.name.c_str(), cvPoint(x_start_pose - getTextSize(action.name, font) - 2, y_mid_pose), font,
          cvScalar(32, 20, 122));

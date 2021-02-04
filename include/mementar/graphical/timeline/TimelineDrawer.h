@@ -21,7 +21,7 @@ private:
   IplImage* image_;
 
   void drawVector(size_t start, size_t end, size_t pose, CvFont* font);
-  void drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time, CvFont* font);
+  void drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time, size_t end_time, CvFont* font);
   void drawEvent(const fact_t& event, size_t line_pose, size_t start_time, CvFont* font);
 
   size_t getTextSize(const std::string& txt, CvFont* font);
