@@ -78,14 +78,14 @@ void ActionReader::setLevels()
         {
           if(action != action2)
           {
-            if((action->getStartFact()->getTime() < action2->getStartFact()->getTime()) || (action->getEndFact()->getTime() > action2->getStartFact()->getTime()))
+            if((action->getStartFact()->getTime() < action2->getStartFact()->getTime()) && (action->getEndFact()->getTime() > action2->getStartFact()->getTime()))
             {
               include_other = true;
               break;
             }
             else if(action2->isPending() == false)
             {
-              if((action->getStartFact()->getTime() < action2->getEndFact()->getTime()) || (action->getEndFact()->getTime() > action2->getEndFact()->getTime()))
+              if((action->getStartFact()->getTime() < action2->getEndFact()->getTime()) && (action->getEndFact()->getTime() > action2->getEndFact()->getTime()))
               {
                 include_other = true;
                 break;
@@ -113,7 +113,12 @@ void ActionReader::setLevels()
       bool is_candidate = true;
       for(auto action2 : actions_at_level)
       {
-        if((action->getStartFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || action2->isPending() || (action->getStartFact()->getTime() <= action2->getEndFact()->getTime())))
+        if(action2->isPending())
+        {
+          is_candidate = false;
+          break;
+        }
+        if((action->getStartFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || (action->getStartFact()->getTime() <= action2->getEndFact()->getTime())))
         {
           is_candidate = false;
           break;
@@ -126,7 +131,12 @@ void ActionReader::setLevels()
             break;
           }
         }
-        else if((action->getEndFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || action2->isPending() || (action->getEndFact()->getTime() <= action2->getEndFact()->getTime())))
+        else if((action->getEndFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || (action->getEndFact()->getTime() <= action2->getEndFact()->getTime())))
+        {
+          is_candidate = false;
+          break;
+        }
+        else if((action->getStartFact()->getTime() <= action2->getStartFact()->getTime()) && (action->isPending() || (action->getEndFact()->getTime() >= action2->getEndFact()->getTime())))
         {
           is_candidate = false;
           break;

@@ -115,11 +115,11 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
     size_t dot_size = UNIT_SPACE/4;
     cvLine(image_, cvPoint(x_mid_pose, y_end_pose - dot_size*4),
                       cvPoint(x_mid_pose, y_end_pose - dot_size*3),
-                      color, 4, CV_AA);
+                      cvScalar(255,255,255), 4, CV_AA);
 
     cvLine(image_, cvPoint(x_mid_pose, y_end_pose - dot_size*2),
                       cvPoint(x_mid_pose, y_end_pose - dot_size),
-                      color, 4, CV_AA);
+                      cvScalar(255,255,255), 4, CV_AA);
 
     drawElipseStart(x_mid_pose, y_start_pose, color);
 
