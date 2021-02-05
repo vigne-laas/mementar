@@ -25,8 +25,10 @@ private:
   void drawEvent(const fact_t& event, size_t line_pose, size_t start_time, CvFont* font);
 
   size_t getTextSize(const std::string& txt, CvFont* font);
-  void drawElipseStart(size_t x, size_t y);
-  void drawElipseEnd(size_t x, size_t y);
+  void drawElipseStart(size_t x, size_t y, CvScalar color);
+  void drawElipseEnd(size_t x, size_t y, CvScalar color);
+
+  CvScalar ScalarHSV2BGR(float H, float S, float V);;
 };
 
 } // namespace mementar

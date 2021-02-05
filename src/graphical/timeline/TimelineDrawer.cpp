@@ -91,62 +91,67 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
     y_end_pose = MARGIN + (action.end.value().getTime() - start_time) * UNIT_SPACE;
   size_t y_mid_pose = y_start_pose + EDGE_RADIUS;
 
+  // BGR base is 122, 20, 32
+  float base_V = 47.8;
+  float step = (100 - base_V) / (max_level - 1);
+  auto color = ScalarHSV2BGR(353/360*255, 83.6/100*255, (base_V + (step * (action.level - 1)))/100*255);
+
   if(action.end == std::experimental::nullopt)
   {
     cvLine(image_, cvPoint(x_end_pose, y_start_pose),
                       cvPoint(x_mid_pose + EDGE_RADIUS, y_start_pose),
-                      cvScalar(32, 20, 122), 4);
+                      color, 4);
 
     cvLine(image_, cvPoint(x_mid_pose, y_start_pose + EDGE_RADIUS),
                       cvPoint(x_mid_pose, y_end_pose),
-                      cvScalar(32, 20, 122), 4);
+                      color, 4);
 
     size_t dot_size = UNIT_SPACE/4;
     cvLine(image_, cvPoint(x_mid_pose, y_end_pose - dot_size*4),
                       cvPoint(x_mid_pose, y_end_pose - dot_size*3),
-                      cvScalar(255, 255, 255), 4, CV_AA);
+                      color, 4, CV_AA);
 
     cvLine(image_, cvPoint(x_mid_pose, y_end_pose - dot_size*2),
                       cvPoint(x_mid_pose, y_end_pose - dot_size),
-                      cvScalar(255, 255, 255), 4, CV_AA);
+                      color, 4, CV_AA);
 
-    drawElipseStart(x_mid_pose, y_start_pose);
+    drawElipseStart(x_mid_pose, y_start_pose, color);
 
     cvLine(image_, cvPoint(x_start_pose, y_mid_pose),
                       cvPoint(x_mid_pose, y_mid_pose),
-                      cvScalar(32, 20, 122), 4);
+                      color, 4);
   }
   else if(action.start.getTime() != action.end.value().getTime())
   {
     cvLine(image_, cvPoint(x_end_pose, y_end_pose),
                        cvPoint(x_mid_pose + EDGE_RADIUS, y_end_pose),
-                       cvScalar(32, 20, 122), 4);
+                       color, 4);
 
     cvLine(image_, cvPoint(x_end_pose, y_start_pose),
                       cvPoint(x_mid_pose + EDGE_RADIUS, y_start_pose),
-                      cvScalar(32, 20, 122), 4);
+                      color, 4);
 
     cvLine(image_, cvPoint(x_mid_pose, y_start_pose + EDGE_RADIUS),
                       cvPoint(x_mid_pose, y_end_pose - EDGE_RADIUS),
-                      cvScalar(32, 20, 122), 4);
+                      color, 4);
 
-    drawElipseStart(x_mid_pose, y_start_pose);
-    drawElipseEnd(x_mid_pose, y_end_pose);
+    drawElipseStart(x_mid_pose, y_start_pose, color);
+    drawElipseEnd(x_mid_pose, y_end_pose, color);
 
     cvLine(image_, cvPoint(x_start_pose, y_mid_pose),
                       cvPoint(x_mid_pose, y_mid_pose),
-                      cvScalar(32, 20, 122), 4);
+                      color, 4);
   }
   else
   {
     cvLine(image_, cvPoint(x_end_pose, y_end_pose),
                        cvPoint(x_mid_pose, y_end_pose),
-                       cvScalar(32, 20, 122), 4);
+                       color, 4);
 
     y_mid_pose = y_start_pose;
      cvLine(image_, cvPoint(x_start_pose, y_mid_pose),
                        cvPoint(x_mid_pose, y_mid_pose),
-                       cvScalar(32, 20, 122), 4);
+                       color, 4);
   }
 
   if(action.start.isInstantaneous() == false)
@@ -170,8 +175,7 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
                      cvScalar(114,102,204), 8);
     }
 
-  cvPutText(image_, action.name.c_str(), cvPoint(x_start_pose - getTextSize(action.name, font) - 2, y_mid_pose), font,
-         cvScalar(32, 20, 122));
+  cvPutText(image_, action.name.c_str(), cvPoint(x_start_pose - getTextSize(action.name, font) - 2, y_mid_pose), font, color);
 }
 
 void TimelineDrawer::drawEvent(const fact_t& event, size_t line_pose, size_t start_time, CvFont* font)
@@ -208,14 +212,22 @@ size_t TimelineDrawer::getTextSize(const std::string& txt, CvFont* font)
   return size.width;
 }
 
-void TimelineDrawer::drawElipseStart(size_t x, size_t y)
+void TimelineDrawer::drawElipseStart(size_t x, size_t y, CvScalar color)
 {
-  cvEllipse(image_, cvPoint(x+EDGE_RADIUS,y+EDGE_RADIUS), cvSize(EDGE_RADIUS, EDGE_RADIUS), 180, 0, 90, cvScalar(32, 20, 122), 4);
+  cvEllipse(image_, cvPoint(x+EDGE_RADIUS,y+EDGE_RADIUS), cvSize(EDGE_RADIUS, EDGE_RADIUS), 180, 0, 90, color, 4);
 }
 
-void TimelineDrawer::drawElipseEnd(size_t x, size_t y)
+void TimelineDrawer::drawElipseEnd(size_t x, size_t y, CvScalar color)
 {
-  cvEllipse(image_, cvPoint(x+EDGE_RADIUS,y-EDGE_RADIUS), cvSize(EDGE_RADIUS, EDGE_RADIUS), 90, 0, 90, cvScalar(32, 20, 122), 4);
+  cvEllipse(image_, cvPoint(x+EDGE_RADIUS,y-EDGE_RADIUS), cvSize(EDGE_RADIUS, EDGE_RADIUS), 90, 0, 90, color, 4);
+}
+
+CvScalar TimelineDrawer::ScalarHSV2BGR(float H, float S, float V)
+{
+  cv::Mat rgb;
+  cv::Mat hsv(1,1, CV_8UC3, cv::Scalar(H,S,V));
+  cvtColor(hsv, rgb, CV_HSV2BGR);
+  return cvScalar(rgb.data[0], rgb.data[1], rgb.data[2]);
 }
 
 } // namespace mementar
