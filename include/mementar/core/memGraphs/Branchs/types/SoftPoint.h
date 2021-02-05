@@ -9,7 +9,7 @@ namespace mementar {
 class SoftPoint
 {
 public:
-  typedef size_t Ttime;
+  typedef float Ttime;
   static Ttime default_time;
   //typedef float Ttime;
 

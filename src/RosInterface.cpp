@@ -128,6 +128,16 @@ void RosInterface::release()
 *
 ****************/
 
+float rosTime2Float(float s, int ns)
+{
+  ns = ns / 100000000;
+  float res = ns/10.f;
+  if(res <= 0.25) return s + 0.25;
+  else if(res <= 0.5) return s + 0.5;
+  else if(res <= 0.75) return s+ 0.75;
+  else return s + 1.;
+}
+
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
   feeder_.storeFact(msg->data, time(0));
@@ -135,7 +145,7 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  feeder_.storeFact(msg->data, msg->stamp.sec);
+  feeder_.storeFact(msg->data, rosTime2Float(msg->stamp.sec, msg->stamp.nsec));
 }
 
 void RosInterface::explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
@@ -146,13 +156,13 @@ void RosInterface::explanationKnowledgeCallback(const MementarExplanation::Const
 void RosInterface::actionKnowledgeCallback(const MementarAction::ConstPtr& msg)
 {
   feeder_.storeAction(msg->name,
-                      (msg->start_stamp.sec != 0) ? msg->start_stamp.sec : SoftPoint::default_time,
-                      (msg->end_stamp.sec != 0) ? msg->end_stamp.sec : SoftPoint::default_time);
+                      (msg->start_stamp.sec != 0) ? rosTime2Float(msg->start_stamp.sec, msg->start_stamp.nsec) : SoftPoint::default_time,
+                      (msg->end_stamp.sec != 0) ? rosTime2Float(msg->end_stamp.sec, msg->end_stamp.nsec) : SoftPoint::default_time);
 }
 
 void RosInterface::ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  feeder_.storeFact(msg->data, msg->stamp.sec);
+  feeder_.storeFact(msg->data, rosTime2Float(msg->stamp.sec, msg->stamp.nsec));
 }
 
 void RosInterface::ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
