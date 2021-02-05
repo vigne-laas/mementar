@@ -101,6 +101,8 @@ private:
   {
     return (onto_name == "") ? "/ontologenius/" + topic_name : "/ontologenius/" + topic_name + "/" + onto_name;
   }
+
+  double rosTime2Float(double s, int ns);
 };
 
 } // namespace mementar

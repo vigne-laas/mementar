@@ -128,14 +128,14 @@ void RosInterface::release()
 *
 ****************/
 
-float rosTime2Float(float s, int ns)
+double RosInterface::rosTime2Float(double s, int ns)
 {
   ns = ns / 100000000;
-  float res = ns/10.f;
-  if(res <= 0.25) return s + 0.25;
-  else if(res <= 0.5) return s + 0.5;
-  else if(res <= 0.75) return s+ 0.75;
-  else return s + 1.;
+  double res = ns/10.f;
+  if(res < 0.25) return s;
+  else if(res < 0.5) return s + 0.25;
+  else if(res < 0.75) return s+ 0.5;
+  else return s + 0.75;
 }
 
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
