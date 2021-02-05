@@ -34,12 +34,14 @@ public:
   size_t max_text_size_;
 
 private:
-  std::vector<size_t> levels_;
+  std::vector<Action*> actions_to_manage_;
+  std::vector<Action*> actions_managed_;
 
   action_t getAction(Action* action);
   void closeAction(Action* action);
 
   size_t getMinLevel();
+  void setLevels();
   void getTextSize(const std::string& txt, CvFont* font);
 };
 
