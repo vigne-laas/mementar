@@ -2,6 +2,7 @@
 #define MEMENTAR_TIMELINEDRAWER_H
 
 #include <string>
+#include <set>
 
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui_c.h>
@@ -19,6 +20,8 @@ public:
   bool draw(const std::string& file_name, Timeline* timeline);
 private:
   IplImage* image_;
+
+  std::set<size_t> used_poses_;
 
   void drawVector(size_t start, size_t end, size_t pose, CvFont* font);
   void drawAction(const action_t& action, size_t line_pose, size_t max_level, size_t start_time, size_t end_time, CvFont* font);

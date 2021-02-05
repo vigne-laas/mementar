@@ -14,6 +14,8 @@ bool TimelineDrawer::draw(const std::string& file_name, Timeline* timeline)
   CvFont font;
   cvInitFont(&font, CV_FONT_HERSHEY_COMPLEX, 0.5, 0.5, 0, 0.5);
 
+  used_poses_.clear();
+
   ActionReader actions_reader_;
   actions_reader_.read(&timeline->facts, &font);
   FactReader facts_reader_;
@@ -90,6 +92,10 @@ void TimelineDrawer::drawAction(const action_t& action, size_t line_pose, size_t
   if(action.end != std::experimental::nullopt)
     y_end_pose = MARGIN + (action.end.value().getTime() - start_time) * UNIT_SPACE;
   size_t y_mid_pose = y_start_pose + EDGE_RADIUS;
+
+  while(used_poses_.find(y_mid_pose) != used_poses_.end())
+    y_mid_pose += UNIT_SPACE / 2;
+  used_poses_.insert(y_mid_pose);
 
   // BGR base is 122, 20, 32
   float base_V = 47.8;
