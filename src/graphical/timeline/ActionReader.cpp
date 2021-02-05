@@ -113,20 +113,20 @@ void ActionReader::setLevels()
       bool is_candidate = true;
       for(auto action2 : actions_at_level)
       {
-        if((action->getStartFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || (action->getStartFact()->getTime() <= action2->getEndFact()->getTime())))
+        if((action->getStartFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || action2->isPending() || (action->getStartFact()->getTime() <= action2->getEndFact()->getTime())))
         {
           is_candidate = false;
           break;
         }
         else if(action->isPending())
         {
-          if(action->getStartFact()->getTime() <= action2->getEndFact()->getTime())
+          if(action2->isPending() || action->getStartFact()->getTime() <= action2->getEndFact()->getTime())
           {
             is_candidate = false;
             break;
           }
         }
-        else if((action->getEndFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || (action->getEndFact()->getTime() <= action2->getEndFact()->getTime())))
+        else if((action->getEndFact()->getTime() >= action2->getStartFact()->getTime()) && (action->isPending() || action2->isPending() || (action->getEndFact()->getTime() <= action2->getEndFact()->getTime())))
         {
           is_candidate = false;
           break;
