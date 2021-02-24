@@ -85,10 +85,11 @@ TripletPattern Subscription::refinePattern(const TripletPattern& triplet)
 bool Subscription::compareToTriplet(const TripletPattern& pattern, const Triplet& triplet)
 {
   if(onto_ == nullptr)
-    return triplet.fit(pattern);
+    return pattern.fit(triplet);
 
-  if(pattern.add_ != triplet.add_)
-    return false;
+  if(!pattern.isOperatorUndefined())
+    if(pattern.add_ != triplet.add_)
+      return false;
 
   if(pattern.isSubjectIndividual() && !pattern.isSubjectUndefined())
   {

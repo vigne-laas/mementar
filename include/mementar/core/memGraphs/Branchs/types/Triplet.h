@@ -99,9 +99,9 @@ public:
   bool fit(const Triplet& other) const
   {
     return ( (add_ == other.add_)
-            && ((subject_ == other.subject_) || (subject_ == "?") || (other.subject_ == "?"))
-            && ((predicat_ == other.predicat_) || (predicat_ == "?") || (other.predicat_ == "?"))
-            && ((object_ == other.object_) || (object_ == "?") || (other.object_ == "?")));
+            && (subject_ == other.subject_)
+            && (predicat_ == other.predicat_)
+            && (object_ == other.object_) );
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Triplet& triplet)

@@ -80,6 +80,14 @@ public:
     return Triplet::serialize(pattern);
   }
 
+  bool fit(const Triplet& other) const
+  {
+    return ( ((add_ == other.add_) || object_is_undefined_)
+            && ((subject_ == other.subject_) || subject_is_undefined_)
+            && ((predicat_ == other.predicat_) || predicat_is_undefined_)
+            && ((object_ == other.object_) || subject_is_undefined_));
+  }
+
   bool operator==(const Triplet& other) const = delete;
   bool operator==(const Triplet* other) const = delete;
 
