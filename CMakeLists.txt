@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 project(mementar)
 
 add_compile_options(-std=c++1z -Wall)
