@@ -18,7 +18,7 @@ class Subscription
 public:
   Subscription(OntologyManipulator* onto = nullptr) { onto_ = onto; }
 
-  size_t subscribe(const Triplet& patern, size_t count);
+  size_t subscribe(const TripletPattern& patern, size_t count);
   bool unsubscribe(size_t id);
 
   bool isFinished(size_t id);
@@ -35,7 +35,7 @@ private:
 
   OntologyManipulator* onto_;
 
-  TripletPattern getPattern(const Triplet& triplet);
+  TripletPattern refinePattern(const TripletPattern& triplet);
   bool compareToTriplet(const TripletPattern& pattern, const Triplet& triplet);
 };
 

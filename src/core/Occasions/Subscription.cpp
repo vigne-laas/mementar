@@ -3,11 +3,11 @@
 namespace mementar
 {
 
-size_t Subscription::subscribe(const Triplet& patern, size_t count)
+size_t Subscription::subscribe(const TripletPattern& patern, size_t count)
 {
   map_mut_.lock();
   size_t id = id_manager_.getNewId();
-  triplet_paterns_.insert(std::pair<size_t, TripletPattern>(id, getPattern(patern)));
+  triplet_paterns_.insert(std::pair<size_t, TripletPattern>(id, refinePattern(patern)));
   counts_[id] = count;
   map_mut_.unlock();
 
@@ -63,9 +63,9 @@ std::vector<size_t> Subscription::evaluate(const Triplet& triplet)
   return res;
 }
 
-TripletPattern Subscription::getPattern(const Triplet& triplet)
+TripletPattern Subscription::refinePattern(const TripletPattern& triplet)
 {
-  TripletPattern pattern(triplet);
+  TripletPattern pattern = triplet;
   if(onto_ != nullptr)
   {
     if(pattern.isSubjectUndefined() == false)

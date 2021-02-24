@@ -76,7 +76,7 @@ void OccasionsManager::add(const Triplet& triplet)
 bool OccasionsManager::SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
                                         mementar::MementarOccasionSubscription::Response &res)
 {
-  Triplet triplet_patern = Triplet::deserialize(req.data);
+  TripletPattern triplet_patern = TripletPattern::deserialize(req.data);
   if(!triplet_patern.valid())
     return false;
 
