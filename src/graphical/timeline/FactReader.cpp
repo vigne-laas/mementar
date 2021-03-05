@@ -16,9 +16,13 @@ void FactReader::read(FactGraph* graph, CvFont* font)
     {
       if(fact->isPartOfAction() == false)
       {
-        group_fact.data += (group_fact.data == "" ? "" : " -- ") + fact->Triplet::toString();
-        if(fact->getTransitionDuration() > group_fact.time_point.getTransitionDuration())
-          group_fact.time_point = SoftPoint(fact);
+        // We do not display teh fact coming from forward deduction
+        if(fact->getDeductionLevel() != 1)
+        {
+          group_fact.data += (group_fact.data == "" ? "" : " -- ") + fact->Triplet::toString();
+          if(fact->getTransitionDuration() > group_fact.time_point.getTransitionDuration())
+            group_fact.time_point = SoftPoint(fact);
+        }
       }
     }
 
