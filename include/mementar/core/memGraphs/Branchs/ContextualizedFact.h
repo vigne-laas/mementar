@@ -72,8 +72,19 @@ public:
     return res;
   }
 
+  void setDeductionLevel(size_t level)
+  {
+    deduction_level_ = level;
+  }
+
+  size_t getDeductionLevel()
+  {
+    return deduction_level_;
+  }
+
 private:
   Action* action_;
+  size_t deduction_level_;
 };
 
 } // namespace mementar

@@ -134,7 +134,11 @@ bool Feeder::runForFacts()
           continue;
         }
         else
-          timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation}));
+        {
+          auto fact = new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation});
+          fact->setDeductionLevel(feed.expl_.size());
+          timeline_->facts.add(fact);
+        }
       }
       else
         timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), feed.fact_.value()));
