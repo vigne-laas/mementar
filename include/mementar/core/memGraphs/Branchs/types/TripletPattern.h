@@ -62,9 +62,9 @@ public:
     else if(std::regex_match(str, match, regex2))
     {
       if(match[1].str() == "?")
-        return Triplet(match[2].str(), match[3].str(), match[4].str());
+        return TripletPattern(match[2].str(), match[3].str(), match[4].str());
       else
-        return Triplet(match[2].str(), match[3].str(), match[4].str(), (match[1].str() == "ADD") || (match[1].str() == "add"));
+        return TripletPattern(match[2].str(), match[3].str(), match[4].str(), (match[1].str() == "ADD") || (match[1].str() == "add"));
     }
     else
       return Triplet();
@@ -80,12 +80,20 @@ public:
     return Triplet::serialize(pattern);
   }
 
+  std::string toString() const
+  {
+    if(operator_is_undefined_ == false)
+      return Triplet::toString();
+    else
+      return "[?]" + subject_ + "|" + predicat_ + "|" + object_;
+  }
+
   bool fit(const Triplet& other) const
   {
-    return ( ((add_ == other.add_) || object_is_undefined_)
+    return ( ((add_ == other.add_) || operator_is_undefined_)
             && ((subject_ == other.subject_) || subject_is_undefined_)
             && ((predicat_ == other.predicat_) || predicat_is_undefined_)
-            && ((object_ == other.object_) || subject_is_undefined_));
+            && ((object_ == other.object_) || object_is_undefined_));
   }
 
   bool operator==(const Triplet& other) const = delete;

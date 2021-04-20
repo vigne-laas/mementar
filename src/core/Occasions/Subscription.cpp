@@ -89,7 +89,7 @@ bool Subscription::compareToTriplet(const TripletPattern& pattern, const Triplet
 
   if(!pattern.isOperatorUndefined())
     if(pattern.add_ != triplet.add_)
-      return false;
+        return false;
 
   if(pattern.isSubjectIndividual() && !pattern.isSubjectUndefined())
   {
