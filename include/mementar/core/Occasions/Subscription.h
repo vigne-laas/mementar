@@ -19,7 +19,7 @@ public:
   Subscription(OntologyManipulator* onto = nullptr) { onto_ = onto; }
 
   size_t subscribe(const TripletPattern& patern, size_t count);
-  bool unsubscribe(size_t id);
+  bool unsubscribe(int id);
 
   bool isFinished(size_t id);
   bool empty() { return triplet_paterns_.size() == 0; }

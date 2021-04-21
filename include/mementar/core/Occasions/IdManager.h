@@ -16,6 +16,8 @@ public:
   TInteger getNewId();
   bool removeId(TInteger id);
 
+  std::set<TInteger> getIds(){ return ids_; }
+
 private:
   TInteger current_id_;
   std::set<TInteger> ids_;

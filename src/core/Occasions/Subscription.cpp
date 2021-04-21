@@ -14,17 +14,34 @@ size_t Subscription::subscribe(const TripletPattern& patern, size_t count)
   return id;
 }
 
-bool Subscription::unsubscribe(size_t id)
+bool Subscription::unsubscribe(int id)
 {
   bool res = true;
   map_mut_.lock();
-  if(id_manager_.removeId(id))
+  if(id != -1)
   {
-    triplet_paterns_.erase(id);
-    counts_.erase(id);
+    if(id_manager_.removeId(id))
+    {
+      triplet_paterns_.erase(id);
+      counts_.erase(id);
+    }
+    else
+      res = false;
   }
   else
-    res = false;
+  {
+    auto ids = id_manager_.getIds();
+    for(auto id : ids)
+    {
+      if(id_manager_.removeId(id))
+      {
+        triplet_paterns_.erase(id);
+        counts_.erase(id);
+      }
+      else
+        res = false;
+    }
+  }
 
   map_mut_.unlock();
   return res;
