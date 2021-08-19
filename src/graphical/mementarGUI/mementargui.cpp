@@ -23,6 +23,8 @@ mementarGUI::mementarGUI(QWidget *parent) :
 
     QObject::connect(ui->action_exist_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
     QObject::connect(ui->action_exist_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
+    QObject::connect(ui->action_removeAction_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
+    QObject::connect(ui->action_removeAction_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
     QObject::connect(ui->action_isPending_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
@@ -53,6 +55,7 @@ mementarGUI::mementarGUI(QWidget *parent) :
 
     QObject::connect(ui->action_exist_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
+    QObject::connect(ui->action_removeAction_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_isPending_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getStartStamp_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getEndStamp_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
