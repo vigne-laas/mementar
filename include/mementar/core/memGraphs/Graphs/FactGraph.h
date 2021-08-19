@@ -23,6 +23,8 @@ public:
   std::string getData(const std::string& fact_id);
   SoftPoint::Ttime getStamp(const std::string& fact_id);
 
+  bool removeFact(const std::string& fact_id);
+
   std::vector<ContextualizedFact*> get()
   {
     return all_facts_;

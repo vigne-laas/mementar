@@ -248,6 +248,11 @@ bool RosInterface::actionHandle(mementar::MementarService::Request &req,
   }
   else if(req.action == "getFactsDuring")
     set_res = timeline_->actions.getFactsDuring(params());
+  else if(req.action == "removeAction")
+  {
+    if(timeline_->actions.removeAction(params()) == false)
+      res.code = NO_EFFECT; 
+  }
   else
     res.code = UNKNOW_ACTION;
 
@@ -377,6 +382,7 @@ param_t RosInterface::getParams(const std::string& param)
     parameters.base = str_params[0];
 
   bool option_found = false;
+  (void)option_found;
   for(size_t i = 1; i < str_params.size(); i++)
   {
     /*if((str_params[i] == "-i") || (str_params[i] == "--take_id"))

@@ -60,6 +60,16 @@ SoftPoint::Ttime FactGraph::getStamp(const std::string& fact_id)
     return fact->getTime();
 }
 
+bool FactGraph::removeFact(const std::string& fact_id)
+{
+  auto fact = container_.find(fact_id);
+  if(fact == nullptr)
+    return false;
+
+  container_.erase(fact);
+  return true;
+}
+
 ContextualizedFact* FactGraph::find(const std::string& fact_id)
 {
   return container_.find(fact_id);

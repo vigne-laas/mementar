@@ -31,6 +31,7 @@ public:
   std::string getStartFact(const std::string& action_name);
   std::string getEndFact(const std::string& action_name);
   std::unordered_set<std::string> getFactsDuring(const std::string& action_name);
+  bool removeAction(const std::string& action_name);
 
   std::vector<Action*> get()
   {
