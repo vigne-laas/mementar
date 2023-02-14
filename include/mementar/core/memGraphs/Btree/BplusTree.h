@@ -155,7 +155,7 @@ public:
   public:
 
       BtreeReverseIterator(T* ptr = nullptr):BtreeIterator<T>(ptr) {}
-      BtreeReverseIterator(const BtreeIterator<T>& forward_iterator) { this->ptr_ = *forward_iterator; }
+      explicit BtreeReverseIterator(const BtreeIterator<T>& forward_iterator) { this->ptr_ = *forward_iterator; }
       BtreeReverseIterator(const BtreeReverseIterator<T>& other) = default;
 
       BtreeReverseIterator<T>&           operator=(const BtreeReverseIterator<T>& other) = default;

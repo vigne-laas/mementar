@@ -15,7 +15,6 @@ class Action : public ValuedNode
 public:
   Action(const std::string& name, const SoftPoint& start);
   Action(const std::string& name, const SoftPoint& start, const SoftPoint& end);
-
   Action(const Action& other) = delete;
 
   bool setEnd(const SoftPoint& end);

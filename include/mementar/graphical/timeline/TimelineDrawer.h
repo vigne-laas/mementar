@@ -16,7 +16,8 @@ namespace mementar {
 class TimelineDrawer
 {
 public:
-
+  TimelineDrawer() : image_(nullptr) {}
+  
   bool draw(const std::string& file_name, Timeline* timeline);
 private:
   IplImage* image_;

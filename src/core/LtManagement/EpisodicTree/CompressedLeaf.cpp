@@ -70,7 +70,7 @@ std::string CompressedLeaf::treeToString(BplusTree<time_t, Fact*>* tree)
     it = static_cast<BplusLeaf<time_t, Fact*>*>(it->getNextLeaf());
   }
 
-  return std::move(res);
+  return res;
 }
 
 } // namespace mementar

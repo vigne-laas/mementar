@@ -16,15 +16,17 @@ class ContextualizedFact : public Fact, public ValuedNode, public LinkedEvent<Ev
 public:
   using LeafType = EventLinkedLeaf<SoftPoint::Ttime, ContextualizedFact*>;
 
-  ContextualizedFact(const std::string& id, const Fact& other, Action* action = nullptr) : Fact(other), ValuedNode(id)
-  {
-    action_ = action;
-  }
+  ContextualizedFact(const std::string& id, const Fact& other, Action* action = nullptr) : Fact(other),
+                                                                                           ValuedNode(id),
+                                                                                           action_(action),
+                                                                                           deduction_level_(0)
+  {}
 
-  ContextualizedFact(const std::string& id, const std::string& data, const SoftPoint& soft_point, Action* action = nullptr) : Fact(data, soft_point), ValuedNode(id)
-  {
-    action_ = action;
-  }
+  ContextualizedFact(const std::string& id, const std::string& data, const SoftPoint& soft_point, Action* action = nullptr) : Fact(data, soft_point),
+                                                                                                                              ValuedNode(id),
+                                                                                                                              action_(action),
+                                                                                                                              deduction_level_(0)
+  {}
 
   virtual ~ContextualizedFact() {}
 

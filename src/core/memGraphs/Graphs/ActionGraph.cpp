@@ -190,8 +190,7 @@ namespace mementar {
   std::vector<Action*> ActionGraph::getPendingPtr()
   {
     std::vector<Action*> res;
-    for(auto act : pending_actions_)
-      res.push_back(act.second);
+    std::transform(pending_actions_.cbegin(), pending_actions_.cend(), std::back_inserter(res), [](const auto& action){ return action.second; });
     return res;
   }
 

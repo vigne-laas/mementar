@@ -17,7 +17,7 @@ class Timeline;
 class Feeder
 {
 public:
-  Feeder(OntologyManipulator* onto, Timeline* timeline = nullptr);
+  explicit Feeder(OntologyManipulator* onto, Timeline* timeline = nullptr);
   Feeder(Timeline* timeline = nullptr);
 
   void storeFact(const std::string& feed, const SoftPoint::Ttime& stamp) { feed_storage_.insertFact(feed, stamp); }

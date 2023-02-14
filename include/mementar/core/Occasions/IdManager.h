@@ -24,10 +24,8 @@ private:
 };
 
 template<typename TInteger>
-IdManager<TInteger>::IdManager()
-{
-  current_id_ = 0;
-}
+IdManager<TInteger>::IdManager() : current_id_(0)
+{}
 
 template<typename TInteger>
 TInteger IdManager<TInteger>::getNewId()

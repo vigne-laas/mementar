@@ -16,7 +16,7 @@ struct BranchNode_t
   std::string id;
   T* branch;
 
-  BranchNode_t() {next = nullptr; id = ""; branch = nullptr; }
+  BranchNode_t() : next(nullptr), branch(nullptr) {}
   ~BranchNode_t()
   {
     //T* branch is destructed by ontograph
@@ -32,11 +32,10 @@ template <typename B>
 class BranchContainerDyn : public BranchContainerBase<B>
 {
 public:
-  BranchContainerDyn()
+  BranchContainerDyn() : buffer_size_(0), nb_elem_(0)
   {
     nodes_ = new BranchNode_t<B>;
     nodes_end_ = nodes_;
-    nb_elem_ = 0;
   }
   BranchContainerDyn(const BranchContainerDyn& base);
 
@@ -55,7 +54,7 @@ private:
   size_t buffer_size_;
   size_t nb_elem_;
 
-  void insertEnd(std::string id, B* branch);
+  void insertEnd(const std::string& id, B* branch);
   void reconf(BranchNode_t<B>* node);
 };
 
@@ -124,7 +123,7 @@ void BranchContainerDyn<B>::erase(B* branch)
 }
 
 template <typename B>
-void BranchContainerDyn<B>::insertEnd(std::string id, B* branch)
+void BranchContainerDyn<B>::insertEnd(const std::string& id, B* branch)
 {
   BranchNode_t<B>* tmp = new BranchNode_t<B>;
   tmp->id = id;

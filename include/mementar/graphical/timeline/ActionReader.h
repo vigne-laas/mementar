@@ -16,7 +16,8 @@ namespace mementar {
 
 struct action_t
 {
-  action_t(const SoftPoint& point) : start(point) {}
+  explicit action_t(const SoftPoint& point) : start(point),
+                                              level(0) {}
 
   std::string name;
   SoftPoint start;

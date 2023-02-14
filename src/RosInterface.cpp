@@ -183,7 +183,7 @@ bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req
 
   removeUselessSpace(req.action);
   removeUselessSpace(req.param);
-  param_t params = getParams(req.param);
+  //param_t params = getParams(req.param);
 
   /*if(req.action == "newSession")
   {
@@ -369,8 +369,7 @@ void RosInterface::set2string(const std::unordered_set<std::string>& word_set, s
 
 void RosInterface::set2vector(const std::unordered_set<std::string>& word_set, std::vector<std::string>& result)
 {
-  for(const std::string& it : word_set)
-    result.push_back(it);
+  std::copy(word_set.cbegin(), word_set.cend(), std::back_inserter(result));
 }
 
 param_t RosInterface::getParams(const std::string& param)

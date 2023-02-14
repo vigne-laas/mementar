@@ -13,10 +13,9 @@ class LinkedData
 public:
   using LeafType = Tleaf;
 
-  LinkedData(Tvalue value) : value_(value)
-  {
-    leaf_ = nullptr;
-  }
+  explicit LinkedData(Tvalue value) : value_(value),
+                                      leaf_(nullptr)
+  {}
 
   LeafType* getNextLeaf()
   {

@@ -11,10 +11,8 @@ template <typename T>
 class DoubleQueue
 {
 public:
-  DoubleQueue()
-  {
-    queue_choice_ = true;
-  }
+  DoubleQueue() : queue_choice_(true)
+  {}
 
   void insert(T& data)
   {

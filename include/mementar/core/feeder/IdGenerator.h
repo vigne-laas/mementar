@@ -9,7 +9,7 @@ namespace mementar {
 class IdGenerator
 {
 public:
-  IdGenerator() { id_ = 0; }
+  IdGenerator() : id_(0) {}
 
   void inspect(const std::string& str_id)
   {

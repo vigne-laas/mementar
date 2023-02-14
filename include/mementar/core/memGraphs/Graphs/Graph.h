@@ -18,7 +18,7 @@ class Graph
 {
   static_assert(std::is_base_of<ValuedNode,B>::value, "B must be derived from ValuedNode");
 public:
-  Graph() { }
+  Graph() {}
   virtual ~Graph() {}
 
   virtual std::vector<B*> get() = 0;

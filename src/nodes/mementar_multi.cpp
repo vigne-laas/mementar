@@ -108,12 +108,12 @@ int main(int argc, char** argv)
   params.display();
 
   ros::ServiceServer service = n_->advertiseService("manage_multi", managerHandle);
+  (void)service;
 
   ros::spin();
 
   std::vector<std::string> interfaces_names;
-  for(auto intreface : interfaces_)
-    interfaces_names.push_back(intreface.first);
+  std::transform(interfaces_.cbegin(), interfaces_.cend(), std::back_inserter(interfaces_names), [](const auto& interface){ return interface.first; });
 
   for(size_t i = 0; i < interfaces_names.size(); i++)
     deleteInterface(interfaces_names[i]);

@@ -50,7 +50,7 @@ public:
     if(std::regex_match(str, match, regex))
     {
       if(match[3].str() == "")
-        return Fact(Triplet::deserialize(match[4].str()), std::stoul(match[1].str()));
+        return Fact(Triplet::deserialize(match[4].str()),  SoftPoint(std::stoul(match[1].str())));
       else
         return Fact(Triplet::deserialize(match[4].str()), SoftPoint(std::stoul(match[1].str()), std::stoul(match[3].str())));
     }
@@ -63,7 +63,7 @@ public:
     if(std::regex_match(str, match, regex))
     {
       if(match[3].str() == "")
-        return new Fact(Triplet::deserialize(match[4].str()), std::stoul(match[1].str()));
+        return new Fact(Triplet::deserialize(match[4].str()),  SoftPoint(std::stoul(match[1].str())));
       else
         return new Fact(Triplet::deserialize(match[4].str()), SoftPoint(std::stoul(match[1].str()), std::stoul(match[3].str())));
     }
@@ -75,7 +75,6 @@ public:
 
   friend std::ostream& operator<<(std::ostream& os, Fact* fact)
   {
-    std::string space = " ";
     os << fact->getData();
     return os;
   }

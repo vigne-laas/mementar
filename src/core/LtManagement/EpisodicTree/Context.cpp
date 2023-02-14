@@ -136,8 +136,8 @@ void Context::fromString(const std::string& string)
       if(map_ptr != nullptr)
       {
         size_t nb;
-        std::istringstream iss(match[1].str());
-        iss >> nb;
+        std::istringstream iss_match(match[1].str());
+        iss_match >> nb;
         if(nb != 0)
           map_ptr->operator[](match[2].str()) = nb;
       }

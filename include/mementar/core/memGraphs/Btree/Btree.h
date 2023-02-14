@@ -13,13 +13,11 @@ class Btree
 {
   using Tdata = typename Tleaf::DataType;
 public:
-  Btree()
-  {
-    root_ = nullptr;
-    first_ = nullptr;
-    last_ = nullptr;
-    nb_data_ = 0;
-  }
+  Btree() : root_(nullptr),
+            first_(nullptr),
+            last_(nullptr),
+            nb_data_(0)
+  {}
 
   virtual ~Btree()
   {

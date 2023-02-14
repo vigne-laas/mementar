@@ -13,24 +13,19 @@ public:
   static Ttime default_time;
   //typedef float Ttime;
 
-  SoftPoint(Ttime t_start, std::experimental::optional<Ttime> t_end = std::experimental::nullopt)
+  // Avoid to set it explicit
+  SoftPoint(Ttime t_start, std::experimental::optional<Ttime> t_end = std::experimental::nullopt) : t_start_(t_start), t_end_(t_end)
   {
-    t_start_ = t_start;
-    t_end_ = t_end;
     t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
   }
 
-  SoftPoint(const SoftPoint& other)
+  SoftPoint(const SoftPoint& other) : t_start_(other.t_start_), t_end_(other.t_end_)
   {
-    t_start_ = other.t_start_;
-    t_end_ = other.t_end_;
     t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
   }
 
-  SoftPoint(const SoftPoint* other)
+  explicit SoftPoint(const SoftPoint* other) : t_start_(other->t_start_), t_end_(other->t_end_)
   {
-    t_start_ = other->t_start_;
-    t_end_ = other->t_end_;
     t_ = t_start_ + (t_end_.value_or(t_start_) - t_start_) / 2;
   }
 
@@ -41,7 +36,6 @@ public:
   Ttime getTransitionDuration() const { return t_end_.value_or(t_start_) - t_start_; }
 
   std::string toString() const { return "[" + std::to_string(t_start_) + std::string(t_end_ ? "," + std::to_string(t_end_.value()) : "") + "]"; }
-
 
 protected:
   Ttime t_start_;

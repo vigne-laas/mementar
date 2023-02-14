@@ -21,15 +21,15 @@ namespace mementar
 class OccasionsManager
 {
 public:
-  OccasionsManager(ros::NodeHandle* n, std::string name = "");
+  explicit OccasionsManager(ros::NodeHandle* n, std::string name = "");
   OccasionsManager(ros::NodeHandle* n, OntologyManipulator* onto, std::string name = "");
 
   void run();
 
   void add(const Triplet& triplet);
 
-  void stop() {run_ = false; }
-  inline bool isRunning() {return run_; }
+  void stop() { run_ = false; }
+  inline bool isRunning() { return run_; }
 
 private:
   ros::NodeHandle* n_;

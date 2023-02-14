@@ -16,7 +16,7 @@ namespace mementar {
 class ActionGraph : public Graph<Action>
 {
 public:
-  ActionGraph(FactGraph* fact_graph);
+  explicit ActionGraph(FactGraph* fact_graph);
   ~ActionGraph();
 
   void add(Action* action);

@@ -27,13 +27,13 @@ public:
     init();
   }
 
-  TripletPattern(const std::string& str_triplet) : Triplet(str_triplet, true)
+  explicit TripletPattern(const std::string& str_triplet) : Triplet(str_triplet, true)
   {
     init();
     operator_is_undefined_ = true;
   }
 
-  TripletPattern(const Triplet& triplet) : Triplet(triplet)
+  explicit TripletPattern(const Triplet& triplet) : Triplet(triplet)
   {
     init();
   }
@@ -67,7 +67,7 @@ public:
         return TripletPattern(match[2].str(), match[3].str(), match[4].str(), (match[1].str() == "ADD") || (match[1].str() == "add"));
     }
     else
-      return Triplet();
+      return TripletPattern(Triplet());
   }
 
   static std::string serialize(const TripletPattern& pattern)

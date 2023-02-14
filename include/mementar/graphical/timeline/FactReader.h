@@ -15,7 +15,7 @@ namespace mementar {
 
 struct fact_t
 {
-  fact_t(SoftPoint::Ttime time) : time_point(time) {}
+  explicit fact_t(SoftPoint::Ttime time) : time_point(time) {}
 
   std::string data;
   SoftPoint time_point;

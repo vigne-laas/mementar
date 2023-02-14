@@ -15,12 +15,10 @@ class LinkedEvent
   friend class EventLinkedLeaf;
 
 public:
-  LinkedEvent()
-  {
-    prev_elem_ = nullptr;
-    next_elem_ = nullptr;
-    leaf_ = nullptr;
-  }
+  LinkedEvent() : leaf_(nullptr),
+                  prev_elem_(nullptr),
+                  next_elem_(nullptr)
+  {}
 
   SelfType* getNext() { return next_elem_; }
   SelfType* getPrevious() { return prev_elem_; }

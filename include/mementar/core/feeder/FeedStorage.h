@@ -26,7 +26,8 @@ struct feed_fact_t
   std::vector<Fact> expl_;
   bool checkout_;
 
-  feed_fact_t() { checkout_ = false; }
+  feed_fact_t() : cmd_(cmd_nop),
+                  checkout_(false) {}
 };
 
 struct feed_action_t
@@ -36,12 +37,10 @@ struct feed_action_t
   SoftPoint::Ttime t_end_;
   bool checkout_;
 
-  feed_action_t()
-  {
-    t_start_ = SoftPoint::default_time;
-    t_end_ = SoftPoint::default_time;
-    checkout_ = false;
-  }
+  feed_action_t() : t_start_(SoftPoint::default_time),
+                    t_end_(SoftPoint::default_time),
+                    checkout_(false)
+  {}
 };
 
 class FeedStorage

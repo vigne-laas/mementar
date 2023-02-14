@@ -10,7 +10,7 @@ namespace mementar {
 class ValuedNode
 {
 public:
-  ValuedNode(const std::string& value)
+  explicit ValuedNode(const std::string& value)
   {
     index_ = table_.add(value);
   }
