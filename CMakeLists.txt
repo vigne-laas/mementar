@@ -37,6 +37,7 @@ find_package(OpenCV REQUIRED)
    MementarExplanation.msg
    MementarOccasion.msg
    StampedString.msg
+   StampedFact.msg
  )
 
 ## Generate services in the 'srv' folder

@@ -16,6 +16,7 @@
 
 //#include "mementar/core/LtManagement/EpisodicTree/ArchivedLeafNode.h"
 #include "mementar/core/feeder/Feeder.h"
+#include "mementar/core/feeder/FeederEcho.h"
 #include "mementar/core/memGraphs/Timeline.h"
 #include "mementar/core/Occasions/OccasionsManager.h"
 #include "mementar/core/Parametrization/Configuration.h"
@@ -52,6 +53,7 @@ private:
 
   Timeline* timeline_;
   Feeder feeder_;
+  FeederEcho feeder_echo_;
   OccasionsManager occasions_;
 
   std::string name_;

@@ -17,6 +17,7 @@ namespace mementar
 RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, const std::string& configuration_file, size_t order, std::string name) :
                                                                                                                 onto_(name),
                                                                                                                 feeder_(&onto_),
+                                                                                                                feeder_echo_(getTopicName("echo", name)),
                                                                                                                 occasions_(n, &onto_, name),
                                                                                                                 run_(true)
 
@@ -84,7 +85,7 @@ void RosInterface::run()
   ros::ServiceServer action_service = n_->advertiseService(getTopicName("action"), &RosInterface::actionHandle, this);
   ros::ServiceServer fact_service = n_->advertiseService(getTopicName("fact"), &RosInterface::factHandle, this);
 
-  feeder_.setCallback([this](const Triplet& triplet){ this->occasions_.add(triplet); });
+  feeder_.setCallback([this](ContextualizedFact* fact){ this->occasions_.add(*fact); this->feeder_echo_.add(fact); });
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
   std::thread feed_thread(&RosInterface::feedThread, this);
 
@@ -338,6 +339,7 @@ void RosInterface::feedThread()
         msg.data = notif;
         feeder_publisher.publish(msg);
       }
+      feeder_echo_.publish();
     }
     feeder_mutex_.unlock();
 

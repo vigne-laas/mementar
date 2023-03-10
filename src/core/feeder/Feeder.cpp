@@ -102,6 +102,7 @@ bool Feeder::runForFacts()
         }
       }
 
+      ContextualizedFact* fact = nullptr;
       if(feed.expl_.size())
       {
         ContextualizedFact* explanation = nullptr;
@@ -135,15 +136,18 @@ bool Feeder::runForFacts()
         }
         else
         {
-          auto fact = new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation});
+          fact = new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation});
           fact->setDeductionLevel(feed.expl_.size());
           timeline_->facts.add(fact);
         }
       }
       else
-        timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), feed.fact_.value()));
+      {
+        fact = new mementar::ContextualizedFact(id_generator_.get(), feed.fact_.value());
+        timeline_->facts.add(fact);
+      }
 
-      callback_(feed.fact_.value());
+      callback_(fact);
     }
 
   }
@@ -184,8 +188,8 @@ bool Feeder::runForActions()
         {
           action = new mementar::Action(feed.name_, feed.t_start_, feed.t_end_);
           timeline_->actions.add(action);
-          callback_(*action->getStartFact());
-          callback_(*action->getEndFact());
+          callback_(action->getStartFact());
+          callback_(action->getEndFact());
         }
       }
       else if(feed.t_start_ != SoftPoint::default_time)
@@ -196,7 +200,7 @@ bool Feeder::runForActions()
         {
           action = new mementar::Action(feed.name_, feed.t_start_);
           timeline_->actions.add(action);
-          callback_(*action->getStartFact());
+          callback_(action->getStartFact());
         }
       }
       else if(feed.t_end_ != SoftPoint::default_time)
@@ -206,7 +210,7 @@ bool Feeder::runForActions()
         else if(timeline_->actions.setEnd(feed.name_, feed.t_end_) == false)
           notifications_.push_back("[FAIL][end stamp already exist] " + feed.name_);
         else
-          callback_(*action->getEndFact());
+          callback_(action->getEndFact());
       }
     }
   }
