@@ -104,6 +104,41 @@ protected:
     }
   }
 
+  inline ros::Time callStamp(mementar::MementarService& srv)
+  {
+    ros::Time res;
+    cpt++;
+
+    if(client.call(srv))
+    {
+      if(srv.response.values.size())
+        return srv.response.time_value;
+      else
+        return res;
+    }
+    else
+    {
+      if(verbose_)
+        std::cout << COLOR_ORANGE << "Failure to call mementar/" << name_ << COLOR_OFF << std::endl;
+      client = n_->serviceClient<mementar::MementarService>("mementar/" + name_, true);
+      if(client.call(srv))
+      {
+        if(verbose_)
+          std::cout << COLOR_GREEN << "Restored mementar/" << name_ << COLOR_OFF << std::endl;
+        if(srv.response.values.size())
+          return srv.response.time_value;
+        else
+          return res;
+      }
+      else
+      {
+        if(verbose_)
+          std::cout << COLOR_RED << "Failure of service restoration" << COLOR_OFF << std::endl;
+        return res;
+      }
+    }
+  }
+
   inline bool callNR(mementar::MementarService& srv)
   {
     cpt++;

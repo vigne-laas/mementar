@@ -175,7 +175,9 @@ add_library(mementar_lib
   src/API/mementar/TimelineManipulator.cpp
   src/API/mementar/TimelinesManipulator.cpp
   src/API/mementar/clients/ManagerClient.cpp
+  src/API/mementar/clients/ActionClient.cpp
   src/API/mementar/clients/ClientBase.cpp
+  src/API/mementar/clients/FactClient.cpp
   src/API/mementar/OccasionsPublisher.cpp
   src/API/mementar/OccasionsSubscriber.cpp
 )

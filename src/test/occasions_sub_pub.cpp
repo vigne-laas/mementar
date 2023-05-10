@@ -3,10 +3,10 @@
 
 #include "ros/ros.h"
 
+#include "ontologenius/OntologyManipulator.h"
+
 #include "mementar/API/mementar/TimelineManipulator.h"
 #include "mementar/API/mementar/OccasionsSubscriber.h"
-
-#include "ontologenius/OntologyManipulator.h"
 
 using namespace std::chrono;
 

@@ -8,6 +8,8 @@
 #include "mementar/API/mementar/ActionsPublisher.h"
 #include "mementar/API/mementar/OccasionsPublisher.h"
 #include "mementar/API/mementar/clients/ClientBase.h"
+#include "mementar/API/mementar/clients/ActionClient.h"
+#include "mementar/API/mementar/clients/FactClient.h"
 
 namespace mementar
 {
@@ -26,6 +28,8 @@ public:
 
   OccasionsPublisher fact_feeder;
   ActionsPublisher action_feeder;
+  ActionClient actions;
+  FactClient facts;
 
 private:
   ros::NodeHandle* n_;
