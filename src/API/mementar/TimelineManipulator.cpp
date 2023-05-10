@@ -1,4 +1,4 @@
-#include "mementar/API/TimelineManipulator.h"
+#include "mementar/API/mementar/TimelineManipulator.h"
 
 namespace mementar
 {

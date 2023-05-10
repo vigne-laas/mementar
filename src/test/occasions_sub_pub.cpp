@@ -3,8 +3,8 @@
 
 #include "ros/ros.h"
 
-#include "mementar/API/TimelineManipulator.h"
-#include "mementar/API/OccasionsSubscriber.h"
+#include "mementar/API/mementar/TimelineManipulator.h"
+#include "mementar/API/mementar/OccasionsSubscriber.h"
 
 #include "ontologenius/OntologyManipulator.h"
 

@@ -5,9 +5,9 @@
 
 #include <ros/ros.h>
 
-#include "mementar/API/ActionsPublisher.h"
-#include "mementar/API/OccasionsPublisher.h"
-#include "mementar/API/clients/ClientBase.h"
+#include "mementar/API/mementar/ActionsPublisher.h"
+#include "mementar/API/mementar/OccasionsPublisher.h"
+#include "mementar/API/mementar/clients/ClientBase.h"
 
 namespace mementar
 {

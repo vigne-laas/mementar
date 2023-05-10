@@ -64,7 +64,7 @@ find_package(OpenCV REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+  INCLUDE_DIRS include include/mementar/API
   LIBRARIES mementar_lib
   CATKIN_DEPENDS roscpp rospy std_msgs ontologenius
   DEPENDS OpenCV
@@ -77,7 +77,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include include/mementar/API
+  include
+  include/mementar/API
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -169,14 +170,14 @@ target_link_libraries(mementar_drawer_lib
 ##############################
 
 add_library(mementar_lib
-  src/API/ActionsPublisher.cpp
-  src/API/ActionsSubscriber.cpp
-  src/API/TimelineManipulator.cpp
-  src/API/TimelinesManipulator.cpp
-  src/API/clients/ManagerClient.cpp
-  src/API/clients/ClientBase.cpp
-  src/API/OccasionsPublisher.cpp
-  src/API/OccasionsSubscriber.cpp
+  src/API/mementar/ActionsPublisher.cpp
+  src/API/mementar/ActionsSubscriber.cpp
+  src/API/mementar/TimelineManipulator.cpp
+  src/API/mementar/TimelinesManipulator.cpp
+  src/API/mementar/clients/ManagerClient.cpp
+  src/API/mementar/clients/ClientBase.cpp
+  src/API/mementar/OccasionsPublisher.cpp
+  src/API/mementar/OccasionsSubscriber.cpp
 )
 target_link_libraries(mementar_lib ${catkin_LIBRARIES})
 add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)

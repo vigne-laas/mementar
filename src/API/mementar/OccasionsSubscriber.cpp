@@ -1,4 +1,4 @@
-#include "mementar/API/OccasionsSubscriber.h"
+#include "mementar/API/mementar/OccasionsSubscriber.h"
 
 #include "mementar/MementarOccasionSubscription.h"
 #include "mementar/MementarOcassionUnsubscription.h"

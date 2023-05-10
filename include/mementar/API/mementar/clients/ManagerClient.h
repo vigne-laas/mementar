@@ -1,7 +1,7 @@
 #ifndef MEMENTAR_MANAGERCLIENT_H
 #define MEMENTAR_MANAGERCLIENT_H
 
-#include "mementar/API/clients/ClientBase.h"
+#include "mementar/API/mementar/clients/ClientBase.h"
 
 namespace mementar
 {

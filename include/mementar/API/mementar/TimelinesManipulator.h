@@ -6,8 +6,8 @@
 
 #include <ros/ros.h>
 
-#include "mementar/API/clients/ManagerClient.h"
-#include "mementar/API/TimelineManipulator.h"
+#include "mementar/API/mementar/clients/ManagerClient.h"
+#include "mementar/API/mementar/TimelineManipulator.h"
 
 namespace mementar
 {

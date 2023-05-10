@@ -5,8 +5,8 @@
 #include <atomic>
 
 #include "ontologenius/OntologyManipulator.h"
-#include "mementar/API/TimelineManipulator.h"
-#include "mementar/API/OccasionsSubscriber.h"
+#include "mementar/API/mementar/TimelineManipulator.h"
+#include "mementar/API/mementar/OccasionsSubscriber.h"
 
 OntologyManipulator* onto_ptr;
 mementar::TimelineManipulator* time_ptr;

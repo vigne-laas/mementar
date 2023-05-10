@@ -1,4 +1,4 @@
-#include "mementar/API/clients/ManagerClient.h"
+#include "mementar/API/mementar/clients/ManagerClient.h"
 
 namespace mementar
 {

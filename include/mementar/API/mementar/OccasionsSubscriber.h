@@ -10,7 +10,7 @@
 #include <ros/callback_queue.h>
 
 #include "mementar/MementarOccasion.h"
-#include "mementar/API/Fact.h"
+#include "mementar/API/mementar/Fact.h"
 
 namespace mementar
 {
