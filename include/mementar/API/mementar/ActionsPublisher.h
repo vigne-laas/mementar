@@ -14,8 +14,10 @@ public:
   ActionsPublisher(ros::NodeHandle* n, const std::string& name = "");
 
   void insert(const std::string& name, time_t start_stamp = time(0), time_t end_stamp = 0);
-  void insert(const std::string& name, ros::Time start_stamp = (ros::Time::now()), ros::Time end_stamp = {0,0});
+  void insert(const std::string& name, ros::Time start_stamp = ros::Time::now(), ros::Time end_stamp = ros::Time(0));
+  
   void insertEnd(const std::string& name, time_t end_stamp = time(0));
+  void insertEnd(const std::string& name, ros::Time end_stamp = ros::Time::now());
 
 private:
   ros::NodeHandle* n_;

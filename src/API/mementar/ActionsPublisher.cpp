@@ -21,10 +21,14 @@ void ActionsPublisher::insert(const std::string& name, ros::Time start_stamp, ro
   publish(name, start_stamp, end_stamp);
 }
 
-
 void ActionsPublisher::insertEnd(const std::string& name, time_t end_stamp)
 {
   publish(name, 0, end_stamp);
+}
+
+void ActionsPublisher::insertEnd(const std::string& name, ros::Time end_stamp)
+{
+  publish(name, ros::Time(0), end_stamp);
 }
 
 void ActionsPublisher::publish(const std::string& name, time_t start_stamp, time_t end_stamp)
@@ -35,6 +39,7 @@ void ActionsPublisher::publish(const std::string& name, time_t start_stamp, time
   msg.end_stamp.sec = end_stamp;
   pub_.publish(msg);
 }
+
 void ActionsPublisher::publish(const std::string& name, ros::Time start_stamp, ros::Time end_stamp)
 {
   MementarAction msg;
