@@ -214,7 +214,7 @@ void mementarGUI::displayErrorInfo(const std::string& text)
 
 void mementarGUI::displayInstancesList()
 {
-  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage_multi");
+  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage");
 
   mementar::MementarService srv;
   srv.request.action = "list";
@@ -287,7 +287,7 @@ void mementarGUI::currentTabChangedSlot(int index)
 
 void mementarGUI::addInstanceSlot()
 {
-  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage_multi");
+  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage");
 
   mementar::MementarService srv;
   srv.request.action = "add";
@@ -323,7 +323,7 @@ void mementarGUI::addInstanceSlot()
   }
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/manage_multi client call failed");
+    displayErrorInfo("mementar/manage client call failed");
   else
   {
     start();
@@ -339,14 +339,14 @@ void mementarGUI::addInstanceSlot()
 
 void mementarGUI::deleteInstanceSlot()
 {
-  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage_multi");
+  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage");
 
   mementar::MementarService srv;
   srv.request.action = "delete";
   srv.request.param = ui->manager_instance_name_editline->text().toStdString();
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/manage_multi client call failed");
+    displayErrorInfo("mementar/manage client call failed");
   else
   {
     start();
