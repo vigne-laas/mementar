@@ -1,5 +1,5 @@
-#ifndef ONTOLOGENIUS_FACTCLIENT_H
-#define ONTOLOGENIUS_FACTCLIENT_H
+#ifndef MEMENTAR_FACTCLIENT_H
+#define MEMENTAR_FACTCLIENT_H
 
 #include "mementar/API/mementar/clients/ClientBase.h"
 
@@ -21,4 +21,4 @@ private:
 
 } // namespace mementar
 
-#endif // ONTOLOGENIUS_FACTCLIENT_H
+#endif // MEMENTAR_FACTCLIENT_H

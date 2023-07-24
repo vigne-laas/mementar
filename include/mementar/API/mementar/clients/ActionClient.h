@@ -1,5 +1,5 @@
-#ifndef ONTOLOGENIUS_ACTIONCLIENT_H
-#define ONTOLOGENIUS_ACTIONCLIENT_H
+#ifndef MEMENTAR_ACTIONCLIENT_H
+#define MEMENTAR_ACTIONCLIENT_H
 
 #include "mementar/API/mementar/clients/ClientBase.h"
 
@@ -25,4 +25,4 @@ private:
 
 } // namespace mementar
 
-#endif // ONTOLOGENIUS_ACTIONCLIENT_H
+#endif // MEMENTAR_ACTIONCLIENT_H
