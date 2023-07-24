@@ -158,7 +158,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "action_pub_sub_tests");
 
   ros::NodeHandle n;
-  OntologyManipulator onto;
+  onto::OntologyManipulator onto;
   mementar::TimelineManipulator timeline(&n);
   time_ptr = &timeline;
 

@@ -49,7 +49,7 @@ private:
   std::string directory_;
   Configuration configuration_;
   size_t order_;
-  OntologyManipulator onto_;
+  onto::OntologyManipulator onto_;
 
   Timeline* timeline_;
   Feeder feeder_;

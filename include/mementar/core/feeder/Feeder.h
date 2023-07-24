@@ -18,7 +18,7 @@ class Timeline;
 class Feeder
 {
 public:
-  explicit Feeder(OntologyManipulator* onto, Timeline* timeline = nullptr);
+  explicit Feeder(onto::OntologyManipulator* onto, Timeline* timeline = nullptr);
   Feeder(Timeline* timeline = nullptr);
 
   void storeFact(const std::string& feed, const SoftPoint::Ttime& stamp) { feed_storage_.insertFact(feed, stamp); }
@@ -48,7 +48,7 @@ private:
   IdGenerator id_generator_;
   //Versionor versionor_;
   Timeline* timeline_;
-  OntologyManipulator* onto_;
+  onto::OntologyManipulator* onto_;
   std::function<void(ContextualizedFact*)> callback_;
 
   std::experimental::optional<bool> is_whitelist_;

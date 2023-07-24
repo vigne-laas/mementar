@@ -8,7 +8,7 @@
 #include "mementar/API/mementar/TimelineManipulator.h"
 #include "mementar/API/mementar/OccasionsSubscriber.h"
 
-OntologyManipulator* onto_ptr;
+onto::OntologyManipulator* onto_ptr;
 mementar::TimelineManipulator* time_ptr;
 std::atomic<bool> done;
 
@@ -152,7 +152,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "fact_pub_sub_tests");
 
   ros::NodeHandle n;
-  OntologyManipulator onto;
+  onto::OntologyManipulator onto;
   onto_ptr = &onto;
   mementar::TimelineManipulator timeline(&n);
   time_ptr = &timeline;

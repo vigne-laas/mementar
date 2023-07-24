@@ -20,7 +20,7 @@ OccasionsManager::OccasionsManager(ros::NodeHandle* n, std::string name) :
   unsub_service_ = n_->advertiseService(service_name, &OccasionsManager::UnsubscribeCallback, this);
 }
 
-OccasionsManager::OccasionsManager(ros::NodeHandle* n, OntologyManipulator* onto, std::string name) :
+OccasionsManager::OccasionsManager(ros::NodeHandle* n, onto::OntologyManipulator* onto, std::string name) :
                                                                      subscription_(onto),
                                                                      run_(false),
                                                                      pub_(n->advertise<mementar::MementarOccasion>((name == "") ? "occasions" : "occasions/" + name, 1000))

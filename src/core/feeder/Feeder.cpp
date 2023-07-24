@@ -12,7 +12,7 @@ Feeder::Feeder(Timeline* timeline) : callback_([this](auto triplet){ this->defau
   onto_ = nullptr;
 }
 
-Feeder::Feeder(OntologyManipulator* onto, Timeline* timeline) : callback_([this](auto triplet){ this->defaultCallback(triplet); }) //, versionor_(&feed_storage_)
+Feeder::Feeder(onto::OntologyManipulator* onto, Timeline* timeline) : callback_([this](auto triplet){ this->defaultCallback(triplet); }) //, versionor_(&feed_storage_)
 {
   timeline_ = timeline;
   onto_ = onto;

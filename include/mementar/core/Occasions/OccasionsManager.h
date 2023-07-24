@@ -22,7 +22,7 @@ class OccasionsManager
 {
 public:
   explicit OccasionsManager(ros::NodeHandle* n, std::string name = "");
-  OccasionsManager(ros::NodeHandle* n, OntologyManipulator* onto, std::string name = "");
+  OccasionsManager(ros::NodeHandle* n, onto::OntologyManipulator* onto, std::string name = "");
 
   void run();
 
@@ -33,7 +33,7 @@ public:
 
 private:
   ros::NodeHandle* n_;
-  OntologyManipulator* onto_;
+  onto::OntologyManipulator* onto_;
   Subscription subscription_;
   std::atomic<bool> run_;
 
