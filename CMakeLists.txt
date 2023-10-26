@@ -190,6 +190,7 @@ add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 add_library(mementar_interface
   src/RosInterface.cpp
+  src/graphical/timeline/CsvSaver.cpp
 )
 target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib mementar_drawer_lib)
 target_link_libraries(mementar_interface ${catkin_LIBRARIES})
