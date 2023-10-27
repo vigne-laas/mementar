@@ -25,7 +25,7 @@ bool CsvSaver::save(const std::string& file_name, Timeline* timeline)
         std::cout << "Fail to open file: " << file_name << std::endl;
         return false;
     }
-
+    file_stream << "time;type;subject;property;object\n" ;
     while(node != nullptr)
     {
         double time = node->getData()[0]->getTime();
