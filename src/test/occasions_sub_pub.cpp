@@ -33,7 +33,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "occasions_sub_pub");
 
   ros::NodeHandle n;
-  onto::OntologyManipulator onto(&n);
+  onto::OntologyManipulator onto;
 
   mementar::TimelineManipulator manip(&n);
   manip.waitInit();
