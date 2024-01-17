@@ -24,7 +24,7 @@ find_package(cmake_modules REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
 find_package(OpenCV REQUIRED)
-find_package(ontologenius 0.3.0 REQUIRED)
+find_package(ontologenius 0.4.0 REQUIRED)
 
 ################################################
 ## Declare ROS messages, services and actions ##
