@@ -14,6 +14,9 @@
 #include "mementar/MementarService.h"
 #include "mementar/StampedString.h"
 
+#include "ontologenius/OntologeniusStampedString.h"
+#include "ontologenius/OntologeniusExplanation.h"
+
 //#include "mementar/core/LtManagement/EpisodicTree/ArchivedLeafNode.h"
 #include "mementar/core/feeder/Feeder.h"
 #include "mementar/core/feeder/FeederEcho.h"
@@ -67,8 +70,8 @@ private:
   void stampedKnowledgeCallback(const StampedString::ConstPtr& msg);
   void explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
   void actionKnowledgeCallback(const MementarAction::ConstPtr& msg);
-  void ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg);
-  void ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
+  void ontoStampedKnowledgeCallback(const ontologenius::OntologeniusStampedString::ConstPtr& msg);
+  void ontoExplanationKnowledgeCallback(const ontologenius::OntologeniusExplanation::ConstPtr& msg);
 
   bool managerInstanceHandle(mementar::MementarService::Request &req,
                              mementar::MementarService::Response &res);

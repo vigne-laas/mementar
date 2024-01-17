@@ -161,12 +161,12 @@ void RosInterface::actionKnowledgeCallback(const MementarAction::ConstPtr& msg)
                       (msg->end_stamp.sec != 0) ? rosTime2Float(msg->end_stamp.sec, msg->end_stamp.nsec) : SoftPoint::default_time);
 }
 
-void RosInterface::ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg)
+void RosInterface::ontoStampedKnowledgeCallback(const ontologenius::OntologeniusStampedString::ConstPtr& msg)
 {
-  feeder_.storeFact(msg->data, rosTime2Float(msg->stamp.sec, msg->stamp.nsec));
+  feeder_.storeFact(msg->data, rosTime2Float(msg->stamp.seconds, msg->stamp.nanoseconds));
 }
 
-void RosInterface::ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
+void RosInterface::ontoExplanationKnowledgeCallback(const ontologenius::OntologeniusExplanation::ConstPtr& msg)
 {
   feeder_.storeFact(msg->fact, msg->cause);
 }
