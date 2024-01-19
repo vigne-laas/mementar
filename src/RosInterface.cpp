@@ -105,8 +105,13 @@ void RosInterface::reset()
 {
   mut_.lock();
   delete timeline_;
-  std::experimental::filesystem::remove_all(directory_);
-  std::experimental::filesystem::create_directories(directory_);
+
+  if(directory_.empty()==false)
+  {
+    std::experimental::filesystem::remove_all(directory_);
+    std::experimental::filesystem::create_directories(directory_);
+  }
+  
   timeline_ = new Timeline();
   feeder_.link(timeline_);
   mut_.unlock();
