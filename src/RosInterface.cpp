@@ -197,15 +197,16 @@ bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req
     tree_->newSession();
     mut_.unlock_shared();
   }
-  else */if(req.action == "reset")
+  else */
+  if(req.action == "reset")
     reset();
-  if(req.action == "draw")
+  else if(req.action == "draw")
   {
     TimelineDrawer drawer;
     if(drawer.draw(req.param, timeline_) == false)
       res.code = NO_EFFECT;
   }
-  if(req.action == "save")
+  else if(req.action == "save")
   {
     CsvSaver saver;
     if(saver.save(req.param, timeline_) == false)
