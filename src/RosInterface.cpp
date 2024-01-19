@@ -115,6 +115,8 @@ void RosInterface::reset()
   timeline_ = new Timeline();
   feeder_.link(timeline_);
   mut_.unlock();
+  
+  Display::info("Timeline of " + name_ + " has been reset.");
 }
 
 void RosInterface::lock()
