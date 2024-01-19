@@ -105,11 +105,18 @@ void RosInterface::reset()
 {
   mut_.lock();
   delete timeline_;
-  std::experimental::filesystem::remove_all(directory_);
-  std::experimental::filesystem::create_directories(directory_);
+
+  if(directory_.empty()==false)
+  {
+    std::experimental::filesystem::remove_all(directory_);
+    std::experimental::filesystem::create_directories(directory_);
+  }
+  
   timeline_ = new Timeline();
   feeder_.link(timeline_);
   mut_.unlock();
+  
+  Display::info("Timeline of " + name_ + " has been reset.");
 }
 
 void RosInterface::lock()
@@ -192,15 +199,16 @@ bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req
     tree_->newSession();
     mut_.unlock_shared();
   }
-  else */if(req.action == "reset")
+  else */
+  if(req.action == "reset")
     reset();
-  if(req.action == "draw")
+  else if(req.action == "draw")
   {
     TimelineDrawer drawer;
     if(drawer.draw(req.param, timeline_) == false)
       res.code = NO_EFFECT;
   }
-  if(req.action == "save")
+  else if(req.action == "save")
   {
     CsvSaver saver;
     if(saver.save(req.param, timeline_) == false)

@@ -33,6 +33,7 @@ bool CsvSaver::save(const std::string& file_name, Timeline* timeline)
         {
             file_stream << std::to_string(time) << separator;
             std::string triplet_str = fact->Triplet::toString();
+            replaceAll(triplet_str, ";", ",");
             replaceAll(triplet_str, triplet_separator, separator);
             replaceAll(triplet_str, "]", "]" + separator);
             file_stream << triplet_str << "\n";
