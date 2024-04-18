@@ -82,6 +82,13 @@ bool Feeder::runForFacts()
     /*if(!feed.checkout_)
       versionor_.insert(feed);*/
 
+    if(!feed.fact_)
+    {
+      notifications_.push_back("[FAIL][Feed with no fact]");
+      continue;
+    }
+
+    std::cout << "consider " << feed.fact_.value().Triplet::toString() << std::endl;
     if(feed.fact_.value().valid() == false)
     {
       notifications_.push_back("[FAIL][fact poorly formed]" + feed.fact_.value().Triplet::toString());
@@ -116,16 +123,20 @@ bool Feeder::runForFacts()
           else
           {
             auto tmp_explanation = timeline_->facts.findRecent(feed_expl);
-            if(explanation == nullptr)
+            if(tmp_explanation)
             {
-              explanation = tmp_explanation;
-              fact_explanation = feed_expl;
+              if(explanation == nullptr)
+              {
+                explanation = tmp_explanation;
+                fact_explanation = feed_expl;
+              }
+              else if(explanation < tmp_explanation)
+              {
+                explanation = tmp_explanation;
+                fact_explanation = feed_expl;
+              }
             }
-            else if(explanation < tmp_explanation)
-            {
-              explanation = tmp_explanation;
-              fact_explanation = feed_expl;
-            }
+            
           }
         }
 
