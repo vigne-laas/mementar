@@ -84,9 +84,7 @@ ContextualizedFact* FactGraph::findRecent(const Triplet& triplet, SoftPoint::Tti
       if(data->getTime() < until)
         return nullptr;
       else if(data->fit(triplet))
-      {
         return data;
-      }
     }
   }
   return nullptr;

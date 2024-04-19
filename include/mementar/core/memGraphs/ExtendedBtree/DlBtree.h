@@ -59,6 +59,7 @@ public:
     this->payload_.emplace_back(data);
     this->payload_.back().leaf_ = leaf;
   }
+  
   void remove(LeafType* leaf, Tdata data)
   {
     (void)leaf;
