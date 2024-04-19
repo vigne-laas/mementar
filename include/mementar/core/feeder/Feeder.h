@@ -25,7 +25,7 @@ public:
   void storeFact(const std::string& feed, const std::string& expl) { feed_storage_.insertFact(feed, expl); }
   void storeAction(const std::string& name, const SoftPoint::Ttime& start_stamp, const SoftPoint::Ttime& end_stamp) { feed_storage_.insertAction(name, start_stamp, end_stamp); }
   bool run();
-  void link(Timeline* timeline) {timeline_ = timeline; }
+  void link(Timeline* timeline) {timeline_ = timeline; id_generator_.reset(); }
   void setCallback(const std::function<void(ContextualizedFact*)>& callback) { callback_ = callback; }
 
   bool setWhitelist(std::vector<std::string> list);

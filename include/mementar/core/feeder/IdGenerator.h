@@ -25,6 +25,8 @@ public:
     }
   }
 
+  void reset() { id_ = 0; }
+
   std::string get()
   {
     return std::to_string(id_++);
