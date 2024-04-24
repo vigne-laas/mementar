@@ -77,7 +77,7 @@ ContextualizedFact* FactGraph::find(const std::string& fact_id)
 
 ContextualizedFact* FactGraph::findRecent(const Triplet& triplet, SoftPoint::Ttime until)
 {
-  for(BplusLeaf<SoftPoint::Ttime, ContextualizedFact*>* leaf = timeline_.getLast(); leaf != nullptr; leaf = leaf->getPreviousLeaf())
+  for(const BplusLeaf<SoftPoint::Ttime, ContextualizedFact*>* leaf = timeline_.getLast(); leaf != nullptr; leaf = leaf->getPreviousLeaf())
   {
     for(auto data : leaf->payload_)
     {

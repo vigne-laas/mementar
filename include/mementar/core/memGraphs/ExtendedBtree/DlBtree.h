@@ -17,7 +17,7 @@ public:
                                       leaf_(nullptr)
   {}
 
-  LeafType* getNextLeaf()
+  LeafType* getNextLeaf() const
   {
     if(leaf_ == nullptr)
       return nullptr;
@@ -25,7 +25,7 @@ public:
       return static_cast<LeafType*>(leaf_->getNextLeaf());
   }
 
-  LeafType* getPreviousLeaf()
+  LeafType* getPreviousLeaf() const
   {
     if(leaf_ == nullptr)
       return nullptr;

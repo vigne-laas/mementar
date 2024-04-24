@@ -33,16 +33,16 @@ public:
   std::string getId() const { return getValue(); }
 
   bool isPartOfAction() const { return action_ != nullptr; }
-  Action* getActionPart() { return action_; }
+  Action* getActionPart() const { return action_; }
 
   std::string toString() const { return getValue() + " " + SoftPoint::toString() + " : " + getData() + std::string(action_ ? " => part of action " + action_->getName() : ""); }
 
-  bool operator==(const ContextualizedFact& other)
+  bool operator==(const ContextualizedFact& other) const
   {
     return this->Fact::operator==(other);
   }
 
-  bool isPartOf(const ContextualizedFact& other)
+  bool isPartOf(const ContextualizedFact& other) const
   {
     return ( (subject_ == other.subject_) &&
              (predicat_ == other.predicat_) );

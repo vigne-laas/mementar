@@ -34,18 +34,18 @@ public:
         i++;
     }
   }
-  bool hasData()
+  bool hasData() const
   {
     return (payload_.size() != 0);
   }
 
-  std::vector<DataType> getData()
+  std::vector<DataType> getData() const
   {
     return payload_;
   }
 
-  BplusLeaf* getPreviousLeaf() { return prev_; }
-  BplusLeaf* getNextLeaf() { return next_; }
+  BplusLeaf* getPreviousLeaf() const { return prev_; }
+  BplusLeaf* getNextLeaf() const { return next_; }
 
   void setPreviousLeaf(BplusLeaf* prev) { prev_ = prev; }
   void setNextLeaf(BplusLeaf* next) { next_ = next; }
@@ -90,13 +90,13 @@ public:
     return (payload_.size() != 0);
   }
 
-  std::vector<DataType> getData()
+  std::vector<DataType> getData() const
   {
     return payload_;
   }
 
-  BplusLeaf* getPreviousLeaf() { return prev_; }
-  BplusLeaf* getNextLeaf() { return next_; }
+  BplusLeaf* getPreviousLeaf() const { return prev_; }
+  BplusLeaf* getNextLeaf() const { return next_; }
 
   void setPreviousLeaf(BplusLeaf* prev) { prev_ = prev; }
   void setNextLeaf(BplusLeaf* next) { next_ = next; }
