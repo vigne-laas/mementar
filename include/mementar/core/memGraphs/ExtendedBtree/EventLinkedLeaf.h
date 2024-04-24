@@ -136,7 +136,7 @@ Tdata EventLinkedLeaf<Tkey,Tdata>::getPrev(Tdata data)
   {
     for(auto& ld : prev_node->payload_)
     {
-      if(data->isPartOf(*ld))
+      if((ld != nullptr) && data->isPartOf(*ld))
         return ld;
     }
     prev_node = static_cast<EventLinkedLeaf<Tkey,Tdata>*>(prev_node->getPreviousLeaf());
@@ -184,7 +184,7 @@ Tdata EventLinkedLeaf<Tkey,Tdata>::getNext(Tdata data)
   {
     for(auto ld : next_node->payload_)
     {
-      if(data->isPartOf(*ld))
+      if((ld != nullptr) && data->isPartOf(*ld))
         return ld;
     }
     next_node = static_cast<EventLinkedLeaf<Tkey,Tdata>*>(next_node->getNextLeaf());
