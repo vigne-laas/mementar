@@ -34,18 +34,18 @@ public:
         i++;
     }
   }
-  bool hasData()
+  bool hasData() const
   {
     return (payload_.size() != 0);
   }
 
-  std::vector<DataType> getData()
+  std::vector<DataType> getData() const
   {
     return payload_;
   }
 
-  BplusLeaf* getPreviousLeaf() { return prev_; }
-  BplusLeaf* getNextLeaf() { return next_; }
+  BplusLeaf* getPreviousLeaf() const { return prev_; }
+  BplusLeaf* getNextLeaf() const { return next_; }
 
   void setPreviousLeaf(BplusLeaf* prev) { prev_ = prev; }
   void setNextLeaf(BplusLeaf* next) { next_ = next; }
@@ -90,13 +90,13 @@ public:
     return (payload_.size() != 0);
   }
 
-  std::vector<DataType> getData()
+  std::vector<DataType> getData() const
   {
     return payload_;
   }
 
-  BplusLeaf* getPreviousLeaf() { return prev_; }
-  BplusLeaf* getNextLeaf() { return next_; }
+  BplusLeaf* getPreviousLeaf() const { return prev_; }
+  BplusLeaf* getNextLeaf() const { return next_; }
 
   void setPreviousLeaf(BplusLeaf* prev) { prev_ = prev; }
   void setNextLeaf(BplusLeaf* next) { next_ = next; }
@@ -155,7 +155,7 @@ public:
   public:
 
       BtreeReverseIterator(T* ptr = nullptr):BtreeIterator<T>(ptr) {}
-      BtreeReverseIterator(const BtreeIterator<T>& forward_iterator) { this->ptr_ = *forward_iterator; }
+      explicit BtreeReverseIterator(const BtreeIterator<T>& forward_iterator) { this->ptr_ = *forward_iterator; }
       BtreeReverseIterator(const BtreeReverseIterator<T>& other) = default;
 
       BtreeReverseIterator<T>&           operator=(const BtreeReverseIterator<T>& other) = default;

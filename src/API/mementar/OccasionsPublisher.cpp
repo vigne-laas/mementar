@@ -1,4 +1,4 @@
-#include "mementar/API/OccasionsPublisher.h"
+#include "mementar/API/mementar/OccasionsPublisher.h"
 
 #include "mementar/StampedString.h"
 

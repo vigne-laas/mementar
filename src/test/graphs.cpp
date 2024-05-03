@@ -47,16 +47,16 @@ int main()
   mementar::Fact e1("cube12|isOn|Table_1", 2,4);
   mementar::Fact e2("cube12|isOn|Table_2", 8);
 
-  action_graph.add(new mementar::Action("pick_1", mementar::SoftPoint(1, 3), 7));
-  action_graph.add(new mementar::Action("place_1", 7, mementar::SoftPoint(9, 10)));
-  action_graph.add(new mementar::Action("pick_2", 12));
+  action_graph.add(new mementar::Action("pick_1", mementar::SoftPoint(1, 3), mementar::SoftPoint(7)));
+  action_graph.add(new mementar::Action("place_1", mementar::SoftPoint(7), mementar::SoftPoint(9, 10)));
+  action_graph.add(new mementar::Action("pick_2", mementar::SoftPoint(12)));
 
   auto pending = action_graph.getPendingPtrSafe();
   for(auto action : pending)
     std::cout << action->getName() << " is a pending action" << std::endl;
 
-  action_graph.setEnd("pick_2", 15);
-  action_graph.setEnd("pick_1", 17);
+  action_graph.setEnd("pick_2", mementar::SoftPoint(15));
+  action_graph.setEnd("pick_1", mementar::SoftPoint(17));
 
   fact_graph.add(new mementar::ContextualizedFact("ce3", e1));
   fact_graph.add(new mementar::ContextualizedFact("ce4", e2));

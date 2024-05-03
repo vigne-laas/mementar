@@ -16,7 +16,7 @@ namespace mementar {
 class ActionGraph : public Graph<Action>
 {
 public:
-  ActionGraph(FactGraph* fact_graph);
+  explicit ActionGraph(FactGraph* fact_graph);
   ~ActionGraph();
 
   void add(Action* action);
@@ -31,6 +31,7 @@ public:
   std::string getStartFact(const std::string& action_name);
   std::string getEndFact(const std::string& action_name);
   std::unordered_set<std::string> getFactsDuring(const std::string& action_name);
+  bool removeAction(const std::string& action_name);
 
   std::vector<Action*> get()
   {

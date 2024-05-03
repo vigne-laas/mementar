@@ -1,4 +1,4 @@
-#include "mementar/API/TimelinesManipulator.h"
+#include "mementar/API/mementar/TimelinesManipulator.h"
 
 namespace mementar
 {
@@ -17,7 +17,7 @@ TimelinesManipulator::~TimelinesManipulator()
 
 bool TimelinesManipulator::waitInit(int32_t timeout)
 {
-  return ros::service::waitForService("mementar/manage_multi", timeout);
+  return ros::service::waitForService("mementar/manage", timeout);
 }
 
 TimelineManipulator* TimelinesManipulator::operator[](const std::string& name)

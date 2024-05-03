@@ -3,28 +3,45 @@
 namespace mementar
 {
 
-size_t Subscription::subscribe(const Triplet& patern, size_t count)
+size_t Subscription::subscribe(const TripletPattern& patern, size_t count)
 {
   map_mut_.lock();
   size_t id = id_manager_.getNewId();
-  triplet_paterns_.insert(std::pair<size_t, TripletPattern>(id, getPattern(patern)));
+  triplet_paterns_.insert(std::pair<size_t, TripletPattern>(id, refinePattern(patern)));
   counts_[id] = count;
   map_mut_.unlock();
 
   return id;
 }
 
-bool Subscription::unsubscribe(size_t id)
+bool Subscription::unsubscribe(int id)
 {
   bool res = true;
   map_mut_.lock();
-  if(id_manager_.removeId(id))
+  if(id != -1)
   {
-    triplet_paterns_.erase(id);
-    counts_.erase(id);
+    if(id_manager_.removeId(id))
+    {
+      triplet_paterns_.erase(id);
+      counts_.erase(id);
+    }
+    else
+      res = false;
   }
   else
-    res = false;
+  {
+    auto ids = id_manager_.getIds();
+    for(auto id : ids)
+    {
+      if(id_manager_.removeId(id))
+      {
+        triplet_paterns_.erase(id);
+        counts_.erase(id);
+      }
+      else
+        res = false;
+    }
+  }
 
   map_mut_.unlock();
   return res;
@@ -63,9 +80,9 @@ std::vector<size_t> Subscription::evaluate(const Triplet& triplet)
   return res;
 }
 
-TripletPattern Subscription::getPattern(const Triplet& triplet)
+TripletPattern Subscription::refinePattern(const TripletPattern& triplet)
 {
-  TripletPattern pattern(triplet);
+  TripletPattern pattern = triplet;
   if(onto_ != nullptr)
   {
     if(pattern.isSubjectUndefined() == false)
@@ -85,10 +102,11 @@ TripletPattern Subscription::getPattern(const Triplet& triplet)
 bool Subscription::compareToTriplet(const TripletPattern& pattern, const Triplet& triplet)
 {
   if(onto_ == nullptr)
-    return triplet.fit(pattern);
+    return pattern.fit(triplet);
 
-  if(pattern.add_ != triplet.add_)
-    return false;
+  if(!pattern.isOperatorUndefined())
+    if(pattern.add_ != triplet.add_)
+        return false;
 
   if(pattern.isSubjectIndividual() && !pattern.isSubjectUndefined())
   {

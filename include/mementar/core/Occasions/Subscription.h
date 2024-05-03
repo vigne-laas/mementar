@@ -16,10 +16,10 @@ namespace mementar
 class Subscription
 {
 public:
-  Subscription(OntologyManipulator* onto = nullptr) { onto_ = onto; }
+  Subscription(onto::OntologyManipulator* onto = nullptr) { onto_ = onto; }
 
-  size_t subscribe(const Triplet& patern, size_t count);
-  bool unsubscribe(size_t id);
+  size_t subscribe(const TripletPattern& patern, size_t count);
+  bool unsubscribe(int id);
 
   bool isFinished(size_t id);
   bool empty() { return triplet_paterns_.size() == 0; }
@@ -33,9 +33,9 @@ private:
 
   IdManager<size_t> id_manager_;
 
-  OntologyManipulator* onto_;
+  onto::OntologyManipulator* onto_;
 
-  TripletPattern getPattern(const Triplet& triplet);
+  TripletPattern refinePattern(const TripletPattern& triplet);
   bool compareToTriplet(const TripletPattern& pattern, const Triplet& triplet);
 };
 

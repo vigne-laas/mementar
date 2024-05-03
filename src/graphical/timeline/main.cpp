@@ -8,6 +8,52 @@ mementar::Timeline* getTimeline()
 {
   mementar::Timeline* timeline = new mementar::Timeline();
 
+  timeline->actions.add(new mementar::Action("speak_673095", 871, 875));
+  timeline->actions.add(new mementar::Action("tidy_one_297846", 871, 884));
+  timeline->actions.add(new mementar::Action("tydy_cubes_160206", 871, 906));
+  timeline->actions.add(new mementar::Action("tidy_414469", 876, 888));
+  timeline->actions.add(new mementar::Action("human_pick_cube_9", 881, 883));
+  timeline->actions.add(new mementar::Action("wait_for_human_460406", 883, 884));
+  timeline->actions.add(new mementar::Action("human_drop_cub9_9", 885, 887));
+  timeline->actions.add(new mementar::Action("speak_43", 888, 892));
+  timeline->actions.add(new mementar::Action("tidy_one_36", 888, 897));
+  timeline->actions.add(new mementar::Action("tydy_cubes_296232", 888, 897));
+  timeline->actions.add(new mementar::Action("tidy_467066", 893, 902));
+  timeline->actions.add(new mementar::Action("human_pick_cube_10", 894, 896));
+  timeline->actions.add(new mementar::Action("wait_for_human_347911", 897, 897));
+  timeline->actions.add(new mementar::Action("human_drop_cube_10", 899, 901));
+  timeline->actions.add(new mementar::Action("speak_243974", 902, 906));
+
+  return timeline;
+}
+
+/*mementar::Timeline* getTimeline()
+{
+  mementar::Timeline* timeline = new mementar::Timeline();
+
+  timeline->actions.add(new mementar::Action("speak_42", 202, 206));
+  timeline->actions.add(new mementar::Action("tidy_one_35", 202, 213));
+  timeline->actions.add(new mementar::Action("tydy_cubes_160206", 203, 225));
+  timeline->actions.add(new mementar::Action("tidy_414469", 206, 217));
+  timeline->actions.add(new mementar::Action("human_pick_cube_9", 210, 212));
+  timeline->actions.add(new mementar::Action("wait_for_human_460406", 213, 213));
+  timeline->actions.add(new mementar::Action("human_drop_cub9_9", 214)); //,216
+  timeline->actions.add(new mementar::Action("speak_43", 217, 221));
+  timeline->actions.add(new mementar::Action("tidy_one_36", 217, 225));
+  timeline->actions.add(new mementar::Action("plop_0", 217, 225));
+  timeline->actions.add(new mementar::Action("tidy_467066", 221, 229));
+  timeline->actions.add(new mementar::Action("human_pick_cube_10", 222, 224));
+  timeline->actions.add(new mementar::Action("wait_for_human_347911", 225, 225));
+  timeline->actions.add(new mementar::Action("human_drop_cube_10", 226, 228));
+  timeline->actions.add(new mementar::Action("speak_243974", 229, 233));
+
+  return timeline;
+}*/
+
+/*mementar::Timeline* getTimeline()
+{
+  mementar::Timeline* timeline = new mementar::Timeline();
+
   timeline->actions.add(new mementar::Action("blue_pick_1", mementar::SoftPoint(35, 36), 37));
   timeline->actions.add(new mementar::Action("blue_place_1", 37, mementar::SoftPoint(41, 42)));
   timeline->actions.add(new mementar::Action("monitor_1", 43, 51));
@@ -60,7 +106,7 @@ mementar::Timeline* getTimeline()
   timeline->facts.add(new mementar::ContextualizedFact("e27", mementar::Fact("tape_1|isIn|pink_box", 173,175)));
 
   return timeline;
-}
+}*/
 
 
 /* HUMAN GREEN*/

@@ -25,13 +25,16 @@ mementar::Parameters params;
 bool deleteInterface(std::string name)
 {
   interfaces_[name]->stop();
+  usleep(1000);
   try
   {
     interfaces_threads_[name].join();
   }
-  catch(...)
+  catch(std::runtime_error& ex)
   {
-    return false;
+    mementar::Display::error("Catch error when joining the interface thread : " + std::string(ex.what()));
+    mementar::Display::warning("The thread will be detached");
+    interfaces_threads_[name].detach();
   }
 
   interfaces_threads_.erase(name);
@@ -104,13 +107,13 @@ int main(int argc, char** argv)
   params.set(argc, argv);
   params.display();
 
-  ros::ServiceServer service = n_->advertiseService("manage_multi", managerHandle);
+  ros::ServiceServer service = n_->advertiseService("manage", managerHandle);
+  (void)service;
 
   ros::spin();
 
   std::vector<std::string> interfaces_names;
-  for(auto intreface : interfaces_)
-    interfaces_names.push_back(intreface.first);
+  std::transform(interfaces_.cbegin(), interfaces_.cend(), std::back_inserter(interfaces_names), [](const auto& interface){ return interface.first; });
 
   for(size_t i = 0; i < interfaces_names.size(); i++)
     deleteInterface(interfaces_names[i]);

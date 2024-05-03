@@ -16,31 +16,33 @@ class ContextualizedFact : public Fact, public ValuedNode, public LinkedEvent<Ev
 public:
   using LeafType = EventLinkedLeaf<SoftPoint::Ttime, ContextualizedFact*>;
 
-  ContextualizedFact(const std::string& id, const Fact& other, Action* action = nullptr) : Fact(other), ValuedNode(id)
-  {
-    action_ = action;
-  }
+  ContextualizedFact(const std::string& id, const Fact& other, Action* action = nullptr) : Fact(other),
+                                                                                           ValuedNode(id),
+                                                                                           action_(action),
+                                                                                           deduction_level_(0)
+  {}
 
-  ContextualizedFact(const std::string& id, const std::string& data, const SoftPoint& soft_point, Action* action = nullptr) : Fact(data, soft_point), ValuedNode(id)
-  {
-    action_ = action;
-  }
+  ContextualizedFact(const std::string& id, const std::string& data, const SoftPoint& soft_point, Action* action = nullptr) : Fact(data, soft_point),
+                                                                                                                              ValuedNode(id),
+                                                                                                                              action_(action),
+                                                                                                                              deduction_level_(0)
+  {}
 
   virtual ~ContextualizedFact() {}
 
   std::string getId() const { return getValue(); }
 
   bool isPartOfAction() const { return action_ != nullptr; }
-  Action* getActionPart() { return action_; }
+  Action* getActionPart() const { return action_; }
 
   std::string toString() const { return getValue() + " " + SoftPoint::toString() + " : " + getData() + std::string(action_ ? " => part of action " + action_->getName() : ""); }
 
-  bool operator==(const ContextualizedFact& other)
+  bool operator==(const ContextualizedFact& other) const
   {
     return this->Fact::operator==(other);
   }
 
-  bool isPartOf(const ContextualizedFact& other)
+  bool isPartOf(const ContextualizedFact& other) const
   {
     return ( (subject_ == other.subject_) &&
              (predicat_ == other.predicat_) );
@@ -72,8 +74,19 @@ public:
     return res;
   }
 
+  void setDeductionLevel(size_t level)
+  {
+    deduction_level_ = level;
+  }
+
+  size_t getDeductionLevel()
+  {
+    return deduction_level_;
+  }
+
 private:
   Action* action_;
+  size_t deduction_level_;
 };
 
 } // namespace mementar

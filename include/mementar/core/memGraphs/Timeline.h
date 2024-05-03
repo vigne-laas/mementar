@@ -9,7 +9,7 @@ namespace mementar {
 class Timeline
 {
 public:
-  Timeline() : actions(&facts) { init_ = true; }
+  Timeline() : actions(&facts), init_(true) {}
 
   FactGraph facts;
   ActionGraph actions;

@@ -3,10 +3,10 @@
 
 #include "ros/ros.h"
 
-#include "mementar/API/TimelineManipulator.h"
-#include "mementar/API/OccasionsSubscriber.h"
-
 #include "ontologenius/OntologyManipulator.h"
+
+#include "mementar/API/mementar/TimelineManipulator.h"
+#include "mementar/API/mementar/OccasionsSubscriber.h"
 
 using namespace std::chrono;
 
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "occasions_sub_pub");
 
   ros::NodeHandle n;
-  OntologyManipulator onto(&n);
+  onto::OntologyManipulator onto;
 
   mementar::TimelineManipulator manip(&n);
   manip.waitInit();

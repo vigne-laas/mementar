@@ -16,16 +16,16 @@ public:
   TInteger getNewId();
   bool removeId(TInteger id);
 
+  std::set<TInteger> getIds(){ return ids_; }
+
 private:
   TInteger current_id_;
   std::set<TInteger> ids_;
 };
 
 template<typename TInteger>
-IdManager<TInteger>::IdManager()
-{
-  current_id_ = 0;
-}
+IdManager<TInteger>::IdManager() : current_id_(0)
+{}
 
 template<typename TInteger>
 TInteger IdManager<TInteger>::getNewId()

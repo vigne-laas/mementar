@@ -5,9 +5,9 @@
 #include <atomic>
 
 #include "ontologenius/OntologyManipulator.h"
-#include "mementar/API/TimelineManipulator.h"
-#include "mementar/API/OccasionsSubscriber.h"
-#include "mementar/API/ActionsSubscriber.h"
+#include "mementar/API/mementar/TimelineManipulator.h"
+#include "mementar/API/mementar/OccasionsSubscriber.h"
+#include "mementar/API/mementar/ActionsSubscriber.h"
 
 mementar::TimelineManipulator* time_ptr;
 
@@ -158,7 +158,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "action_pub_sub_tests");
 
   ros::NodeHandle n;
-  OntologyManipulator onto;
+  onto::OntologyManipulator onto;
   mementar::TimelineManipulator timeline(&n);
   time_ptr = &timeline;
 

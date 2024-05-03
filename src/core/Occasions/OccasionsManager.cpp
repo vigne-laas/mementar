@@ -20,7 +20,7 @@ OccasionsManager::OccasionsManager(ros::NodeHandle* n, std::string name) :
   unsub_service_ = n_->advertiseService(service_name, &OccasionsManager::UnsubscribeCallback, this);
 }
 
-OccasionsManager::OccasionsManager(ros::NodeHandle* n, OntologyManipulator* onto, std::string name) :
+OccasionsManager::OccasionsManager(ros::NodeHandle* n, onto::OntologyManipulator* onto, std::string name) :
                                                                      subscription_(onto),
                                                                      run_(false),
                                                                      pub_(n->advertise<mementar::MementarOccasion>((name == "") ? "occasions" : "occasions/" + name, 1000))
@@ -76,7 +76,7 @@ void OccasionsManager::add(const Triplet& triplet)
 bool OccasionsManager::SubscribeCallback(mementar::MementarOccasionSubscription::Request &req,
                                         mementar::MementarOccasionSubscription::Response &res)
 {
-  Triplet triplet_patern = Triplet::deserialize(req.data);
+  TripletPattern triplet_patern = TripletPattern::deserialize(req.data);
   if(!triplet_patern.valid())
     return false;
 

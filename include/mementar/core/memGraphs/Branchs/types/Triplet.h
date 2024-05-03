@@ -12,13 +12,11 @@ namespace mementar
 class Triplet
 {
 public:
-  Triplet(const std::string& subject, const std::string& predicat, const std::string& object, bool add = true)
-  {
-    subject_ = subject;
-    predicat_ = predicat;
-    object_ = object;
-    add_ = add;
-  }
+  Triplet(const std::string& subject, const std::string& predicat, const std::string& object, bool add = true) : subject_(subject),
+                                                                                                                 predicat_(predicat),
+                                                                                                                 object_(object),
+                                                                                                                 add_(add)
+  {}
 
   Triplet(const std::string& str_triplet = "", bool add = true)
   {
@@ -32,13 +30,11 @@ public:
     add_ = add;
   }
 
-  Triplet(const Triplet& other)
-  {
-    subject_ = other.subject_;
-    predicat_ = other.predicat_;
-    object_ = other.object_;
-    add_ = other.add_;
-  }
+  Triplet(const Triplet& other) : subject_(other.subject_),
+                                  predicat_(other.predicat_),
+                                  object_(other.object_),
+                                  add_(other.add_)
+  {}
 
   static std::string serialize(const Triplet& triplet)
   {
@@ -99,9 +95,9 @@ public:
   bool fit(const Triplet& other) const
   {
     return ( (add_ == other.add_)
-            && ((subject_ == other.subject_) || (subject_ == "?") || (other.subject_ == "?"))
-            && ((predicat_ == other.predicat_) || (predicat_ == "?") || (other.predicat_ == "?"))
-            && ((object_ == other.object_) || (object_ == "?") || (other.object_ == "?")));
+            && (subject_ == other.subject_)
+            && (predicat_ == other.predicat_)
+            && (object_ == other.object_) );
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Triplet& triplet)

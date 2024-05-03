@@ -8,7 +8,7 @@
 #include "mementar/core/utility/error_code.h"
 #include "mementar/graphical/Display.h"
 #include "mementar/graphical/timeline/TimelineDrawer.h"
-
+#include "mementar/graphical/timeline/CsvSaver.h"
 #include "mementar/utils/String.h"
 
 namespace mementar
@@ -17,6 +17,7 @@ namespace mementar
 RosInterface::RosInterface(ros::NodeHandle* n, const std::string& directory, const std::string& configuration_file, size_t order, std::string name) :
                                                                                                                 onto_(name),
                                                                                                                 feeder_(&onto_),
+                                                                                                                feeder_echo_(getTopicName("echo", name)),
                                                                                                                 occasions_(n, &onto_, name),
                                                                                                                 run_(true)
 
@@ -84,7 +85,7 @@ void RosInterface::run()
   ros::ServiceServer action_service = n_->advertiseService(getTopicName("action"), &RosInterface::actionHandle, this);
   ros::ServiceServer fact_service = n_->advertiseService(getTopicName("fact"), &RosInterface::factHandle, this);
 
-  feeder_.setCallback([this](const Triplet& triplet){ this->occasions_.add(triplet); });
+  feeder_.setCallback([this](ContextualizedFact* fact){ this->occasions_.add(*fact); this->feeder_echo_.add(fact); });
   std::thread occasions_thread(&OccasionsManager::run, &occasions_);
   std::thread feed_thread(&RosInterface::feedThread, this);
 
@@ -97,17 +98,26 @@ void RosInterface::run()
 
   occasions_.stop();
   occasions_thread.join();
+  feed_thread.join();
 }
 
 void RosInterface::reset()
 {
   mut_.lock();
   delete timeline_;
-  std::experimental::filesystem::remove_all(directory_);
-  std::experimental::filesystem::create_directories(directory_);
+
+  if(directory_.empty()==false)
+  {
+    std::experimental::filesystem::remove_all(directory_);
+    std::experimental::filesystem::create_directories(directory_);
+  }
+  
+  ValuedNode::table_.reset();
   timeline_ = new Timeline();
   feeder_.link(timeline_);
   mut_.unlock();
+  
+  Display::info("Timeline of " + name_ + " has been reset.");
 }
 
 void RosInterface::lock()
@@ -127,6 +137,16 @@ void RosInterface::release()
 *
 ****************/
 
+double RosInterface::rosTime2Float(double s, int ns)
+{
+  ns = ns / 100000000;
+  double res = ns/10.f;
+  if(res < 0.25) return s;
+  else if(res < 0.5) return s + 0.25;
+  else if(res < 0.75) return s+ 0.5;
+  else return s + 0.75;
+}
+
 void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 {
   feeder_.storeFact(msg->data, time(0));
@@ -134,7 +154,7 @@ void RosInterface::knowledgeCallback(const std_msgs::String::ConstPtr& msg)
 
 void RosInterface::stampedKnowledgeCallback(const StampedString::ConstPtr& msg)
 {
-  feeder_.storeFact(msg->data, msg->stamp.sec);
+  feeder_.storeFact(msg->data, rosTime2Float(msg->stamp.sec, msg->stamp.nsec));
 }
 
 void RosInterface::explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
@@ -145,16 +165,16 @@ void RosInterface::explanationKnowledgeCallback(const MementarExplanation::Const
 void RosInterface::actionKnowledgeCallback(const MementarAction::ConstPtr& msg)
 {
   feeder_.storeAction(msg->name,
-                      (msg->start_stamp.sec != 0) ? msg->start_stamp.sec : SoftPoint::default_time,
-                      (msg->end_stamp.sec != 0) ? msg->end_stamp.sec : SoftPoint::default_time);
+                      (msg->start_stamp.sec != 0) ? rosTime2Float(msg->start_stamp.sec, msg->start_stamp.nsec) : SoftPoint::default_time,
+                      (msg->end_stamp.sec != 0) ? rosTime2Float(msg->end_stamp.sec, msg->end_stamp.nsec) : SoftPoint::default_time);
 }
 
-void RosInterface::ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg)
+void RosInterface::ontoStampedKnowledgeCallback(const ontologenius::OntologeniusStampedString::ConstPtr& msg)
 {
-  feeder_.storeFact(msg->data, msg->stamp.sec);
+  feeder_.storeFact(msg->data, rosTime2Float(msg->stamp.seconds, msg->stamp.nanoseconds));
 }
 
-void RosInterface::ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg)
+void RosInterface::ontoExplanationKnowledgeCallback(const ontologenius::OntologeniusExplanation::ConstPtr& msg)
 {
   feeder_.storeFact(msg->fact, msg->cause);
 }
@@ -168,11 +188,11 @@ void RosInterface::ontoExplanationKnowledgeCallback(const MementarExplanation::C
 bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req,
                                          mementar::MementarService::Response &res)
 {
-  res.code = 0;
+  res.code = NO_ERROR;
 
   removeUselessSpace(req.action);
   removeUselessSpace(req.param);
-  param_t params = getParams(req.param);
+  //param_t params = getParams(req.param);
 
   /*if(req.action == "newSession")
   {
@@ -180,12 +200,19 @@ bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req
     tree_->newSession();
     mut_.unlock_shared();
   }
-  else */if(req.action == "reset")
+  else */
+  if(req.action == "reset")
     reset();
-  if(req.action == "draw")
+  else if(req.action == "draw")
   {
     TimelineDrawer drawer;
     if(drawer.draw(req.param, timeline_) == false)
+      res.code = NO_EFFECT;
+  }
+  else if(req.action == "save")
+  {
+    CsvSaver saver;
+    if(saver.save(req.param, timeline_) == false)
       res.code = NO_EFFECT;
   }
   else
@@ -237,6 +264,11 @@ bool RosInterface::actionHandle(mementar::MementarService::Request &req,
   }
   else if(req.action == "getFactsDuring")
     set_res = timeline_->actions.getFactsDuring(params());
+  else if(req.action == "removeAction")
+  {
+    if(timeline_->actions.removeAction(params()) == false)
+      res.code = NO_EFFECT; 
+  }
   else
     res.code = UNKNOW_ACTION;
 
@@ -322,6 +354,7 @@ void RosInterface::feedThread()
         msg.data = notif;
         feeder_publisher.publish(msg);
       }
+      feeder_echo_.publish();
     }
     feeder_mutex_.unlock();
 
@@ -353,8 +386,7 @@ void RosInterface::set2string(const std::unordered_set<std::string>& word_set, s
 
 void RosInterface::set2vector(const std::unordered_set<std::string>& word_set, std::vector<std::string>& result)
 {
-  for(const std::string& it : word_set)
-    result.push_back(it);
+  std::copy(word_set.cbegin(), word_set.cend(), std::back_inserter(result));
 }
 
 param_t RosInterface::getParams(const std::string& param)
@@ -366,6 +398,7 @@ param_t RosInterface::getParams(const std::string& param)
     parameters.base = str_params[0];
 
   bool option_found = false;
+  (void)option_found;
   for(size_t i = 1; i < str_params.size(); i++)
   {
     /*if((str_params[i] == "-i") || (str_params[i] == "--take_id"))

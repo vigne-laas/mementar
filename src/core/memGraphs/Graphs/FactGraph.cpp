@@ -60,6 +60,16 @@ SoftPoint::Ttime FactGraph::getStamp(const std::string& fact_id)
     return fact->getTime();
 }
 
+bool FactGraph::removeFact(const std::string& fact_id)
+{
+  auto fact = container_.find(fact_id);
+  if(fact == nullptr)
+    return false;
+
+  container_.erase(fact);
+  return true;
+}
+
 ContextualizedFact* FactGraph::find(const std::string& fact_id)
 {
   return container_.find(fact_id);
@@ -67,16 +77,14 @@ ContextualizedFact* FactGraph::find(const std::string& fact_id)
 
 ContextualizedFact* FactGraph::findRecent(const Triplet& triplet, SoftPoint::Ttime until)
 {
-  for(BplusLeaf<SoftPoint::Ttime, ContextualizedFact*>* leaf = timeline_.getLast(); leaf != nullptr; leaf = leaf->getPreviousLeaf())
+  for(const BplusLeaf<SoftPoint::Ttime, ContextualizedFact*>* leaf = timeline_.getLast(); leaf != nullptr; leaf = leaf->getPreviousLeaf())
   {
     for(auto data : leaf->payload_)
     {
       if(data->getTime() < until)
         return nullptr;
       else if(data->fit(triplet))
-      {
         return data;
-      }
     }
   }
   return nullptr;

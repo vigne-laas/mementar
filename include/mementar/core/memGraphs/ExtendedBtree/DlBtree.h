@@ -13,12 +13,11 @@ class LinkedData
 public:
   using LeafType = Tleaf;
 
-  LinkedData(Tvalue value) : value_(value)
-  {
-    leaf_ = nullptr;
-  }
+  explicit LinkedData(Tvalue value) : value_(value),
+                                      leaf_(nullptr)
+  {}
 
-  LeafType* getNextLeaf()
+  LeafType* getNextLeaf() const
   {
     if(leaf_ == nullptr)
       return nullptr;
@@ -26,7 +25,7 @@ public:
       return static_cast<LeafType*>(leaf_->getNextLeaf());
   }
 
-  LeafType* getPreviousLeaf()
+  LeafType* getPreviousLeaf() const
   {
     if(leaf_ == nullptr)
       return nullptr;
@@ -60,6 +59,7 @@ public:
     this->payload_.emplace_back(data);
     this->payload_.back().leaf_ = leaf;
   }
+  
   void remove(LeafType* leaf, Tdata data)
   {
     (void)leaf;

@@ -3,6 +3,7 @@
 
 #include "mementar/core/feeder/FeedStorage.h"
 #include "mementar/core/feeder/IdGenerator.h"
+#include "mementar/core/memGraphs/Branchs/ContextualizedFact.h"
 //#include "ontologenius/core/feeder/Versionor.h"
 
 #include "ontologenius/OntologyManipulator.h"
@@ -17,15 +18,15 @@ class Timeline;
 class Feeder
 {
 public:
-  Feeder(OntologyManipulator* onto, Timeline* timeline = nullptr);
+  explicit Feeder(onto::OntologyManipulator* onto, Timeline* timeline = nullptr);
   Feeder(Timeline* timeline = nullptr);
 
   void storeFact(const std::string& feed, const SoftPoint::Ttime& stamp) { feed_storage_.insertFact(feed, stamp); }
   void storeFact(const std::string& feed, const std::string& expl) { feed_storage_.insertFact(feed, expl); }
   void storeAction(const std::string& name, const SoftPoint::Ttime& start_stamp, const SoftPoint::Ttime& end_stamp) { feed_storage_.insertAction(name, start_stamp, end_stamp); }
   bool run();
-  void link(Timeline* timeline) {timeline_ = timeline; }
-  void setCallback(const std::function<void(const Triplet&)>& callback) { callback_ = callback; }
+  void link(Timeline* timeline) {timeline_ = timeline; id_generator_.reset(); }
+  void setCallback(const std::function<void(ContextualizedFact*)>& callback) { callback_ = callback; }
 
   bool setWhitelist(std::vector<std::string> list);
   bool setBlacklist(std::vector<std::string> list);
@@ -47,8 +48,8 @@ private:
   IdGenerator id_generator_;
   //Versionor versionor_;
   Timeline* timeline_;
-  OntologyManipulator* onto_;
-  std::function<void(const Triplet&)> callback_;
+  onto::OntologyManipulator* onto_;
+  std::function<void(ContextualizedFact*)> callback_;
 
   std::experimental::optional<bool> is_whitelist_;
   std::unordered_set<std::string> list_;
@@ -61,7 +62,7 @@ private:
 
   void setList(const std::vector<std::string>& base_list);
 
-  void defaultCallback(const Triplet&) {}
+  void defaultCallback(ContextualizedFact*) {}
 };
 
 } // namespace mementar

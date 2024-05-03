@@ -13,12 +13,9 @@ class BtreeLeafBase : public Tleaf
 {
   using Tdata = typename Tleaf::DataType;
 public:
-  BtreeLeafBase(const Tkey& key)
-  {
-    mother_ = nullptr;
-
-    key_ = key;
-  }
+  explicit BtreeLeafBase(const Tkey& key) : key_(key),
+                                            mother_(nullptr)
+  {}
 
   bool operator==(const BtreeLeafBase& other) { return key_ == other.key_; }
   bool operator>(const BtreeLeafBase& other) { return key_ > other.key_; }

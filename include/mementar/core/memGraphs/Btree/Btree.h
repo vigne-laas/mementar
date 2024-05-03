@@ -13,13 +13,11 @@ class Btree
 {
   using Tdata = typename Tleaf::DataType;
 public:
-  Btree()
-  {
-    root_ = nullptr;
-    first_ = nullptr;
-    last_ = nullptr;
-    nb_data_ = 0;
-  }
+  Btree() : root_(nullptr),
+            first_(nullptr),
+            last_(nullptr),
+            nb_data_(0)
+  {}
 
   virtual ~Btree()
   {
@@ -72,7 +70,7 @@ template<typename Tkey, typename Tleaf, size_t N>
 size_t Btree<Tkey,Tleaf,N>::insert(const Tkey& key, const Tdata& data)
 {
   nb_data_++;
-  if(last_ == nullptr)
+  if(last_ == nullptr) // first leaf in the entire Btree
   {
     root_ = new BtreeNode<Tkey,Tleaf>();
     first_ = insertInLeaf(root_, key, data);
@@ -90,6 +88,7 @@ size_t Btree<Tkey,Tleaf,N>::insert(const Tkey& key, const Tdata& data)
         last_ = tmp;
       else if(tmp->operator<(*first_))
         first_ = tmp;
+      
       if(root_->getMother() != nullptr)
         root_ = root_->getMother();
     }
@@ -241,9 +240,7 @@ BtreeLeafBase<Tkey,Tleaf>* Btree<Tkey,Tleaf,N>::insertInLeaf(BtreeNode<Tkey,Tlea
   }
   else
   {
-    BtreeLeafBase<Tkey,Tleaf>* last = nullptr;
-    if(node->leafs_.size())
-      last = node->leafs_.back();
+    BtreeLeafBase<Tkey,Tleaf>* last = node->leafs_.back();
 
     if(key > node->keys_.back())
     {

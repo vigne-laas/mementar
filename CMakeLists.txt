@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 project(mementar)
 
 add_compile_options(-std=c++1z -Wall)
@@ -23,7 +24,7 @@ find_package(cmake_modules REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
 find_package(OpenCV REQUIRED)
-
+find_package(ontologenius 0.4.0 REQUIRED)
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -36,6 +37,7 @@ find_package(OpenCV REQUIRED)
    MementarExplanation.msg
    MementarOccasion.msg
    StampedString.msg
+   StampedFact.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -62,7 +64,7 @@ find_package(OpenCV REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
+  INCLUDE_DIRS include include/mementar/API
   LIBRARIES mementar_lib
   CATKIN_DEPENDS roscpp rospy std_msgs ontologenius
   DEPENDS OpenCV
@@ -75,7 +77,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include include/mementar/API
+  include
+  include/mementar/API
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -167,14 +170,16 @@ target_link_libraries(mementar_drawer_lib
 ##############################
 
 add_library(mementar_lib
-  src/API/ActionsPublisher.cpp
-  src/API/ActionsSubscriber.cpp
-  src/API/TimelineManipulator.cpp
-  src/API/TimelinesManipulator.cpp
-  src/API/clients/ManagerClient.cpp
-  src/API/clients/ClientBase.cpp
-  src/API/OccasionsPublisher.cpp
-  src/API/OccasionsSubscriber.cpp
+  src/API/mementar/ActionsPublisher.cpp
+  src/API/mementar/ActionsSubscriber.cpp
+  src/API/mementar/TimelineManipulator.cpp
+  src/API/mementar/TimelinesManipulator.cpp
+  src/API/mementar/clients/ManagerClient.cpp
+  src/API/mementar/clients/ActionClient.cpp
+  src/API/mementar/clients/ClientBase.cpp
+  src/API/mementar/clients/FactClient.cpp
+  src/API/mementar/OccasionsPublisher.cpp
+  src/API/mementar/OccasionsSubscriber.cpp
 )
 target_link_libraries(mementar_lib ${catkin_LIBRARIES})
 add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
@@ -185,6 +190,7 @@ add_dependencies(mementar_lib ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
 add_library(mementar_interface
   src/RosInterface.cpp
+  src/graphical/timeline/CsvSaver.cpp
 )
 target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib mementar_drawer_lib)
 target_link_libraries(mementar_interface ${catkin_LIBRARIES})

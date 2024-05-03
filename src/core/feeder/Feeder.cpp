@@ -12,7 +12,7 @@ Feeder::Feeder(Timeline* timeline) : callback_([this](auto triplet){ this->defau
   onto_ = nullptr;
 }
 
-Feeder::Feeder(OntologyManipulator* onto, Timeline* timeline) : callback_([this](auto triplet){ this->defaultCallback(triplet); }) //, versionor_(&feed_storage_)
+Feeder::Feeder(onto::OntologyManipulator* onto, Timeline* timeline) : callback_([this](auto triplet){ this->defaultCallback(triplet); }) //, versionor_(&feed_storage_)
 {
   timeline_ = timeline;
   onto_ = onto;
@@ -82,6 +82,12 @@ bool Feeder::runForFacts()
     /*if(!feed.checkout_)
       versionor_.insert(feed);*/
 
+    if(!feed.fact_)
+    {
+      notifications_.push_back("[FAIL][Feed with no fact]");
+      continue;
+    }
+
     if(feed.fact_.value().valid() == false)
     {
       notifications_.push_back("[FAIL][fact poorly formed]" + feed.fact_.value().Triplet::toString());
@@ -102,6 +108,7 @@ bool Feeder::runForFacts()
         }
       }
 
+      ContextualizedFact* fact = nullptr;
       if(feed.expl_.size())
       {
         ContextualizedFact* explanation = nullptr;
@@ -115,16 +122,20 @@ bool Feeder::runForFacts()
           else
           {
             auto tmp_explanation = timeline_->facts.findRecent(feed_expl);
-            if(explanation == nullptr)
+            if(tmp_explanation)
             {
-              explanation = tmp_explanation;
-              fact_explanation = feed_expl;
+              if(explanation == nullptr)
+              {
+                explanation = tmp_explanation;
+                fact_explanation = feed_expl;
+              }
+              else if(explanation < tmp_explanation)
+              {
+                explanation = tmp_explanation;
+                fact_explanation = feed_expl;
+              }
             }
-            else if(explanation < tmp_explanation)
-            {
-              explanation = tmp_explanation;
-              fact_explanation = feed_expl;
-            }
+            
           }
         }
 
@@ -134,12 +145,19 @@ bool Feeder::runForFacts()
           continue;
         }
         else
-          timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation}));
+        {
+          fact = new mementar::ContextualizedFact(id_generator_.get(), {feed.fact_.value(), *explanation});
+          fact->setDeductionLevel(feed.expl_.size());
+          timeline_->facts.add(fact);
+        }
       }
       else
-        timeline_->facts.add(new mementar::ContextualizedFact(id_generator_.get(), feed.fact_.value()));
+      {
+        fact = new mementar::ContextualizedFact(id_generator_.get(), feed.fact_.value());
+        timeline_->facts.add(fact);
+      }
 
-      callback_(feed.fact_.value());
+      callback_(fact);
     }
 
   }
@@ -180,8 +198,8 @@ bool Feeder::runForActions()
         {
           action = new mementar::Action(feed.name_, feed.t_start_, feed.t_end_);
           timeline_->actions.add(action);
-          callback_(*action->getStartFact());
-          callback_(*action->getEndFact());
+          callback_(action->getStartFact());
+          callback_(action->getEndFact());
         }
       }
       else if(feed.t_start_ != SoftPoint::default_time)
@@ -192,7 +210,7 @@ bool Feeder::runForActions()
         {
           action = new mementar::Action(feed.name_, feed.t_start_);
           timeline_->actions.add(action);
-          callback_(*action->getStartFact());
+          callback_(action->getStartFact());
         }
       }
       else if(feed.t_end_ != SoftPoint::default_time)
@@ -202,7 +220,7 @@ bool Feeder::runForActions()
         else if(timeline_->actions.setEnd(feed.name_, feed.t_end_) == false)
           notifications_.push_back("[FAIL][end stamp already exist] " + feed.name_);
         else
-          callback_(*action->getEndFact());
+          callback_(action->getEndFact());
       }
     }
   }

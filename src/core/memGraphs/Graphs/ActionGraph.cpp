@@ -152,11 +152,45 @@ namespace mementar {
     return res;
   }
 
+  bool ActionGraph::removeAction(const std::string& action_name)
+  {
+    auto action = container_.find(action_name);
+    if(action == nullptr)
+      return false;
+
+    auto start_fact = action->getStartFact();
+    if(start_fact != nullptr)
+    {
+      if(fact_graph_->removeFact(start_fact->getId()) == false)
+        return false;
+    }
+
+    if(action->isPending() == false)
+    {
+      auto end_fact = action->getEndFact();
+      if(end_fact != nullptr)
+      {
+        if(fact_graph_->removeFact(end_fact->getId()) == false)
+        return false;
+      }
+    }
+    else
+      pending_actions_.erase(action->getValue());
+
+    auto action_it = std::find(all_actions_.begin(), all_actions_.end(), action);
+    if(action_it != all_actions_.end())
+      all_actions_.erase(action_it);
+
+    container_.erase(action);
+    delete action;
+
+    return true;
+  }
+
   std::vector<Action*> ActionGraph::getPendingPtr()
   {
     std::vector<Action*> res;
-    for(auto act : pending_actions_)
-      res.push_back(act.second);
+    std::transform(pending_actions_.cbegin(), pending_actions_.cend(), std::back_inserter(res), [](const auto& action){ return action.second; });
     return res;
   }
 

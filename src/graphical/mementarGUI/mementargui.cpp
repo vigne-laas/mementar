@@ -23,6 +23,8 @@ mementarGUI::mementarGUI(QWidget *parent) :
 
     QObject::connect(ui->action_exist_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
     QObject::connect(ui->action_exist_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
+    QObject::connect(ui->action_removeAction_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
+    QObject::connect(ui->action_removeAction_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(hoverLeave()),this, SLOT(actionButtonHoverLeaveSlot()));
     QObject::connect(ui->action_isPending_button, SIGNAL(hoverEnter()),this, SLOT(actionButtonHoverEnterSlot()));
@@ -53,6 +55,7 @@ mementarGUI::mementarGUI(QWidget *parent) :
 
     QObject::connect(ui->action_exist_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getPending_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
+    QObject::connect(ui->action_removeAction_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_isPending_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getStartStamp_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
     QObject::connect(ui->action_getEndStamp_button, SIGNAL(clicked()),this, SLOT(actionButtonClickedSlot()));
@@ -211,7 +214,7 @@ void mementarGUI::displayErrorInfo(const std::string& text)
 
 void mementarGUI::displayInstancesList()
 {
-  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage_multi");
+  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage");
 
   mementar::MementarService srv;
   srv.request.action = "list";
@@ -284,7 +287,7 @@ void mementarGUI::currentTabChangedSlot(int index)
 
 void mementarGUI::addInstanceSlot()
 {
-  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage_multi");
+  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage");
 
   mementar::MementarService srv;
   srv.request.action = "add";
@@ -320,7 +323,7 @@ void mementarGUI::addInstanceSlot()
   }
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/manage_multi client call failed");
+    displayErrorInfo("mementar/manage client call failed");
   else
   {
     start();
@@ -336,14 +339,14 @@ void mementarGUI::addInstanceSlot()
 
 void mementarGUI::deleteInstanceSlot()
 {
-  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage_multi");
+  ros::ServiceClient client = n_->serviceClient<mementar::MementarService>("mementar/manage");
 
   mementar::MementarService srv;
   srv.request.action = "delete";
   srv.request.param = ui->manager_instance_name_editline->text().toStdString();
 
   if(!client.call(srv))
-    displayErrorInfo("mementar/manage_multi client call failed");
+    displayErrorInfo("mementar/manage client call failed");
   else
   {
     start();

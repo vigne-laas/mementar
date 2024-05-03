@@ -12,6 +12,7 @@ template<typename Tkey, typename Tleaf>
 class BtreeNode
 {
 public:
+  BtreeNode() : mother_(nullptr) {}
   ~BtreeNode()
   {
     for(auto child : childs_)

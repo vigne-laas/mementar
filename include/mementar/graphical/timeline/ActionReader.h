@@ -5,7 +5,10 @@
 #include <map>
 #include <experimental/optional>
 
-#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui/highgui_c.h>
+#include <opencv2/core/core_c.h>
 
 #include "mementar/core/memGraphs/Graphs/FactGraph.h"
 
@@ -13,7 +16,8 @@ namespace mementar {
 
 struct action_t
 {
-  action_t(const SoftPoint& point) : start(point) {}
+  explicit action_t(const SoftPoint& point) : start(point),
+                                              level(0) {}
 
   std::string name;
   SoftPoint start;
@@ -34,12 +38,14 @@ public:
   size_t max_text_size_;
 
 private:
-  std::vector<size_t> levels_;
+  std::vector<Action*> actions_to_manage_;
+  std::vector<Action*> actions_managed_;
 
   action_t getAction(Action* action);
   void closeAction(Action* action);
 
   size_t getMinLevel();
+  void setLevels();
   void getTextSize(const std::string& txt, CvFont* font);
 };
 

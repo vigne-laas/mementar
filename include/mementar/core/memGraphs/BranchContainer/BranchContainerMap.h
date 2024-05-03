@@ -13,7 +13,7 @@ class BranchContainerMap : public BranchContainerBase<B>
 {
 public:
   BranchContainerMap() {}
-  BranchContainerMap(const BranchContainerMap& base);
+  BranchContainerMap(const BranchContainerMap& base) = delete;
   virtual ~BranchContainerMap() {} //B* must by destructed by the owner
 
   virtual B* find(const std::string& word);
@@ -24,8 +24,8 @@ private:
   std::unordered_map<std::string, B*> nodes_;
 };
 
-template <typename B>
-BranchContainerMap<B>::BranchContainerMap(const BranchContainerMap& base)
+/*template <typename B>
+BranchContainerMap<B>::BranchContainerMap(const BranchContainerMap& base) = delete;
 {
   for(auto& it : base.nodes_)
   {
@@ -33,7 +33,7 @@ BranchContainerMap<B>::BranchContainerMap(const BranchContainerMap& base)
     *tmp = *(it.second);
     nodes_[it.first] = tmp;
   }
-}
+}*/
 
 template <typename B>
 B* BranchContainerMap<B>::find(const std::string& word)

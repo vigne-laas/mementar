@@ -1,10 +1,12 @@
-#include "mementar/API/TimelineManipulator.h"
+#include "mementar/API/mementar/TimelineManipulator.h"
 
 namespace mementar
 {
 
 TimelineManipulator::TimelineManipulator(ros::NodeHandle* n, const std::string& name) : fact_feeder(n, name),
-                                                                                        action_feeder(n, name)
+                                                                                        action_feeder(n, name),
+                                                                                        actions(n, name),
+                                                                                        facts(n, name)
 {
   n_ = n;
   name_ = name;

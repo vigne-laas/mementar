@@ -14,8 +14,12 @@
 #include "mementar/MementarService.h"
 #include "mementar/StampedString.h"
 
+#include "ontologenius/OntologeniusStampedString.h"
+#include "ontologenius/OntologeniusExplanation.h"
+
 //#include "mementar/core/LtManagement/EpisodicTree/ArchivedLeafNode.h"
 #include "mementar/core/feeder/Feeder.h"
+#include "mementar/core/feeder/FeederEcho.h"
 #include "mementar/core/memGraphs/Timeline.h"
 #include "mementar/core/Occasions/OccasionsManager.h"
 #include "mementar/core/Parametrization/Configuration.h"
@@ -48,10 +52,11 @@ private:
   std::string directory_;
   Configuration configuration_;
   size_t order_;
-  OntologyManipulator onto_;
+  onto::OntologyManipulator onto_;
 
   Timeline* timeline_;
   Feeder feeder_;
+  FeederEcho feeder_echo_;
   OccasionsManager occasions_;
 
   std::string name_;
@@ -65,8 +70,8 @@ private:
   void stampedKnowledgeCallback(const StampedString::ConstPtr& msg);
   void explanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
   void actionKnowledgeCallback(const MementarAction::ConstPtr& msg);
-  void ontoStampedKnowledgeCallback(const StampedString::ConstPtr& msg);
-  void ontoExplanationKnowledgeCallback(const MementarExplanation::ConstPtr& msg);
+  void ontoStampedKnowledgeCallback(const ontologenius::OntologeniusStampedString::ConstPtr& msg);
+  void ontoExplanationKnowledgeCallback(const ontologenius::OntologeniusExplanation::ConstPtr& msg);
 
   bool managerInstanceHandle(mementar::MementarService::Request &req,
                              mementar::MementarService::Response &res);
@@ -101,6 +106,8 @@ private:
   {
     return (onto_name == "") ? "/ontologenius/" + topic_name : "/ontologenius/" + topic_name + "/" + onto_name;
   }
+
+  double rosTime2Float(double s, int ns);
 };
 
 } // namespace mementar

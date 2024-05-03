@@ -10,8 +10,8 @@
 #include <ros/callback_queue.h>
 
 #include "mementar/MementarOccasion.h"
-#include "mementar/API/Fact.h"
-#include "mementar/API/OccasionsSubscriber.h"
+#include "mementar/API/mementar/Fact.h"
+#include "mementar/API/mementar/OccasionsSubscriber.h"
 
 namespace mementar
 {

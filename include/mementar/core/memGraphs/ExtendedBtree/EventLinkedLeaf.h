@@ -15,17 +15,15 @@ class LinkedEvent
   friend class EventLinkedLeaf;
 
 public:
-  LinkedEvent()
-  {
-    prev_elem_ = nullptr;
-    next_elem_ = nullptr;
-    leaf_ = nullptr;
-  }
+  LinkedEvent() : leaf_(nullptr),
+                  prev_elem_(nullptr),
+                  next_elem_(nullptr)
+  {}
 
-  SelfType* getNext() { return next_elem_; }
-  SelfType* getPrevious() { return prev_elem_; }
+  SelfType* getNext() const { return next_elem_; }
+  SelfType* getPrevious() const { return prev_elem_; }
 
-  Tleaf* getLeaf()
+  Tleaf* getLeaf() const
   {
     if(leaf_ == nullptr)
       return nullptr;
@@ -33,7 +31,7 @@ public:
       return static_cast<Tleaf*>(leaf_);
   }
 
-  Tleaf* getNextLeaf()
+  Tleaf* getNextLeaf() const
   {
     if(leaf_ == nullptr)
       return nullptr;
@@ -41,7 +39,7 @@ public:
       return static_cast<Tleaf*>(leaf_->getNextLeaf());
   }
 
-  Tleaf* getPreviousLeaf()
+  Tleaf* getPreviousLeaf() const
   {
     if(leaf_ == nullptr)
       return nullptr;
@@ -138,7 +136,7 @@ Tdata EventLinkedLeaf<Tkey,Tdata>::getPrev(Tdata data)
   {
     for(auto& ld : prev_node->payload_)
     {
-      if(data->isPartOf(*ld))
+      if((ld != nullptr) && data->isPartOf(*ld))
         return ld;
     }
     prev_node = static_cast<EventLinkedLeaf<Tkey,Tdata>*>(prev_node->getPreviousLeaf());
@@ -186,7 +184,7 @@ Tdata EventLinkedLeaf<Tkey,Tdata>::getNext(Tdata data)
   {
     for(auto ld : next_node->payload_)
     {
-      if(data->isPartOf(*ld))
+      if((ld != nullptr) && data->isPartOf(*ld))
         return ld;
     }
     next_node = static_cast<EventLinkedLeaf<Tkey,Tdata>*>(next_node->getNextLeaf());
