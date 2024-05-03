@@ -38,6 +38,12 @@ public:
     for(uint32_t i : base)
       res.insert(table_[i]);
   }
+
+  inline void reset()
+  {
+    table_.clear();
+  }
+  
 private:
   std::vector<std::string> table_;
 };
