@@ -112,6 +112,7 @@ void RosInterface::reset()
     std::experimental::filesystem::create_directories(directory_);
   }
   
+  ValuedNode::table_.reset();
   timeline_ = new Timeline();
   feeder_.link(timeline_);
   mut_.unlock();
