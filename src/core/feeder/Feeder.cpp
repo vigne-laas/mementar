@@ -88,7 +88,6 @@ bool Feeder::runForFacts()
       continue;
     }
 
-    std::cout << "consider " << feed.fact_.value().Triplet::toString() << std::endl;
     if(feed.fact_.value().valid() == false)
     {
       notifications_.push_back("[FAIL][fact poorly formed]" + feed.fact_.value().Triplet::toString());
