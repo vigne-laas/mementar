@@ -7,7 +7,7 @@
 
 #include "mementar/core/utility/error_code.h"
 #include "mementar/graphical/Display.h"
-#include "mementar/graphical/timeline/TimelineDrawer.h"
+// #include "mementar/graphical/timeline/TimelineDrawer.h"
 #include "mementar/graphical/timeline/CsvSaver.h"
 #include "mementar/utils/String.h"
 
@@ -205,8 +205,8 @@ bool RosInterface::managerInstanceHandle(mementar::MementarService::Request &req
     reset();
   else if(req.action == "draw")
   {
-    TimelineDrawer drawer;
-    if(drawer.draw(req.param, timeline_) == false)
+    // TimelineDrawer drawer;
+    // if(drawer.draw(req.param, timeline_) == false)
       res.code = NO_EFFECT;
   }
   else if(req.action == "save")

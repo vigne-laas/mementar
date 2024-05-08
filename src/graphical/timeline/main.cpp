@@ -195,8 +195,8 @@ int main(int argc, char** argv)
 
   std::cout << "-------- DRAW---------" << std::endl;
 
-  mementar::TimelineDrawer drawer;
-  drawer.draw("out.png", timeline);
+  // mementar::TimelineDrawer drawer;
+  // drawer.draw("out.png", timeline);
 
   /*std::cout << "width = " << ontologenius::commit_t::global_width << std::endl;
   std::cout << "height = " << ontologenius::commit_t::global_height << std::endl;

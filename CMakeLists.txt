@@ -23,7 +23,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 find_package(cmake_modules REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport)
-find_package(OpenCV REQUIRED)
+# find_package(OpenCV REQUIRED)
 find_package(ontologenius 0.4.0 REQUIRED)
 
 ################################################
@@ -151,19 +151,19 @@ add_dependencies(mementar_core_lib ${catkin_EXPORTED_TARGETS})
 ## DRAWER
 ##############################
 
-add_library(mementar_drawer_lib
-  src/graphical/timeline/ActionReader.cpp
-  src/graphical/timeline/FactReader.cpp
-  src/graphical/timeline/TimelineDrawer.cpp
-)
-target_include_directories(mementar_drawer_lib
-PUBLIC
- ${OpenCV_INCLUDE_DIRS}
-)
-target_link_libraries(mementar_drawer_lib
-  mementar_memGraphs_lib
-  ${OpenCV_LIBS}
-)
+# add_library(mementar_drawer_lib
+  # src/graphical/timeline/ActionReader.cpp
+  # src/graphical/timeline/FactReader.cpp
+  # src/graphical/timeline/TimelineDrawer.cpp
+# )
+# target_include_directories(mementar_drawer_lib
+# PUBLIC
+#  ${OpenCV_INCLUDE_DIRS}
+# )
+# target_link_libraries(mementar_drawer_lib
+#   mementar_memGraphs_lib
+#   ${OpenCV_LIBS}
+# )
 
 ##############################
 ## API
@@ -192,7 +192,8 @@ add_library(mementar_interface
   src/RosInterface.cpp
   src/graphical/timeline/CsvSaver.cpp
 )
-target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib mementar_drawer_lib)
+# target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib mementar_drawer_lib)
+target_link_libraries(mementar_interface mementar_core_lib mementar_events_lib)
 target_link_libraries(mementar_interface ${catkin_LIBRARIES})
 add_dependencies(mementar_interface ${catkin_EXPORTED_TARGETS} mementar_gencpp)
 
@@ -212,10 +213,11 @@ target_link_libraries(mementar_multi mementar_interface)
 target_link_libraries(mementar_multi ${catkin_LIBRARIES})
 add_dependencies(mementar_multi ${catkin_EXPORTED_TARGETS})
 
-add_executable(mementar_timeline src/graphical/timeline/main.cpp)
-target_link_libraries(mementar_timeline mementar_core_lib mementar_drawer_lib)
-target_link_libraries(mementar_timeline ${catkin_LIBRARIES})
-add_dependencies(mementar_timeline ${catkin_EXPORTED_TARGETS})
+# add_executable(mementar_timeline src/graphical/timeline/main.cpp)
+# target_link_libraries(mementar_timeline mementar_core_lib mementar_drawer_lib)
+# target_link_libraries(mementar_timeline mementar_core_lib)
+# target_link_libraries(mementar_timeline ${catkin_LIBRARIES})
+# add_dependencies(mementar_timeline ${catkin_EXPORTED_TARGETS})
 
 ##############################
 ## Test executables
@@ -278,19 +280,19 @@ set( QT_SOURCES
 # Binaries
 ##############################################################################
 
-add_executable(mementarGUI ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
-target_include_directories(mementarGUI
-  PRIVATE
-    ${catkin_INCLUDE_DIRS}
-)
-add_dependencies(mementarGUI mementar_gencpp)
-target_link_libraries(mementarGUI
-    ${catkin_LIBRARIES}
-    Qt5::Core
-    Qt5::Widgets
-    Qt5::PrintSupport
-)
-install(TARGETS mementarGUI RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+# add_executable(mementarGUI ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
+# target_include_directories(mementarGUI
+  # PRIVATE
+    # ${catkin_INCLUDE_DIRS}
+# )
+# add_dependencies(mementarGUI mementar_gencpp)
+# target_link_libraries(mementarGUI
+    # ${catkin_LIBRARIES}
+    # Qt5::Core
+    # Qt5::Widgets
+    # Qt5::PrintSupport
+# )
+# install(TARGETS mementarGUI RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ##############################
 ## Install
