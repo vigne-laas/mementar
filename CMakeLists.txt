@@ -67,7 +67,7 @@ catkin_package(
   INCLUDE_DIRS include include/mementar/API
   LIBRARIES mementar_lib
   CATKIN_DEPENDS roscpp rospy std_msgs ontologenius
-  DEPENDS OpenCV
+  # DEPENDS OpenCV
 )
 
 ###########
