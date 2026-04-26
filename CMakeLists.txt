@@ -280,19 +280,19 @@ set( QT_SOURCES
 # Binaries
 ##############################################################################
 
-# add_executable(mementarGUI ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
-# target_include_directories(mementarGUI
-  # PRIVATE
-    # ${catkin_INCLUDE_DIRS}
-# )
-# add_dependencies(mementarGUI mementar_gencpp)
-# target_link_libraries(mementarGUI
-    # ${catkin_LIBRARIES}
-    # Qt5::Core
-    # Qt5::Widgets
-    # Qt5::PrintSupport
-# )
-# install(TARGETS mementarGUI RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+add_executable(mementarGUI ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
+target_include_directories(mementarGUI
+  PRIVATE
+    ${catkin_INCLUDE_DIRS}
+)
+add_dependencies(mementarGUI mementar_gencpp)
+target_link_libraries(mementarGUI
+    ${catkin_LIBRARIES}
+    Qt5::Core
+    Qt5::Widgets
+    Qt5::PrintSupport
+)
+install(TARGETS mementarGUI RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 ##############################
 ## Install
